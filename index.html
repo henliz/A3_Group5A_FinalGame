@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Through the Woods</title>
+
+    <!-- Load p5 exactly once -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/addons/p5.sound.min.js"></script>
+
+    <!-- Game scripts (global mode; order matters) -->
+    <script src="tavernFloor1.js"></script>
+    <script src="clutter.js"></script>
+    <script src="player.js"></script>
+    <script src="journal.js"></script>
+    <script src="npc.js"></script>
+    <script src="innkeeper.js"></script>
+    <script src="doctor.js"></script>
+    <script src="runawayMan.js"></script>
+    <script src="dialogue.js"></script>
+    <script src="home.js"></script>
+    <script src="checkin.js"></script>
+    <script src="lighting.js"></script>
+    <script src="judge.js"></script>
+    <script src="sketch.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #161214;
+        cursor:
+          url("assets/cursor-default.png") 4 4,
+          auto;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
