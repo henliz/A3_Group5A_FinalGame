@@ -373,7 +373,7 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A lobby telephone. The handset is cold. Someone mentioned a call the night it happened — I wonder if anyone thought to check the line.",
+      "A lobby telephone. I can use this to call the sheriff when I have more information.",
     journalEntry: null,
     closeupAsset: null,
     closeupLabel: null,
@@ -390,9 +390,9 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A silver necklace, tucked between shelves. Expensive for a thank-you gift. Someone went to a lot of trouble to hide this — or to get it back.",
+      "This looks expensive. It isn't something you drop and don't notice. This is something that fell during something. Or was left. I saw Helen wearing something when I checked in. I think that was hers. Why is it here. Why is it here?",
     journalEntry:
-      "Silver necklace found hidden near the lobby shelf — who left it here, and why was it hidden?",
+      "Silver Necklace: Matches what Helen was wearing. Shouldn't be here.",
     closeupAsset: "necklace_close",
     closeupLabel: "Silver Necklace",
   },
@@ -408,9 +408,9 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A framed certificate. Dr. Krisia's name. The listed specialty is pharmacology — she knows exactly what plants can do to a person.",
+      "I've seen enough official documents to know this doesn't look exactly right. I can't say why specifically. I just know something is off and I don't know what to do with that yet. Helen worked this desk. Helen would have seen this.",
     journalEntry:
-      "Dr. Krisia's certificate — pharmacology. She would know what wolfsbane does in high doses.",
+      "Charity certificate:  Formatting inconsistencies, seal looks printed. Filed at front desk where Helen worked. Note of missing payment for Helen.",
     closeupAsset: "donation_certificate",
     closeupLabel: "Certificate",
   },
@@ -426,9 +426,9 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A torn newspaper clipping. An article about a gambling ring — someone has underlined a name near the bottom twice, in red ink.",
+      "A charity donation. That's fine. That's a normal thing. Except why is this clipping here in the inn lobby and not somewhere she keeps her things. Did she leave this here on purpose? That's a strange thing to leave somewhere on purpose.",
     journalEntry:
-      "Newspaper clipping about a gambling raid — a name underlined twice in red ink.",
+      "Newspaper clipping : Mrs. Gustall donation to Feeding the Hungry Children Organization. Found in lobby not her room. Felt placed rather than forgotten.",
     closeupAsset: "newsclipping_close",
     closeupLabel: "News Clipping",
   },
@@ -444,9 +444,9 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A crumpled note, written in a hurried hand: 'She knows. I can't let her say it.' No date. No signature.",
+      "This note is strangely crumpled like someone was trying to hide it but it was found...",
     journalEntry:
-      "Crumpled note found in the east rooms: 'She knows. I can't let her say it.'",
+      "The photo is unclear, but it looks like Jerome?? Who is the woman with him?",
     closeupAsset: "note_close",
     closeupLabel: "Crumpled Note",
   },
@@ -462,9 +462,9 @@ const roomLayout = [
     interactRadius: 80,
     examined: false,
     monologue:
-      "A thick medical reference. Dog-eared on several pages, and one has been torn out entirely — near the chapter on wolfsbane. Someone didn't want this read.",
+      "A doctor marking up a page about a plant that isn't commonly used in  medicine anymore. That's strange. Or maybe I don't know enough about medicine to know if it's strange. I'm writing it down anyway. Hmmm... I see a note here from Helen.  Helen was watching her. Helen figured something out and wrote it down and now Helen is dead and this page is still here. My hands are shaking and I don't know if that's fear or the fact that I haven't eaten today.",
     journalEntry:
-      "Medical book — page torn from the wolfsbane chapter. Found near the lobby.",
+      "Medicinal Plants book:  wolfsbane page dog-eared, personal margin marks, not clinical annotations.",
     closeupAsset: "medicinal_plat_book",
     closeupLabel: "Medicinal Book",
   },

@@ -178,10 +178,10 @@ class Journal {
     if (page.textEntries.length > 0) {
       let entryX = width * 0.29 + 350;
       let entryY = 250;
-      let entryW = 650 / 2 - 90;
+      let entryW = 650 / 2 - 80;
 
       fill(40, 20, 10);
-      textSize(14);
+      textSize(12);
       textAlign(LEFT, TOP);
       textStyle(ITALIC);
 
@@ -199,7 +199,6 @@ class Journal {
     drawCloseButton(btnX, btnY);
     this.drawArrows();
 
-    // Lightbox overlay — drawn on top of everything when a thumbnail is clicked
     if (this.lightboxEntry) {
       const lbImg = clutterImages[this.lightboxEntry.assetKey];
       if (lbImg) {
