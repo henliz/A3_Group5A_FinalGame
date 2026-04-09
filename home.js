@@ -107,4 +107,8 @@ function drawEndPage() {
       height / 2 - 20,
     );
   }
+
+  fill(255, min(endScreenAlpha, 160));
+  textSize(16);
+  text("Press E to continue", width / 2, height / 2 + 40);
 }

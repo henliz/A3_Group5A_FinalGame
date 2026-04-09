@@ -1,12 +1,11 @@
 // lighting.js
 // Atmospheric purple/blue tint — drawn in screen-space AFTER the world, BEFORE UI.
 //
-// Cross-platform approach: no offscreen buffer, no destination-out.
-// destination-out has a known GPU compositing bug on Windows Chrome.
-// Instead: dark source-over overlay + screen-mode light gradients directly
-// on the main canvas. screen blend is universally supported.
+// PERF: static light sources are cached to an offscreen canvas.
+// The buffer only rebuilds when the camera drifts more than DRIFT_THRESH screen-pixels
+// OR when the flicker timer ticks. Between rebuilds we blit the cached bitmap.
+// The player light is still drawn per-frame (it moves with the player).
 
-// TF1_T is a global const from tavernFloor1.js (loaded first).
 const LIGHT_SOURCES = [
   // ── Top rooms ──────────────────────────────────────────────────────────────
   { x:  3.5 * TF1_T, y:  0.7 * TF1_T, r: 210, seed: 0.11 },
@@ -38,22 +37,37 @@ const LIGHT_SOURCES = [
   { x: 10.5 * TF1_T, y: 13.0 * TF1_T, r: 310, seed: 5.45 },
 ];
 
-// Flicker cache — recomputed every FLICKER_INTERVAL frames
 const FLICKER_INTERVAL = 3;
+const DRIFT_THRESH     = 8; // screen pixels — rebuild buffer if camera drifts past this
+
 let _flickerTick   = 0;
 const _flickerF    = new Float32Array(LIGHT_SOURCES.length).fill(1.0);
 let   _flickerPlayer = 1.0;
 
-// No buffer needed — lighting draws directly on the main canvas
-function lightingSetup()   {}
-function lightingResized() {}
+// Offscreen canvas — holds cached static lights
+let _lightCanvas  = null;
+let _lightCtx     = null;
+let _lightBufCamX = -9999;
+let _lightBufCamY = -9999;
 
-// World → screen
+function lightingSetup() {
+  _lightCanvas        = document.createElement('canvas');
+  _lightCanvas.width  = window.innerWidth;
+  _lightCanvas.height = window.innerHeight;
+  _lightCtx           = _lightCanvas.getContext('2d');
+}
+
+function lightingResized() {
+  if (!_lightCanvas) return;
+  _lightCanvas.width  = window.innerWidth;
+  _lightCanvas.height = window.innerHeight;
+  _lightBufCamX = -9999; // force rebuild on next frame
+}
+
 function _w2s(wx, wy) {
   return [(wx - camX) * CAM_ZOOM, (wy - camY) * CAM_ZOOM];
 }
 
-// Draw one screen-mode light circle (brightens whatever is beneath it)
 function _screenLight(ctx, sx, sy, r) {
   const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
   g.addColorStop(0,    'rgba(60, 45, 80, 0.45)');
@@ -66,46 +80,60 @@ function _screenLight(ctx, sx, sy, r) {
   ctx.fill();
 }
 
-function drawLighting() {
-  if (currentScene !== "GAME") return;
-
-  const ctx = drawingContext; // main canvas — no offscreen buffer
+function _rebuildLightBuffer() {
+  const ctx = _lightCtx;
   const t   = frameCount * 0.016;
 
-  // ── Refresh flicker cache every FLICKER_INTERVAL frames ───────────────────
-  if (_flickerTick === 0) {
-    _flickerPlayer = 0.92 + noise(t + 9.9) * 0.08;
-    for (let i = 0; i < LIGHT_SOURCES.length; i++) {
-      _flickerF[i] = 0.82 + noise(t + LIGHT_SOURCES[i].seed) * 0.18;
-    }
-  }
-  _flickerTick = (_flickerTick + 1) % FLICKER_INTERVAL;
+  ctx.clearRect(0, 0, _lightCanvas.width, _lightCanvas.height);
 
-  // ── 1. Dark ambient overlay (source-over — works everywhere) ───────────────
-  noStroke();
-  fill(18, 8, 42, 140); // 0.55 opacity
-  rect(0, 0, width, height);
-
-  // ── 2. Brighten lit areas with screen-mode gradients ──────────────────────
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-
-  // Player carries a gentle personal glow
-  const [ppx, ppy] = _w2s(player.px, player.py);
-  _screenLight(ctx, ppx, ppy, 240 * _flickerPlayer * CAM_ZOOM);
-
-  // Inn light sources — cull off-screen
+  // Refresh static flicker values
   for (let i = 0; i < LIGHT_SOURCES.length; i++) {
-    const src = LIGHT_SOURCES[i];
+    _flickerF[i] = 0.82 + noise(t + LIGHT_SOURCES[i].seed) * 0.18;
+  }
+
+  // Draw each visible static light into the offscreen buffer
+  for (let i = 0; i < LIGHT_SOURCES.length; i++) {
+    const src    = LIGHT_SOURCES[i];
     const [sx, sy] = _w2s(src.x, src.y);
-    const r = src.r * _flickerF[i] * CAM_ZOOM;
-    if (sx + r < 0 || sx - r > width || sy + r < 0 || sy - r > height) continue;
+    const r      = src.r * _flickerF[i] * CAM_ZOOM;
+    if (sx + r < 0 || sx - r > _lightCanvas.width ||
+        sy + r < 0 || sy - r > _lightCanvas.height) continue;
     _screenLight(ctx, sx, sy, r);
   }
 
-  ctx.restore(); // resets globalCompositeOperation to source-over
+  _lightBufCamX = camX;
+  _lightBufCamY = camY;
+}
 
-  // ── 3. Very gentle scene-wide purple breathe ──────────────────────────────
+function drawLighting() {
+  if (currentScene !== 'GAME') return;
+
+  const ctx = drawingContext;
+  const t   = frameCount * 0.016;
+
+  // Rebuild cache if camera drifted too far or flicker ticked
+  const driftX = Math.abs((camX - _lightBufCamX) * CAM_ZOOM);
+  const driftY = Math.abs((camY - _lightBufCamY) * CAM_ZOOM);
+  if (_flickerTick === 0 || driftX > DRIFT_THRESH || driftY > DRIFT_THRESH) {
+    _rebuildLightBuffer();
+  }
+  _flickerTick    = (_flickerTick + 1) % FLICKER_INTERVAL;
+  _flickerPlayer  = 0.92 + noise(t + 9.9) * 0.08;
+
+  // 1. Dark ambient overlay (cheap rect, source-over)
+  noStroke();
+  fill(18, 8, 42, 140);
+  rect(0, 0, width, height);
+
+  // 2. Blit cached static lights + player light — screen compositing
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.drawImage(_lightCanvas, 0, 0);                          // cached — no gradient creation
+  const [ppx, ppy] = _w2s(player.px, player.py);
+  _screenLight(ctx, ppx, ppy, 240 * _flickerPlayer * CAM_ZOOM); // player — 1 gradient/frame
+  ctx.restore();
+
+  // 3. Subtle scene-wide purple breathe
   noStroke();
   const pulse = 4 + noise(t * 0.25) * 8;
   fill(45, 15, 85, pulse);
