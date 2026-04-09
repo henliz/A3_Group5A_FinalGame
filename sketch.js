@@ -95,7 +95,7 @@ function preload() {
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
 
   gear = loadImage("assets/gear.png");
-  cookiejar = loadImage("assets/cookiejar.png");
+  ///cookiejar = loadImage("assets/cookiejar.png");
 
   // character portraits
   portraits = {
