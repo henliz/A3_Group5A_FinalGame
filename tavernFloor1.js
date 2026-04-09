@@ -63,17 +63,17 @@ function tf1Preload() {
   floorImg = loadImage("assets/newassets/floor.png"); //reference [19]
 
   wallImgs = [
-    loadImage("assets/walls/wall1.png"),
-    loadImage("assets/walls/wall2.png"),
-    loadImage("assets/walls/wall3.png"),
-    loadImage("assets/walls/wall4.png"),
+    loadImage("assets/newassets/wall_flat.png"),
+    // loadImage("assets/newassets/wall2.png"),
+    // loadImage("assets/newassets/wall3.png"),
+    // loadImage("assets/newassets/wall4.png"),
   ];
 
-  wallCorner = loadImage("assets/walls/wall_corner.png");
+  wallCorner = loadImage("assets/newassets/wall_corner_right.png");
   wallDoor = loadImage("assets/walls/wall_door.png"); // optional
 
-  externalSideWall = loadImage("assets/walls/external_side_wall.png");
-  internalSideWall = loadImage("assets/walls/inside_side_wall.png");
+  externalSideWall = loadImage("assets/newassets/wall_exterior.png");
+  internalSideWall = loadImage("assets/newassets/wall_inner.png");
 }
 
 function tf1Setup() {
