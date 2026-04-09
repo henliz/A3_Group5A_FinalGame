@@ -74,7 +74,7 @@ const clutterAssetList = [
   //Room 1
   {
     key: "bed1",
-    path: "assets/bed-5.png",
+    path: "assets/newassets/double_bed.png",
   },
   {
     key: "cabinet1",
@@ -84,7 +84,7 @@ const clutterAssetList = [
   //Room 2
   {
     key: "bed2",
-    path: "assets/bed-2.png",
+    path: "assets/newassets/double_bed.png",
   },
   {
     key: "shelf3",
@@ -93,7 +93,7 @@ const clutterAssetList = [
   //Room 3
   {
     key: "bed3",
-    path: "assets/bed-4.png",
+    path: "assets/newassets/double_bed.png",
   },
   {
     key: "shelf2",
@@ -160,11 +160,17 @@ const clutterAssetList = [
     path: "assets/crime_scene.png",
   },
   // close-up versions for examination display
-  { key: "necklace_close",      path: "assets/objects/necklace_close.png" },
-  { key: "newsclipping_close",  path: "assets/objects/newsclipping_close.png" },
-  { key: "note_close",          path: "assets/objects/note_close.png" },
-  { key: "donation_certificate",path: "assets/objects/donation certificate.png" },
-  { key: "medicinal_plat_book", path: "assets/objects/Medicinal_plat book.png" },
+  { key: "necklace_close", path: "assets/objects/necklace_close.png" },
+  { key: "newsclipping_close", path: "assets/objects/newsclipping_close.png" },
+  { key: "note_close", path: "assets/objects/note_close.png" },
+  {
+    key: "donation_certificate",
+    path: "assets/objects/donation certificate.png",
+  },
+  {
+    key: "medicinal_plat_book",
+    path: "assets/objects/Medicinal_plat book.png",
+  },
 ];
 
 const roomLayout = [
@@ -269,7 +275,7 @@ const roomLayout = [
     asset: "bed1",
     tileX: 1.6,
     tileY: 3.8,
-    scale: 6.2,
+    scale: 4.5,
     anchor: "top-left",
   },
   {
@@ -284,8 +290,8 @@ const roomLayout = [
   {
     asset: "bed2",
     tileX: 10.4,
-    tileY: 0.2,
-    scale: 6,
+    tileY: 0,
+    scale: 4.5,
     anchor: "bottom",
   },
   {
@@ -300,8 +306,8 @@ const roomLayout = [
   {
     asset: "bed3",
     tileX: 2.6,
-    tileY: 0.2,
-    scale: 5,
+    tileY: 0,
+    scale: 4.5,
     anchor: "bottom",
   },
   {
@@ -366,7 +372,8 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A lobby telephone. The handset is cold. Someone mentioned a call the night it happened — I wonder if anyone thought to check the line.",
+    monologue:
+      "A lobby telephone. The handset is cold. Someone mentioned a call the night it happened — I wonder if anyone thought to check the line.",
     journalEntry: null,
     closeupAsset: null,
     closeupLabel: null,
@@ -382,8 +389,10 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A silver necklace, tucked between shelves. Expensive for a thank-you gift. Someone went to a lot of trouble to hide this — or to get it back.",
-    journalEntry: "Silver necklace found hidden near the lobby shelf — who left it here, and why was it hidden?",
+    monologue:
+      "A silver necklace, tucked between shelves. Expensive for a thank-you gift. Someone went to a lot of trouble to hide this — or to get it back.",
+    journalEntry:
+      "Silver necklace found hidden near the lobby shelf — who left it here, and why was it hidden?",
     closeupAsset: "necklace_close",
     closeupLabel: "Silver Necklace",
   },
@@ -398,8 +407,10 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A framed certificate. Dr. Krisia's name. The listed specialty is pharmacology — she knows exactly what plants can do to a person.",
-    journalEntry: "Dr. Krisia's certificate — pharmacology. She would know what wolfsbane does in high doses.",
+    monologue:
+      "A framed certificate. Dr. Krisia's name. The listed specialty is pharmacology — she knows exactly what plants can do to a person.",
+    journalEntry:
+      "Dr. Krisia's certificate — pharmacology. She would know what wolfsbane does in high doses.",
     closeupAsset: "donation_certificate",
     closeupLabel: "Certificate",
   },
@@ -414,8 +425,10 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A torn newspaper clipping. An article about a gambling ring — someone has underlined a name near the bottom twice, in red ink.",
-    journalEntry: "Newspaper clipping about a gambling raid — a name underlined twice in red ink.",
+    monologue:
+      "A torn newspaper clipping. An article about a gambling ring — someone has underlined a name near the bottom twice, in red ink.",
+    journalEntry:
+      "Newspaper clipping about a gambling raid — a name underlined twice in red ink.",
     closeupAsset: "newsclipping_close",
     closeupLabel: "News Clipping",
   },
@@ -430,8 +443,10 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A crumpled note, written in a hurried hand: 'She knows. I can't let her say it.' No date. No signature.",
-    journalEntry: "Crumpled note found in the east rooms: 'She knows. I can't let her say it.'",
+    monologue:
+      "A crumpled note, written in a hurried hand: 'She knows. I can't let her say it.' No date. No signature.",
+    journalEntry:
+      "Crumpled note found in the east rooms: 'She knows. I can't let her say it.'",
     closeupAsset: "note_close",
     closeupLabel: "Crumpled Note",
   },
@@ -446,8 +461,10 @@ const roomLayout = [
     interactable: true,
     interactRadius: 80,
     examined: false,
-    monologue: "A thick medical reference. Dog-eared on several pages, and one has been torn out entirely — near the chapter on wolfsbane. Someone didn't want this read.",
-    journalEntry: "Medical book — page torn from the wolfsbane chapter. Found near the lobby.",
+    monologue:
+      "A thick medical reference. Dog-eared on several pages, and one has been torn out entirely — near the chapter on wolfsbane. Someone didn't want this read.",
+    journalEntry:
+      "Medical book — page torn from the wolfsbane chapter. Found near the lobby.",
     closeupAsset: "medicinal_plat_book",
     closeupLabel: "Medicinal Book",
   },
@@ -602,7 +619,9 @@ function clutterDraw(worldX = 0, worldY = 0) {
     if (p.glow && !p.examined && typeof player !== "undefined") {
       const centerX = pos.actualX + pos.dw / 2;
       const centerY = pos.actualY + pos.dh / 2;
-      if (dist(player.px, player.py, centerX, centerY) < (p.interactRadius || 80)) {
+      if (
+        dist(player.px, player.py, centerX, centerY) < (p.interactRadius || 80)
+      ) {
         drawingContext.shadowColor = "rgba(255, 215, 60, 0.85)";
         drawingContext.shadowBlur = 20;
         image(p.img, pos.actualX, pos.actualY, pos.dw, pos.dh);
