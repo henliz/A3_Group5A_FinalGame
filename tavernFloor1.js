@@ -17,14 +17,14 @@ const TF1_T = TF1_S * TF1_SCALE; // 102.4px per tile
 const BACK_WALL_OVERLAP = Math.floor(TF1_T * 0.2);
 
 // More overlap between segments to hide seams
-const WALL_OVERLAP_PX = 6; // was 8
+const WALL_OVERLAP_PX = 4; // adjusted for smaller scale
 
 // Raise the back walls so they align with corners
-const BACK_WALL_RAISE_PX = 51; // was 64
+const BACK_WALL_RAISE_PX = 32; // adjusted for smaller scale
 
-const BACK_WALL_SHIFT_X = 6; // was 8
+const BACK_WALL_SHIFT_X = 4; // adjusted for smaller scale
 
-const WALL_WIDTH_TRIM = 3; // was 4
+const WALL_WIDTH_TRIM = 2; // adjusted for smaller scale
 
 // Side walls
 const SIDE_EDGE_PAD = 0; // Flush alignment with tile edges
