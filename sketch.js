@@ -611,7 +611,7 @@ function drawPrompt() {
   if (nearItem) {
     const pos = getPropPosition(nearItem);
     if (pos) {
-      const screenX = ((pos.actualX + pos.dw / 2) - camX) * CAM_ZOOM;
+      const screenX = (pos.actualX + pos.dw / 2 - camX) * CAM_ZOOM;
       const screenY = (pos.actualY - camY) * CAM_ZOOM;
       let msg = "Press 'E' to examine";
       textSize(13);
@@ -725,7 +725,12 @@ function handleSettingsClick(mx, my) {
 }
 
 function drawExamineImage() {
-  if (!activeExamineItem || !activeExamineItem.closeupAsset || dialoguePhase !== "monologue") return;
+  if (
+    !activeExamineItem ||
+    !activeExamineItem.closeupAsset ||
+    dialoguePhase !== "monologue"
+  )
+    return;
   const img = clutterImages[activeExamineItem.closeupAsset];
   if (!img) return;
 
@@ -761,7 +766,11 @@ function handlePhoneClick(mx, my) {
   // Only allow click when player is within interact radius
   const phoneCenterX = pos.actualX + pos.dw / 2;
   const phoneCenterY = pos.actualY + pos.dh / 2;
-  if (dist(player.px, player.py, phoneCenterX, phoneCenterY) > (phoneItem.interactRadius || 80)) return;
+  if (
+    dist(player.px, player.py, phoneCenterX, phoneCenterY) >
+    (phoneItem.interactRadius || 80)
+  )
+    return;
 
   const wx = mx / CAM_ZOOM + camX;
   const wy = my / CAM_ZOOM + camY;
@@ -1066,7 +1075,12 @@ function keyPressed() {
             journal.addTextEntry(4, nearItem.journalEntry); // 4 = Evidence page
           }
           if (nearItem.closeupAsset) {
-            journal.addImageEntry(4, nearItem.closeupAsset, nearItem.closeupLabel, nearItem.asset);
+            journal.addImageEntry(
+              4,
+              nearItem.closeupAsset,
+              nearItem.closeupLabel,
+              nearItem.asset,
+            );
           }
           activeExamineItem = nearItem;
           chosenOption = { monologue: nearItem.monologue || "…" };
@@ -1086,6 +1100,12 @@ function keyPressed() {
         closeDialogue();
       } else {
         dialoguePhase = "repeat-choosing";
+      }
+    } else if (dialoguePhase === "exchange") {
+      if (!typewriterDone) {
+        skipTypewriter();
+      } else {
+        advanceExchange();
       }
     } else if (dialoguePhase === "response" || dialoguePhase === "response2") {
       if (pendingResponseQueue.length > 0) {
@@ -1217,6 +1237,9 @@ function mousePressed() {
       } else if (dialoguePhase === "repeat") {
         if (spoonsRemaining === 0) closeDialogue();
         else dialoguePhase = "repeat-choosing";
+      } else if (dialoguePhase === "exchange") {
+        if (!typewriterDone) skipTypewriter();
+        else advanceExchange();
       } else if (
         dialoguePhase === "response" ||
         dialoguePhase === "response2"

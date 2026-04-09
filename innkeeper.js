@@ -38,7 +38,6 @@ const innkeeperDialogueByDay = {
         monologue:
           "I had something to ask and I lost it the second she looked at me. Now I'm standing here and she's already looking through me like I'm not worth the attention. Maybe that's better. Maybe being invisible is safer right now.",
         notebookEntry: null,
-        cost: 0,
       },
     ],
   },
@@ -55,9 +54,25 @@ const innkeeperDialogueByDay = {
         cost: 3,
         playerLine:
           "Yesterday, I saw a framed newspaper clipping of your donation to feed the hungry children organization, how did you get involved in that?",
-        npcResponse:
-          "Have you been snooping around my office?! It was bad enough Helen was always rustling around, and now you're rummaging through my business. Anyway. Don't ask me; my sister runs it in Oakdale.",
-        npcResponse2: "But she doesn't need any more volunteers.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "angry",
+            text: "Have you been snooping around my office?! It was bad enough Helen was always rustling around, and now you're rummaging through my business.",
+          },
+          {
+            speaker: "player",
+            emotion: "nervous",
+            text: "No I —",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Anyway. Don't ask me; my sister runs it in Oakdale. But she doesn't need any more volunteers.",
+          },
+        ],
+        //npcResponse:
+        //"Have you been snooping around my office?! It was bad enough Helen was always rustling around, and now you're rummaging through my business. Anyway. Don't ask me; my sister runs it in Oakdale. But she doesn't need any more volunteers.",
         monologue:
           "This charity seems really weird. First the certificate looked odd, then she doesn't know details about a charity she donated $100,000 to, then she gives me the wrong location. Helen worked here and must have known about this fishy business, but would Ms. Gustall really kill her to keep Helen quiet?",
         notebookEntry:
@@ -68,8 +83,24 @@ const innkeeperDialogueByDay = {
         cost: 2,
         playerLine:
           "Yesterday, I saw a framed newspaper clipping of your support of the hungry children organization, how can I get involved?",
-        npcResponse:
-          "Yeah, yeah. Is there something you actually need? I have a lot to get through today. My sister handles all of that. I just write the cheques.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "sus",
+            text: "Yeah, yeah. Is there something you actually need? I have a lot to get through today.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "I just thought it seemed like a good cause —",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "My sister handles all of that. I just write the cheques.",
+          },
+        ],
+        //npcResponse: "My sister handles all of that. I just write the cheques.",
         monologue:
           "She dismissed it immediately. A hundred thousand dollar donation and she just writes the cheques. She didn't even ask why I was interested. I can feel her annoyance from here.",
         notebookEntry: '"I just write the cheques"',
@@ -88,7 +119,7 @@ const innkeeperDialogueByDay = {
         id: "D",
         cost: 0,
         playerLine: "Sorry to bother you again... [Exit]",
-        npcResponse: "'Don't get in the way'",
+        npcResponse: "Don't get in the way",
         monologue:
           "I didn't even finish the sentence. I need to talk to someone else.",
         notebookEntry: null,
@@ -107,39 +138,140 @@ const innkeeperDialogueByDay = {
       {
         id: "A",
         cost: 3,
-        playerLine: "What were you doing the night of the murder?",
-        npcResponse:
-          "I checked up on the inn and make sure everything is stocked. That night, Helen was helping me organize some operational forms and documents earlier that evening...",
-        npcResponse2:
-          "so I checked up on her progress and dismissed her for the night. I turn in around 11pm every night. I was already asleep when the scream woke me up. I ran out...",
-        npcResponse3:
-          "to find Helen bleeding out on the ground. She was already dead when I found her. It was really strange, she had a few scratches on her face and chest...",
-        npcResponse4:
-          "I suspect that's what ultimately caused her death. But I can't explain the scratches. You saw how brutal it was. Helen had her faults but she didn't deserve to go that way. Yeah, she was really sweet in the short time I knew her...",
+        playerLine: "Where were you on the night of the murder?",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I checked up on the inn and made sure everything was stocked. That night, Helen was helping me organize some operational forms and documents earlier that evening.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "So, I checked up on her progress and dismissed her for the night.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            italics: true,
+            text: "Helen had access to Mrs. Gustall’s documents. She must have found her information about the shady donation and tax information.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I turn in around 11pm every night. I was already asleep when the scream woke me up.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "What happened after?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I ran out to find Helen bleeding out on the ground....",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "...she was already dead when I found her. It was really strange, she had a few scratches on her face and chest.",
+          },
+          {
+            speaker: "player",
+            text: "Scratches? I thought her throat was slit?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "It was. I suspect that’s what ultimately caused her dead. But I can’t explain the scratches.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yeah, she was really sweet in the short time I knew her.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "You saw how brutal it was. Helen had her faults but she didn’t deserve to go that way.",
+          },
+        ],
         monologue:
-          "Faults? Like how she would snoop around Ms. Gustall's office? Ms. Gustall was the one who found her body, she seems to know Helen well and seems really upset but what if she's faking it?",
+          "Faults? Like how she would snoop around Ms. Gustall’s office? Ms. Gustall was the one who found her body, she seems to know Helen well and seems really upset but what if she’s faking it?",
         notebookEntry:
-          "Helen helped organize Mrs. Gustall's documents. She probably knew about her suspicious donation. Mrs. Gustall found her body.",
+          "Helen helped organize Mrs. Gustall’s documents\n She probably knew about her suspicious donation\n Mrs. Gustall found her body\n",
       },
       {
         id: "B",
         cost: 2,
         playerLine: "How long was Helen working here?",
-        npcResponse:
-          "She worked here for just under 2 years. She said she needed a job and my son just left, so I hired her. She was my employee. We had a very professional relationship. Ha! Not really...",
-        npcResponse2:
-          "She made a lot of mistakes and was always in everyone's business. But she was really friendly and the guests loved her. It's a shame how it ended.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "She worked here for just under two years.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "She said she needed a job and my son just left, so I hired her.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "What was your relationship like?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "She was my employee. We had a very professional relationship.",
+          },
+          {
+            speaker: "player",
+            text: "Was she a good fit at her job?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Ha! Not really. She made a lot of mistakes and was always nosy. Always in everyone’s business.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "But she was really friendly and the guests loved her. It’s a shame how it ended.",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "Thank you for sharing.",
+          },
+        ],
         monologue:
-          "She seems upset about Helen's passing. But this confirms Helen's inquisitive nature.",
+          "She seems upset about Helen’s passing. But this confirms Helen’s inquisitive nature.",
         notebookEntry:
-          "Ms. Gustall knew Helen for ~2 years. She seems sad about her passing.",
+          "Helen worked at the inn for just under two years.\nShe seems sad about her passing.",
       },
       {
         id: "C",
         cost: 1,
         playerLine: "Good morning, it was nice talking to you yesterday.",
-        npcResponse:
-          "Yeah, It was nice talking to you too. Is there something you need or can I get on with my day?",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yeah, it was nice talking to you too.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Is there something you need or can I get on with my day?",
+          },
+          {
+            speaker: "player",
+            emotion: "idle",
+            text: "No, sorry to bother you.",
+          },
+        ],
         monologue:
           "Maybe I should talk with other guests. I can feel her annoyance already and I barely said anything.",
         notebookEntry: null,
@@ -148,7 +280,7 @@ const innkeeperDialogueByDay = {
         id: "D",
         cost: 0,
         playerLine: "Sorry…never mind [Exit]",
-        npcResponse: "Annoyed look.",
+        npcResponse: "(She looks annoyed)",
         monologue:
           "I didn't even finish the sentence. I need to talk to someone else.",
         notebookEntry: null,
