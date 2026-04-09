@@ -1,8 +1,8 @@
 const COOKIE_JAR = {
   x: 1200,
-  y: 525,
-  w: 20,
-  h: 25,
+  y: 520,
+  w: 30,
+  h: 35,
 
   interactRadius: 80,
   usedToday: false,
@@ -21,25 +21,10 @@ function isPlayerNearCookieJar(player) {
 function cookieJarDraw() {
   const { x, y, w, h, usedToday } = COOKIE_JAR;
 
-  noStroke();
-  fill(usedToday ? color(80, 80, 80) : color(160, 160, 160));
-  rect(x, y, w, h, 4);
+  image(cookiejar, x, y, w, h);
 
-  if (!usedToday) {
-    fill(200, 140, 80);
-    ellipse(x + w / 2, y + h / 2, 18, 18);
-    fill(120, 70, 30);
-    ellipse(x + w / 2 - 3, y + h / 2 - 3, 4, 4);
-    ellipse(x + w / 2 + 4, y + h / 2, 4, 4);
-    ellipse(x + w / 2 - 1, y + h / 2 + 4, 4, 4);
-  }
-
-  if (!usedToday) {
-    drawingContext.shadowColor = "rgba(255, 200, 80, 0.6)";
-    drawingContext.shadowBlur = 18;
-    rect(x, y, w, h, 4);
-    drawingContext.shadowColor = "transparent";
-    drawingContext.shadowBlur = 0;
+  if (usedToday) {
+    image(emptyjar, x, y, w, h);
   }
 }
 

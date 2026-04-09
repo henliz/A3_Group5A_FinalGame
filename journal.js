@@ -129,7 +129,7 @@ class Journal {
       const gapX = 12;
       const gapY = 14;
       const startX = width * 0.29 + 70;
-      const startY = height * 0.15 + 130;
+      const startY = height * 0.15 + 150;
 
       for (let i = 0; i < page.imageEntries.length; i++) {
         const entry = page.imageEntries[i];
@@ -171,7 +171,7 @@ class Journal {
         textStyle(ITALIC);
         text(entry.label, x + thumbW / 2, y + thumbH + 4);
         textStyle(NORMAL);
-        textFont(jersey10Font);
+        textFont(journalFont);
       }
     }
 

@@ -35,6 +35,7 @@ let innkeeperPg;
 let fdlPg;
 let evidencePg;
 let cookiejar;
+let emptyjar;
 
 let portraits = {}; // for dialogue portraits
 
@@ -84,8 +85,8 @@ function preload() {
   loadHomeAssets();
   spoonImg = loadImage("assets/cookies.png"); //reference [7]
   innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [4]
-  nunImg = loadImage("nuns.png"); //reference [15]
-  runawayManImg = loadImage("assets/Jerome_spirtesheet.png"); //reference [2]
+  nunImg = loadImage("assets/Krisia_spritesheet.png"); //reference [15]
+  runawayManImg = loadImage("assets/Jerome_spritesheet.png"); //reference [2]
 
   // journal pages
   doctorPg = loadImage("assets/journal/Krisia_journal.png");
@@ -95,7 +96,8 @@ function preload() {
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
 
   gear = loadImage("assets/gear.png");
-  ///cookiejar = loadImage("assets/cookiejar.png");
+  cookiejar = loadImage("assets/cookiejar.png");
+  emptyjar = loadImage("assets/EmptyJar.png");
 
   // character portraits
   portraits = {
@@ -315,7 +317,7 @@ function setup() {
   runawayMan.colour = color(100, 220, 130); // green
   runawayMan.sprite = runawayManImg;
   runawayMan.spriteFrameW = 48;
-  runawayMan.spriteFrameH = 64; // measured from pixel data: rows are 64px tall, not 56
+  runawayMan.spriteFrameH = 48;
 
   judgePortraits = [
     portraits.innkeeper.idle,
@@ -394,8 +396,8 @@ function draw() {
   drawSpoonCounter();
   drawPrompt();
   drawJournalIcon();
-  settings();
   drawDayCounter();
+  settings();
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
@@ -695,6 +697,7 @@ function settings() {
   const ih = 50;
   const ix = width - iw - 30;
   const iy = 20;
+  image(gear, ix, iy, iw, ih);
 
   if (setting === true) {
     noStroke();
@@ -712,11 +715,6 @@ function settings() {
       // Close button top-right of the instructions image
       drawCloseButton(imgX + imgW + 18, imgY - 18);
     }
-
-    // Gear drawn after overlay so it sits on top
-    image(gear, ix, iy, iw, ih);
-  } else {
-    image(gear, ix, iy, iw, ih);
   }
 }
 
