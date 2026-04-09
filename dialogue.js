@@ -252,7 +252,7 @@ function isLittleRedSpeaking() {
 function drawPortrait(boxX, boxY, boxW) {
   let pW = 300;
   let pH = 420;
-  let pY = boxY - pH * 0.9;
+  let pY = boxY - pH; // bottom of portrait sits flush with top of dialogue box
 
   if (isLittleRedSpeaking()) {
     let pX = boxX + boxW - pW - 20;
@@ -495,21 +495,7 @@ function confirmChoice() {
 
 // ─── Misc helpers ─────────────────────────────────────────────
 function bedtime() {
-  if (spoonsRemaining === 0 && dialoguePhase === "closed") {
-    fill("black");
-    rect(0, 0, width, height);
-    fill("white");
-    textSize(13);
-    text(
-      "With no more spoons left to give, little Red went off to bed. A restless slumber waiting just ahead.",
-      width / 2,
-      height / 2,
-    );
-    textSize(20);
-    text("DAY 1 OVER", width / 2, height / 2 + 40);
-    lowCookieNotifTriggered = false;
-    lowCookieNotifVisible = false;
-  }
+  // black screen removed — day ends via door (press E at door)
 }
 
 function getVisibleOptionIndices() {
