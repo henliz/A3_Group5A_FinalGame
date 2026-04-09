@@ -358,7 +358,7 @@ function drawEnterHint(boxX, boxY, boxW, boxH) {
   fill(255, 255, 255, hinting ? 255 : 200);
   textSize(18);
   textAlign(RIGHT, BOTTOM);
-  text("Press 'E' to continue", hintX, hintY);
+  text("Press SPACE to continue", hintX, hintY);
 }
 
 function isMouseOver(x, y, w, h) {

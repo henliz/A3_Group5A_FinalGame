@@ -377,6 +377,7 @@ function draw() {
 
   tf1Draw(0, 0);
   clutterDraw(0, 0);
+  cookieJarDraw();
   drawPlayer();
   for (let npc of npcs) {
     npc.update();
@@ -391,13 +392,13 @@ function draw() {
   drawSpoonCounter();
   drawPrompt();
   drawJournalIcon();
+  settings();
   drawDayCounter();
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
   bedtime();
   updateHoverCursor();
-  settings();
 }
 
 function updatePlayer() {
@@ -554,7 +555,7 @@ function drawPrompt() {
       let screenY = (npc.y - camY) * CAM_ZOOM;
 
       // draw a small dark pill-shaped box above the NPC
-      let msg = "Press 'E' to talk";
+      let msg = "Press SPACE to talk";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -590,7 +591,7 @@ function drawPrompt() {
       let screenX = (doorPos.actualX - camX) * CAM_ZOOM;
       let screenY = (doorPos.actualY - camY) * CAM_ZOOM;
       // draw a small dark pill-shaped box above the door
-      let msg = "Press 'E' to go to bed";
+      let msg = "Press SPACE to go to bed";
       textSize(16);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -611,9 +612,9 @@ function drawPrompt() {
   if (nearItem) {
     const pos = getPropPosition(nearItem);
     if (pos) {
-      const screenX = ((pos.actualX + pos.dw / 2) - camX) * CAM_ZOOM;
+      const screenX = (pos.actualX + pos.dw / 2 - camX) * CAM_ZOOM;
       const screenY = (pos.actualY - camY) * CAM_ZOOM;
-      let msg = "Press 'E' to examine";
+      let msg = "Press SPACE to examine";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -628,6 +629,7 @@ function drawPrompt() {
       text(msg, screenX, msgY + msgH / 2);
     }
   }
+  cookieJarDrawPrompt(player, camX, camY, CAM_ZOOM);
 }
 
 //journal icon
@@ -685,47 +687,73 @@ function drawJournalIcon() {
   }
 }
 
-//settings
+//settings pop up
 function settings() {
   const iw = 50;
   const ih = 50;
   const ix = width - iw - 30;
   const iy = 20;
 
-  image(gear, ix, iy, iw, ih);
-
   if (setting === true) {
     noStroke();
     fill(0, 0, 0, 200);
     rect(0, 0, width, height);
 
-    // instructions image
     if (instructions) {
       const imgW = min(900, width * 0.9);
       const imgH = imgW * (instructions.height / instructions.width);
       const imgX = (width - imgW) / 2;
       const imgY = (height - imgH) / 2;
-
       imageMode(CORNER);
       image(instructions, imgX, imgY, imgW, imgH);
+
+      // Close button top-right of the instructions image
+      drawCloseButton(imgX + imgW + 18, imgY - 18);
     }
+
+    // Gear drawn after overlay so it sits on top
+    image(gear, ix, iy, iw, ih);
+  } else {
     image(gear, ix, iy, iw, ih);
   }
 }
 
 function handleSettingsClick(mx, my) {
-  const iw = 60;
-  const ih = 60;
-  const ix = width - iw - 30;
-  const iy = 12;
+  const iw = 60,
+    ih = 60;
+  const ix = width - iw - 30,
+    iy = 12;
 
   if (mx > ix && mx < ix + iw && my > iy && my < iy + ih) {
-    setting = !setting; // toggle on and off
+    setting = !setting;
+    return;
+  }
+  if (setting && instructions) {
+    const imgW = min(900, width * 0.9);
+    const imgH = imgW * (instructions.height / instructions.width);
+    const imgX = (width - imgW) / 2;
+    const imgY = (height - imgH) / 2;
+    const btnX = imgX + imgW + 18;
+    const btnY = imgY - 18;
+    const size = 36;
+    if (
+      mx > btnX - size / 2 &&
+      mx < btnX + size / 2 &&
+      my > btnY - size / 2 &&
+      my < btnY + size / 2
+    ) {
+      setting = false;
+    }
   }
 }
 
 function drawExamineImage() {
-  if (!activeExamineItem || !activeExamineItem.closeupAsset || dialoguePhase !== "monologue") return;
+  if (
+    !activeExamineItem ||
+    !activeExamineItem.closeupAsset ||
+    dialoguePhase !== "monologue"
+  )
+    return;
   const img = clutterImages[activeExamineItem.closeupAsset];
   if (!img) return;
 
@@ -761,7 +789,11 @@ function handlePhoneClick(mx, my) {
   // Only allow click when player is within interact radius
   const phoneCenterX = pos.actualX + pos.dw / 2;
   const phoneCenterY = pos.actualY + pos.dh / 2;
-  if (dist(player.px, player.py, phoneCenterX, phoneCenterY) > (phoneItem.interactRadius || 80)) return;
+  if (
+    dist(player.px, player.py, phoneCenterX, phoneCenterY) >
+    (phoneItem.interactRadius || 80)
+  )
+    return;
 
   const wx = mx / CAM_ZOOM + camX;
   const wy = my / CAM_ZOOM + camY;
@@ -803,6 +835,7 @@ function advanceDay() {
   spoonsRemaining = 7;
   lowCookieNotifTriggered = false;
   lowCookieNotifVisible = false;
+  cookieJarResetDay();
 
   // close any open dialogue
   closeDialogue();
@@ -970,6 +1003,28 @@ function updateHoverCursor() {
   }
 }
 
+function drawCloseButton(x, y, size = 36) {
+  const hovering =
+    mouseX > x - size / 2 &&
+    mouseX < x + size / 2 &&
+    mouseY > y - size / 2 &&
+    mouseY < y + size / 2;
+
+  // Circle background
+  noStroke();
+  fill(hovering ? color(180, 60, 60) : color(120, 40, 40));
+  ellipse(x, y, size, size);
+
+  // X mark
+  fill(255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
+  text("×", x, y - 4);
+
+  return hovering;
+}
+
 function keyPressed() {
   if (currentScene === "HOME") {
     if (keyCode === ENTER) {
@@ -991,7 +1046,7 @@ function keyPressed() {
     return;
   }
 
-  if (isPlayerNearDoor1(player) && (key === "e" || key === "E")) {
+  if (isPlayerNearDoor1(player) && key === " ") {
     if (currentDay < TOTAL_DAYS) {
       advanceDay();
     }
@@ -1014,7 +1069,7 @@ function keyPressed() {
     }
   }
 
-  if (key === "E" || key === "e") {
+  if (key === " ") {
     // If text is still animating, skip to full text instead of advancing
     const choosingPhase =
       dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing";
@@ -1030,6 +1085,10 @@ function keyPressed() {
           return;
         }
       }
+      if (isPlayerNearCookieJar(player)) {
+        cookieJarInteract();
+        return;
+      }
       // Check interactable evidence objects
       const nearItem = getInteractableNearPlayer(player);
       if (nearItem) {
@@ -1043,7 +1102,12 @@ function keyPressed() {
             journal.addTextEntry(4, nearItem.journalEntry); // 4 = Evidence page
           }
           if (nearItem.closeupAsset) {
-            journal.addImageEntry(4, nearItem.closeupAsset, nearItem.closeupLabel, nearItem.asset);
+            journal.addImageEntry(
+              4,
+              nearItem.closeupAsset,
+              nearItem.closeupLabel,
+              nearItem.asset,
+            );
           }
           activeExamineItem = nearItem;
           chosenOption = { monologue: nearItem.monologue || "…" };
