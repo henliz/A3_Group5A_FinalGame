@@ -34,6 +34,7 @@ let rmPg;
 let innkeeperPg;
 let fdlPg;
 let evidencePg;
+let cookiejar;
 
 let portraits = {}; // for dialogue portraits
 
@@ -94,6 +95,7 @@ function preload() {
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
 
   gear = loadImage("assets/gear.png");
+  cookiejar = loadImage("assets/cookiejar.png");
 
   // character portraits
   portraits = {
