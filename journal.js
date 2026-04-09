@@ -346,7 +346,6 @@ class Journal {
       }
     }
 
-    // Replace the two arrow nav checks at the bottom of handleClick()
     const btnSize = 44;
     const leftX = width * 0.29 - 50;
     const rightX = width * 0.29 + 650 + 20;
