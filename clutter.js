@@ -97,7 +97,19 @@ const clutterAssetList = [
   },
   {
     key: "shelf2",
-    path: "assets/shelf-2.png",
+    path: "assets/newassets/newbookshelf.png",
+  },
+  {
+    key: "smalltable1",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newcloset1",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "newplant1",
+    path: "assets/plant-1.png",
   },
 
   //Little Red Room Door
@@ -305,17 +317,38 @@ const roomLayout = [
   //Room 3 clutter setting
   {
     asset: "bed3",
-    tileX: 2.6,
+    tileX: 4.7,
     tileY: 0,
     scale: 4.5,
     anchor: "bottom",
   },
   {
     asset: "shelf2",
-    tileX: 4.2,
-    tileY: 0,
-    scale: 6,
+    tileX: 3.2,
+    tileY: -0.6,
+    scale: 4.5,
     anchor: "bottom",
+  },
+  {
+    asset: "smalltable1",
+    tileX: 4.1,
+    tileY: -0.2,
+    scale: 4,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcloset1",
+    tileX: 2.3,
+    tileY: -0.7,
+    scale: 4.3,
+    anchor: "top-left",
+  },
+  {
+    asset: "newplant1",
+    tileX: 2.4,
+    tileY: 1.5,
+    scale: 4.3,
+    anchor: "top-left",
   },
 
   //office clutter setting
