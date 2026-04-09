@@ -48,6 +48,8 @@ let lowCookieNotifTriggered = false;
 let lowCookieNotifTimer = 0;
 const LOW_COOKIE_NOTIF_DURATION = 300; // ~5 seconds at 60fps
 
+let dayEndTriggered = false;
+
 let currentScene = "HOME";
 let npcPromptBounds = null; // set each frame by drawPrompt()
 
@@ -611,7 +613,7 @@ function drawPrompt() {
   if (nearItem) {
     const pos = getPropPosition(nearItem);
     if (pos) {
-      const screenX = ((pos.actualX + pos.dw / 2) - camX) * CAM_ZOOM;
+      const screenX = (pos.actualX + pos.dw / 2 - camX) * CAM_ZOOM;
       const screenY = (pos.actualY - camY) * CAM_ZOOM;
       let msg = "Press 'E' to examine";
       textSize(13);
@@ -725,7 +727,12 @@ function handleSettingsClick(mx, my) {
 }
 
 function drawExamineImage() {
-  if (!activeExamineItem || !activeExamineItem.closeupAsset || dialoguePhase !== "monologue") return;
+  if (
+    !activeExamineItem ||
+    !activeExamineItem.closeupAsset ||
+    dialoguePhase !== "monologue"
+  )
+    return;
   const img = clutterImages[activeExamineItem.closeupAsset];
   if (!img) return;
 
@@ -761,7 +768,11 @@ function handlePhoneClick(mx, my) {
   // Only allow click when player is within interact radius
   const phoneCenterX = pos.actualX + pos.dw / 2;
   const phoneCenterY = pos.actualY + pos.dh / 2;
-  if (dist(player.px, player.py, phoneCenterX, phoneCenterY) > (phoneItem.interactRadius || 80)) return;
+  if (
+    dist(player.px, player.py, phoneCenterX, phoneCenterY) >
+    (phoneItem.interactRadius || 80)
+  )
+    return;
 
   const wx = mx / CAM_ZOOM + camX;
   const wy = my / CAM_ZOOM + camY;
@@ -803,6 +814,7 @@ function advanceDay() {
   spoonsRemaining = 7;
   lowCookieNotifTriggered = false;
   lowCookieNotifVisible = false;
+  dayEndTriggered = false;
 
   // close any open dialogue
   closeDialogue();
@@ -1043,7 +1055,12 @@ function keyPressed() {
             journal.addTextEntry(4, nearItem.journalEntry); // 4 = Evidence page
           }
           if (nearItem.closeupAsset) {
-            journal.addImageEntry(4, nearItem.closeupAsset, nearItem.closeupLabel, nearItem.asset);
+            journal.addImageEntry(
+              4,
+              nearItem.closeupAsset,
+              nearItem.closeupLabel,
+              nearItem.asset,
+            );
           }
           activeExamineItem = nearItem;
           chosenOption = { monologue: nearItem.monologue || "…" };
