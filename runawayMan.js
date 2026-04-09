@@ -54,12 +54,43 @@ const runawayManDialogueByDay = {
         id: "A",
         cost: 3,
         playerLine: "You were one of the first to accuse me.",
-        npcResponse:
-          "What are you implying? Nothing. I was just curious to why? Oh… Sorry its because you were new and I already knew Mrs. Gustall and Krisia. Did you see Helen before she died?",
-        npcResponse2:
-          "Yes, Helen and I had spoken earlier that evening, in the parlour. She wanted to return something of mine. We talked for a while. Just something personal. It doesn't matter anymore. She seemed perfectly fine when I left her.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "angry",
+            text: "What are you implying?",
+          },
+          {
+            speaker: "player",
+            text: "Nothing. I was just curious to why?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Oh… Sorry its because you were new and I already knew Mrs. Gustall and Krisia.",
+          },
+          {
+            speaker: "player",
+            emotion: "sus",
+            text: "Did you see Helen before she died?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yes, Helen and I had spoken earlier that evening, in the parlour. She wanted to return something of mine. We talked for a while.",
+          },
+          {
+            speaker: "player",
+            text: "What was she returning?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Just something personal. Its doesn’t matter anymore. She seemed perfectly fine when I left her.",
+          },
+        ],
         monologue:
-          "Returned something of his… In his room. He said it like it was minor. Like it was just a thing that happened. Helen was returning something of his in the parlour late at night and now she's dead and he was already awake when it happened.",
+          "Returned something of his... In his room. He said it like it was minor. Like it was just a thing that happened.. Helen was returning something of his in the parlour late at night and now she's dead and he was already awake when it happened.",
         notebookEntry:
           "Jerome last saw her on the night of the murder… Jerome accused Little Red.",
       },
@@ -67,19 +98,52 @@ const runawayManDialogueByDay = {
         id: "B",
         cost: 2,
         playerLine: "Do you have somewhere you need to be?",
-        npcResponse:
-          "My father-in-law's birthday. I was just passing through for one night? And one night turned into three? Sure… Funny how that happens. Helen and I had some unfinished business. I was waiting for the right moment to sort it out.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "My father-in-law's birthday. I was just passing through for one night?",
+          },
+          {
+            speaker: "player",
+            text: "And one night turned into three?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Sure... Funny how that happens.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Helen and I had some unfinished business. I was waiting for the right moment to sort it out.",
+          },
+        ],
         monologue:
-          '"Unfinished business??" He said it so quietly too. What else could he be hiding?',
+          "“Unfinished business??” He said it so quietly too. What else could he be hidden?",
         notebookEntry:
-          '"Unfinished Business" with Helen. "Father in-law" Is he married?',
+          "'Unfinished Business' with Helen...also 'Father in-law' Is he married?",
       },
       {
         id: "C",
         cost: 1,
         playerLine: "How have you been?",
-        npcResponse:
-          "Every night I been here feels longer than the last. Did you know her at all? Helen? Everyone knew Helen.",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Every night I've been here feels longer than the last.",
+          },
+          {
+            speaker: "player",
+            text: "Did you know her at all? Helen?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Everyone knew Helen.",
+          },
+        ],
         monologue:
           "Everybody knew Helen… He said it like it meant something specific and then shut the door on it. Maybe he is just as anxious as I am. Or maybe he just doesn't want to be the one still talking when the police arrive.",
         notebookEntry: null,
@@ -88,7 +152,7 @@ const runawayManDialogueByDay = {
         id: "D",
         cost: 0,
         playerLine: "(Observe what Jerome is doing) [Exit]",
-        npcResponse: "….",
+        npcResponse: "…",
         monologue: "Maybe I should talk with other guests here.",
         notebookEntry: null,
       },
@@ -106,30 +170,129 @@ const runawayManDialogueByDay = {
         cost: 3,
         playerLine:
           "You mentioned that you met up with Helen to get something from her. What was it?",
-        npcResponse:
-          "I don't see how that's any of your business. I'm just trying to understand what happened that night. Helen was a nice lady, she didn't deserve this. Did you know Helen beyond her working...",
-        npcResponse2:
-          "at the inn? Yes… When I checked in, I was going through a difficult time. Helen listened and comforted me. I gave her a necklace to thank her for all she's done for me during my stay. But that night...",
-        npcResponse3:
-          "I received a call saying that I had to settle a large fine so I asked for the necklace back. She refused and said this confirmed her suspicions about me. Then she stormed off.",
-        npcResponse4:
-          "That was the last time I saw her. I'm not sure, but I went back to my room. I remember her necklace when I checked in. How did it end up hidden between books?",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I don't see how that's any of your business.",
+          },
+          {
+            speaker: "player",
+            text: "I'm just trying to understand what happened that night. Helen was a nice lady, she didn't deserve this.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "It's hard to believe she's really gone. She was amazing.",
+          },
+          {
+            speaker: "player",
+            text: "Did you know Helen was volunteering at the inn?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yes... When I checked in, I was going through a difficult time. Helen listened and comforted me.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I gave her a necklace to thank her for all she's done for me during my stay.",
+          },
+          {
+            speaker: "player",
+            italic: true,
+            text: "It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...",
+          },
+          {
+            speaker: "player",
+            text: "But a necklace seems like an intimate gift to give to someone you met just a few days ago. Especially one that's expensive...",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "But that night I received a call saying that I had to settle a large fine so I asked for the necklace back.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "She refused and said this confirmed her suspicions about me. Then she stormed off. That was the last time I saw her.",
+          },
+          {
+            speaker: "player",
+            italic: true,
+            text: "Suspicions? Does he mean she knew about his wife? Or what the fine was for...",
+          },
+          {
+            speaker: "player",
+            text: "Where did she go?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "I'm not sure, but I went back to my room.",
+          },
+        ],
         monologue:
-          "According to Jerome's story Helen must have left the note after he went to the bar. Suspicions? Does he mean she knew about his wife? Or what the fine was for?…",
+          "According to Jerome's story Helen must have left the ruins after he went to the bar. I remember her necklace when I checked in. How did it end up hidden between books?",
         notebookEntry:
-          "Jerome was in the bar at the time of the murder. Helen stormed off. They had a close relationship (he gave her an expensive necklace). Helen knew about his gambling fine and wife.",
+          "Jerome was in the bar at the time of the murder\nHelen stormed off\nThey had a close relationship\nHelen knew about his gambling fine and wife",
       },
       {
         id: "B",
         cost: 2,
-        playerLine: "Good morning, how many nights have you stayed so far?",
-        npcResponse:
-          "Six. I wanted to check out and leave, but now I'm stuck here. Yeah, but it's not awful all the time. I've been playing poker with Mrs. Gustall in the evenings. No money though,",
-        npcResponse2:
-          "I'm not getting involved with that again. Anyway, I hope this wraps up soon. I have business to attend to. Yes, my in-laws will be so angry if I miss it. Hopefully this is over soon.",
-        monologue:
-          "So he IS married. Why else would his in-laws care so much about his attendance? Is his wife the woman in the photo I found?",
-        notebookEntry: "Married. Has a history of gambling.",
+        playerLine: "Good morning. How many nights have you stayed so far?",
+        exchange: [
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Sir, I wanted to check out and leave, but now I'm stuck here.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "You must be bored. There's not much to do here.",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yeah, but it's not awful all the time. I've been playing poker with Mrs. Gustall in the evenings.",
+          },
+          {
+            speaker: "player",
+            text: "No money though, I'm not getting involved with that again.",
+          },
+          {
+            speaker: "player",
+            italic: true,
+            text: "Does he have a history of gambling? Is this what Helen 'knew about' in her note?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Anyway, I hope this wraps up soon. I have business to attend to.",
+          },
+          {
+            speaker: "player",
+            text: "The birthday party?",
+          },
+          {
+            speaker: "npc",
+            emotion: "idle",
+            text: "Yes, my in-laws will be so angry if I miss it.",
+          },
+          {
+            speaker: "player",
+            italic: true,
+            text: "So he IS married. Why else would his in-laws care so much about his attendance?",
+          },
+          {
+            speaker: "player",
+            text: "Hopefully this is over soon.",
+          },
+        ],
+        monologue: "Is his wife the woman in the photo I found?",
+        notebookEntry: "Married\nHas a history of gambling",
       },
       {
         id: "C",
