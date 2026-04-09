@@ -589,11 +589,12 @@ function clutterSetup() {
 
 // DRAW: Render all props in the CLUTTER array
 
-function clutterDraw(worldX = 0, worldY = 0) {
+function clutterDraw(worldX = 0, worldY = 0, hideCrimeScene = false) {
   // Loop through all placed props and draw each one
   for (const p of CLUTTER) {
     if (!p.img) continue;
     if (p.interactable && p.examined) continue; // collected items vanish
+    if (hideCrimeScene && p.asset === "crimescene") continue; // skip during tutorial
 
     const pos = getPropPosition(p, worldX, worldY);
     if (!pos) continue;
