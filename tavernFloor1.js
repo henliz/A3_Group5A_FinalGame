@@ -10,7 +10,7 @@ let externalSideWall;
 let internalSideWall;
 
 const TF1_S = 32;
-const TF1_SCALE = 3.2; // 80% of original — scales tile rendering & world size
+const TF1_SCALE = 2; // 80% of original — scales tile rendering & world size
 const TF1_T = TF1_S * TF1_SCALE; // 102.4px per tile
 
 // Back wall overlap into floor edge (how much the wall "sits" on the floor line)
@@ -60,7 +60,7 @@ let BUILDING_MIN_COL = 0;
 let BUILDING_MAX_COL = 0;
 
 function tf1Preload() {
-  floorImg = loadImage("assets/walls/floor_full.png"); //reference [19]
+  floorImg = loadImage("assets/newassets/floor.png"); //reference [19]
 
   wallImgs = [
     loadImage("assets/walls/wall1.png"),
