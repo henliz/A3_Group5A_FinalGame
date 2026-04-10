@@ -244,29 +244,28 @@ class Journal {
   }
 
   drawArrows() {
-    noStroke();
     const btnSize = 44;
     const leftX = width * 0.29 - 50;
     const rightX = width * 0.29 + 650 + 20;
     const btnY = height / 2 - btnSize / 2;
 
     // Left arrow
-    fill(this.openPage > 0 ? color(160, 120, 80) : color(100, 100, 100, 60));
-    rect(leftX, btnY, btnSize, btnSize, 6);
-    fill(this.openPage > 0 ? 255 : 190);
-    textSize(26);
-    textAlign(CENTER, CENTER);
-    text("‹", leftX + btnSize / 2, btnY + btnSize / 2 - 5);
+    if (this.openPage > 0) {
+      tint(255, 255);
+    } else {
+      tint(255, 60);
+    }
+    image(leftarrow, leftX, btnY, btnSize, btnSize);
 
     // Right arrow
-    fill(
-      this.openPage < this.totalPages - 1
-        ? color(160, 120, 80)
-        : color(100, 100, 100, 60),
-    );
-    rect(rightX, btnY, btnSize, btnSize, 6);
-    fill(this.openPage < this.totalPages - 1 ? 255 : 150);
-    text("›", rightX + btnSize / 2, btnY + btnSize / 2 - 5);
+    if (this.openPage < this.totalPages - 1) {
+      tint(255, 255);
+    } else {
+      tint(255, 60);
+    }
+    image(rightarrow, rightX, btnY, btnSize, btnSize);
+
+    noTint();
   }
 
   handleClick(mx, my) {

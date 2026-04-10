@@ -58,6 +58,8 @@ const TOTAL_DAYS = 3;
 let endScreenAlpha = 255;
 
 let journalicon;
+let leftarrow;
+let rightarrow;
 
 let jersey10Font;
 let journalFont;
@@ -94,6 +96,8 @@ function preload() {
   innkeeperPg = loadImage("assets/journal/Mrs.Gustall_journal.png");
   fdlPg = loadImage("assets/journal/Helen_journal.png");
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
+  leftarrow = loadImage("assets/left_arrow.png");
+  rightarrow = loadImage("assets/right_arrow.png");
 
   gear = loadImage("assets/gear.png");
   cookiejar = loadImage("assets/cookiejar.png");
