@@ -27,30 +27,30 @@ const BACK_WALL_SHIFT_X = 4; // adjusted for smaller scale
 const WALL_WIDTH_TRIM = 2; // adjusted for smaller scale
 
 // Side walls
-const SIDE_EDGE_PAD = 0; // Flush alignment with tile edges
+const SIDE_EDGE_PAD = 3; // Flush alignment with tile edges
 const SIDE_WALL_X_NUDGE = 0; // No additional nudge needed
-const SIDE_WALL_START_DROP = Math.floor(TF1_T * 0.3); // Start higher for better visual integration
+const SIDE_WALL_START_DROP = 0; // Start at the exact floor row for tight wall/floor alignment
 
 // Corners are perfect — keep this
 const CORNER_Y_NUDGE = Math.floor(TF1_T * 0.35);
 
 // ── MULTI-ROOM CONNECTED FLOORPLAN ─────────────────────────────────────────
 const TF1_FLOOR_MASK = [
-  "00111100111100",
-  "00111100111100",
-  "00000111100000",
-  "00000111100000",
-  "01111111111110",
-  "01110111101110",
-  "00000111100000", //
-  "00000111100000", //
-  "00111111111100", //
-  "00111111111100", //
-  "00000111100000",
-  "00000111100000",
-  "00111111111100", //
-  "00111111111100", //
-  "00111111111100", //
+  "0011100011100",
+  "0011111111100",
+  "0000011100000",
+  "0000011100000",
+  "0111111111110",
+  "0111011101110",
+  "0000011100000", //
+  "0000011100000", //
+  "0000011111100", //
+  "0000011111100", //
+  "0000011100000",
+  "0000011100000",
+  "0011111111100", //
+  "0011111111100", //
+  "0011111111100", //
 ];
 
 let TF1_W = 0;
