@@ -56,6 +56,9 @@ let npcPromptBounds = null; // set each frame by drawPrompt()
 let currentDay = 1;
 const TOTAL_DAYS = 3;
 let endScreenAlpha = 255;
+let endFadeTimeout = null;
+let endFadeInterval = null;
+let _checkinCheatBuf = "";
 
 let journalicon;
 let leftarrow;
@@ -131,6 +134,9 @@ function preload() {
       happy: loadImage("assets/portraits/RM_happy.png"),
       sus: loadImage("assets/portraits/RM_sus.png"),
       angry: loadImage("assets/portraits/RM_angry.png"),
+    },
+    helen: {
+      idle: loadImage("assets/portraits/helen.png"),
     },
   };
   journalicon = loadImage("assets/bookicon.png"); // reference 16
@@ -275,15 +281,9 @@ function setup() {
   const zones = getInnZones();
   const used = [];
 
-  // Player spawns just inside the door
-  const doorPos = getPropPosition(door1Layout);
-  if (doorPos) {
-    player.px = doorPos.actualX + doorPos.dw / 2;
-    player.py = doorPos.actualY + doorPos.dh + 60;
-  } else {
-    player.px = 7.3 * TF1_T;
-    player.py = 3 * TF1_T;
-  }
+  // Player spawns near the crime scene (tileX 6.5, tileY 13.4)
+  player.px = 6.5 * TF1_T;
+  player.py = 12.5 * TF1_T;
   used.push({ x: player.px, y: player.py });
 
   // NPC spawns (spread out)
@@ -847,17 +847,20 @@ function advanceDay() {
   // show end screen, then return to game
   endScreenAlpha = 255;
   currentScene = "END";
-  setTimeout(() => {
-    // start fading out over ~1.5 seconds before switching to GAME
-    const fadeInterval = setInterval(() => {
+  if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
+  if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+  endFadeTimeout = setTimeout(() => {
+    endFadeTimeout = null;
+    endFadeInterval = setInterval(() => {
       endScreenAlpha -= 5;
       if (endScreenAlpha <= 0) {
         endScreenAlpha = 0;
-        clearInterval(fadeInterval);
+        clearInterval(endFadeInterval);
+        endFadeInterval = null;
         currentScene = "GAME";
       }
-    }, 1000 / 60); // runs at ~60fps
-  }, 2000); // wait 2 seconds at full black before fading
+    }, 1000 / 60);
+  }, 2000);
 }
 
 function isMouseOverNPC(npc) {
@@ -989,21 +992,24 @@ function updateHoverCursor() {
         break;
       }
     }
+  }
 
-    // NPC sprites (world-space hit test)
-    if (dialoguePhase === "closed" && currentScene === "GAME") {
-      for (const npc of npcs) {
-        if (isMouseOverNPC(npc)) {
-          hovering = true;
-          break;
-        }
+  // NPC sprites (world-space hit test)
+  if (dialoguePhase === "closed" && currentScene === "GAME") {
+    for (const npc of npcs) {
+      if (isMouseOverNPC(npc)) {
+        hovering = true;
+        break;
       }
     }
+  }
 
-    const clickCursor = "url('assets/cursor-click.png') 4 4, auto";
-    const defaultCursor = "url('assets/cursor-default.png') 4 4, auto";
-    document.body.style.cursor =
-      hovering || mouseIsPressed ? clickCursor : defaultCursor;
+  const clickCursor = "url('assets/cursor-click.png') 4 4, auto";
+  const defaultCursor = "url('assets/cursor-default.png') 4 4, auto";
+  const next = hovering || mouseIsPressed ? clickCursor : defaultCursor;
+  if (next !== updateHoverCursor._last) {
+    document.body.style.cursor = next;
+    updateHoverCursor._last = next;
   }
 }
 
@@ -1039,7 +1045,24 @@ function keyPressed() {
   }
 
   if (currentScene === "CHECKIN") {
-    if (keyCode === ENTER) checkinAdvance();
+    _checkinCheatBuf += key;
+    if (_checkinCheatBuf.length > 5) _checkinCheatBuf = _checkinCheatBuf.slice(-5);
+    if (_checkinCheatBuf === "12345") {
+      _checkinCheatBuf = "";
+      closeDialogue();
+      currentScene = "GAME";
+      return;
+    }
+    if (dialoguePhase === "closed") return; // walk phase — nothing else to handle
+  }
+
+  if (currentScene === "END") {
+    if (key === "e" || key === "E" || key === " " || keyCode === ENTER) {
+      if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
+      if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+      endScreenAlpha = 0;
+      currentScene = "GAME";
+    }
     return;
   }
 
@@ -1073,7 +1096,7 @@ function keyPressed() {
     }
   }
 
-  if (key === " ") {
+  if (key === "E" || key === "e" || key === " ") {
     // If text is still animating, skip to full text instead of advancing
     const choosingPhase =
       dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing";
@@ -1131,6 +1154,12 @@ function keyPressed() {
         closeDialogue();
       } else {
         dialoguePhase = "repeat-choosing";
+      }
+    } else if (dialoguePhase === "exchange") {
+      if (!typewriterDone) {
+        skipTypewriter();
+      } else {
+        advanceExchange();
       }
     } else if (dialoguePhase === "response" || dialoguePhase === "response2") {
       if (pendingResponseQueue.length > 0) {
@@ -1196,8 +1225,8 @@ function mousePressed() {
   }
 
   if (currentScene === "CHECKIN") {
-    checkinAdvance();
-    return;
+    // delegate clicks to the real dialogue system — same logic as GAME
+    if (dialoguePhase === "closed") return;
   }
 
   if (
@@ -1262,6 +1291,9 @@ function mousePressed() {
       } else if (dialoguePhase === "repeat") {
         if (spoonsRemaining === 0) closeDialogue();
         else dialoguePhase = "repeat-choosing";
+      } else if (dialoguePhase === "exchange") {
+        if (!typewriterDone) skipTypewriter();
+        else advanceExchange();
       } else if (
         dialoguePhase === "response" ||
         dialoguePhase === "response2"
