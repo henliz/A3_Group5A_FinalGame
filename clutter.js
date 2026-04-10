@@ -45,10 +45,7 @@ const clutterAssetList = [
   },
 
   //Travern clutter
-  {
-    key: "table1",
-    path: "assets/table-3.png",
-  },
+
   {
     key: "counter1",
     path: "assets/counter-4.png",
@@ -88,7 +85,7 @@ const clutterAssetList = [
   },
   {
     key: "shelf3",
-    path: "assets/shelf-3.png",
+    path: "assets/newassets/newbookshelf.png",
   },
   //Room 3
   {
@@ -187,13 +184,7 @@ const clutterAssetList = [
 
 const roomLayout = [
   // Tavern clutter setting
-  {
-    asset: "table1",
-    tileX: 2.6,
-    tileY: 7.5,
-    scale: 4,
-    anchor: "top-left",
-  },
+
   {
     asset: "counter1",
     tileX: 10,
@@ -301,46 +292,46 @@ const roomLayout = [
   //Room 2 clutter setting
   {
     asset: "bed2",
-    tileX: 10.4,
-    tileY: 0,
-    scale: 4.5,
+    tileX: 9.9,
+    tileY: -0.2,
+    scale: 3.8,
     anchor: "bottom",
   },
   {
     asset: "shelf3",
-    tileX: 9,
-    tileY: -0.2,
-    scale: 6,
+    tileX: 8.3,
+    tileY: -0.5,
+    scale: 4,
     anchor: "bottom",
   },
 
   //Room 3 clutter setting
   {
     asset: "bed3",
-    tileX: 4.7,
-    tileY: 0,
-    scale: 4.5,
+    tileX: 4,
+    tileY: -0.3,
+    scale: 3.5,
     anchor: "bottom",
   },
   {
     asset: "shelf2",
-    tileX: 3.2,
-    tileY: -0.6,
-    scale: 4.5,
+    tileX: 2.8,
+    tileY: -0.7,
+    scale: 3.5,
     anchor: "bottom",
   },
   {
     asset: "smalltable1",
-    tileX: 4.1,
-    tileY: -0.2,
-    scale: 4,
+    tileX: 3.5,
+    tileY: -0.1,
+    scale: 3,
     anchor: "top-left",
   },
   {
     asset: "newcloset1",
-    tileX: 2.3,
-    tileY: -0.7,
-    scale: 4.3,
+    tileX: 2.2,
+    tileY: -0.6,
+    scale: 3.5,
     anchor: "top-left",
   },
   {
@@ -515,8 +506,8 @@ const roomLayout = [
 //Little Red Room Door setting
 const door1Layout = {
   asset: "door1",
-  tileX: 6.8,
-  tileY: 1.1,
+  tileX: 6.3,
+  tileY: 0,
   scale: 5,
   anchor: "bottom",
   interactRadius: 120, // radius (in pixels) where the player can interact
