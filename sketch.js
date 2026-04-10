@@ -34,6 +34,8 @@ let rmPg;
 let innkeeperPg;
 let fdlPg;
 let evidencePg;
+let cookiejar;
+let emptyjar;
 
 let portraits = {}; // for dialogue portraits
 
@@ -59,6 +61,8 @@ let endFadeInterval = null;
 let _checkinCheatBuf = "";
 
 let journalicon;
+let leftarrow;
+let rightarrow;
 
 let jersey10Font;
 let journalFont;
@@ -86,8 +90,8 @@ function preload() {
   loadHomeAssets();
   spoonImg = loadImage("assets/cookies.png"); //reference [7]
   innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [4]
-  nunImg = loadImage("nuns.png"); //reference [15]
-  runawayManImg = loadImage("assets/Jerome_spirtesheet.png"); //reference [2]
+  nunImg = loadImage("assets/Krisia_spritesheet.png"); //reference [15]
+  runawayManImg = loadImage("assets/Jerome_spritesheet.png"); //reference [2]
 
   // journal pages
   doctorPg = loadImage("assets/journal/Krisia_journal.png");
@@ -95,8 +99,12 @@ function preload() {
   innkeeperPg = loadImage("assets/journal/Mrs.Gustall_journal.png");
   fdlPg = loadImage("assets/journal/Helen_journal.png");
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
+  leftarrow = loadImage("assets/left_arrow.png");
+  rightarrow = loadImage("assets/right_arrow.png");
 
   gear = loadImage("assets/gear.png");
+  cookiejar = loadImage("assets/cookiejar.png");
+  emptyjar = loadImage("assets/EmptyJar.png");
 
   // character portraits
   portraits = {
@@ -313,7 +321,7 @@ function setup() {
   runawayMan.colour = color(100, 220, 130); // green
   runawayMan.sprite = runawayManImg;
   runawayMan.spriteFrameW = 48;
-  runawayMan.spriteFrameH = 64; // measured from pixel data: rows are 64px tall, not 56
+  runawayMan.spriteFrameH = 48;
 
   judgePortraits = [
     portraits.innkeeper.idle,
@@ -377,6 +385,7 @@ function draw() {
 
   tf1Draw(0, 0);
   clutterDraw(0, 0);
+  cookieJarDraw();
   drawPlayer();
   for (let npc of npcs) {
     npc.update();
@@ -392,12 +401,12 @@ function draw() {
   drawPrompt();
   drawJournalIcon();
   drawDayCounter();
+  settings();
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
   bedtime();
   updateHoverCursor();
-  settings();
 }
 
 function updatePlayer() {
@@ -554,7 +563,7 @@ function drawPrompt() {
       let screenY = (npc.y - camY) * CAM_ZOOM;
 
       // draw a small dark pill-shaped box above the NPC
-      let msg = "Press 'E' to talk";
+      let msg = "Press SPACE to talk";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -590,7 +599,7 @@ function drawPrompt() {
       let screenX = (doorPos.actualX - camX) * CAM_ZOOM;
       let screenY = (doorPos.actualY - camY) * CAM_ZOOM;
       // draw a small dark pill-shaped box above the door
-      let msg = "Press 'E' to go to bed";
+      let msg = "Press SPACE to go to bed";
       textSize(16);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -613,7 +622,7 @@ function drawPrompt() {
     if (pos) {
       const screenX = (pos.actualX + pos.dw / 2 - camX) * CAM_ZOOM;
       const screenY = (pos.actualY - camY) * CAM_ZOOM;
-      let msg = "Press 'E' to examine";
+      let msg = "Press SPACE to examine";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -628,6 +637,7 @@ function drawPrompt() {
       text(msg, screenX, msgY + msgH / 2);
     }
   }
+  cookieJarDrawPrompt(player, camX, camY, CAM_ZOOM);
 }
 
 //journal icon
@@ -685,13 +695,12 @@ function drawJournalIcon() {
   }
 }
 
-//settings
+//settings pop up
 function settings() {
   const iw = 50;
   const ih = 50;
   const ix = width - iw - 30;
   const iy = 20;
-
   image(gear, ix, iy, iw, ih);
 
   if (setting === true) {
@@ -699,28 +708,46 @@ function settings() {
     fill(0, 0, 0, 200);
     rect(0, 0, width, height);
 
-    // instructions image
     if (instructions) {
       const imgW = min(900, width * 0.9);
       const imgH = imgW * (instructions.height / instructions.width);
       const imgX = (width - imgW) / 2;
       const imgY = (height - imgH) / 2;
-
       imageMode(CORNER);
       image(instructions, imgX, imgY, imgW, imgH);
+
+      // Close button top-right of the instructions image
+      drawCloseButton(imgX + imgW + 18, imgY - 18);
     }
-    image(gear, ix, iy, iw, ih);
   }
 }
 
 function handleSettingsClick(mx, my) {
-  const iw = 60;
-  const ih = 60;
-  const ix = width - iw - 30;
-  const iy = 12;
+  const iw = 60,
+    ih = 60;
+  const ix = width - iw - 30,
+    iy = 12;
 
   if (mx > ix && mx < ix + iw && my > iy && my < iy + ih) {
-    setting = !setting; // toggle on and off
+    setting = !setting;
+    return;
+  }
+  if (setting && instructions) {
+    const imgW = min(900, width * 0.9);
+    const imgH = imgW * (instructions.height / instructions.width);
+    const imgX = (width - imgW) / 2;
+    const imgY = (height - imgH) / 2;
+    const btnX = imgX + imgW + 18;
+    const btnY = imgY - 18;
+    const size = 36;
+    if (
+      mx > btnX - size / 2 &&
+      mx < btnX + size / 2 &&
+      my > btnY - size / 2 &&
+      my < btnY + size / 2
+    ) {
+      setting = false;
+    }
   }
 }
 
@@ -812,6 +839,7 @@ function advanceDay() {
   spoonsRemaining = 7;
   lowCookieNotifTriggered = false;
   lowCookieNotifVisible = false;
+  cookieJarResetDay();
 
   // close any open dialogue
   closeDialogue();
@@ -985,6 +1013,28 @@ function updateHoverCursor() {
   }
 }
 
+function drawCloseButton(x, y, size = 36) {
+  const hovering =
+    mouseX > x - size / 2 &&
+    mouseX < x + size / 2 &&
+    mouseY > y - size / 2 &&
+    mouseY < y + size / 2;
+
+  // Circle background
+  noStroke();
+  fill(hovering ? color(180, 60, 60) : color(120, 40, 40));
+  ellipse(x, y, size, size);
+
+  // X mark
+  fill(255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
+  text("×", x, y - 4);
+
+  return hovering;
+}
+
 function keyPressed() {
   if (currentScene === "HOME") {
     if (keyCode === ENTER) {
@@ -1023,7 +1073,7 @@ function keyPressed() {
     return;
   }
 
-  if (isPlayerNearDoor1(player) && (key === "e" || key === "E")) {
+  if (isPlayerNearDoor1(player) && key === " ") {
     if (currentDay < TOTAL_DAYS) {
       advanceDay();
     }
@@ -1061,6 +1111,10 @@ function keyPressed() {
           openDialogue(npc);
           return;
         }
+      }
+      if (isPlayerNearCookieJar(player)) {
+        cookieJarInteract();
+        return;
       }
       // Check interactable evidence objects
       const nearItem = getInteractableNearPlayer(player);
