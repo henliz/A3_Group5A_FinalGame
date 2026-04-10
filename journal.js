@@ -195,7 +195,7 @@ class Journal {
 
     // Close button
     const btnX = width * 0.29 + 630;
-    const btnY = height * 0.15 + 20;
+    const btnY = height * 0.15 + 60;
     drawCloseButton(btnX, btnY);
     this.drawArrows();
 
@@ -273,7 +273,7 @@ class Journal {
 
     // Close button
     const btnX2 = width * 0.29 + 630;
-    const btnY2 = height * 0.15 + 20;
+    const btnY2 = height * 0.15 + 60;
     const btnSize2 = 36;
     if (
       mx > btnX2 - btnSize2 / 2 &&
