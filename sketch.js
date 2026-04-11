@@ -15,9 +15,9 @@ const TILE = 32;
 const FRAME_W = 32;
 const FRAME_H = 32;
 const ANIM_SPEED = 7;
-const CHAR_SCALE = 2.0;
-const NPC_CHAR_SCALE = 1.7; // NPCs drawn slightly smaller than the player
-const CAM_ZOOM = 1.8; // world-space zoom (increased from 1.4 for closer zoom)
+const CHAR_SCALE = 1.7;
+const NPC_CHAR_SCALE = 1.3;
+const CAM_ZOOM = 2.3; // world-space zoom (increased from 1.4 for closer zoom)
 
 const DIR = { down: 0, left: 1, right: 2, up: 3 };
 
@@ -49,6 +49,8 @@ let lowCookieNotifVisible = false;
 let lowCookieNotifTriggered = false;
 let lowCookieNotifTimer = 0;
 const LOW_COOKIE_NOTIF_DURATION = 300; // ~5 seconds at 60fps
+
+let dayEndTriggered = false;
 
 let currentScene = "HOME";
 let npcPromptBounds = null; // set each frame by drawPrompt()
@@ -839,6 +841,7 @@ function advanceDay() {
   spoonsRemaining = 7;
   lowCookieNotifTriggered = false;
   lowCookieNotifVisible = false;
+  dayEndTriggered = false;
   cookieJarResetDay();
 
   // close any open dialogue

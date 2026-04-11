@@ -10,47 +10,47 @@ let externalSideWall;
 let internalSideWall;
 
 const TF1_S = 32;
-const TF1_SCALE = 3.2; // 80% of original — scales tile rendering & world size
+const TF1_SCALE = 2; // 80% of original — scales tile rendering & world size
 const TF1_T = TF1_S * TF1_SCALE; // 102.4px per tile
 
 // Back wall overlap into floor edge (how much the wall "sits" on the floor line)
 const BACK_WALL_OVERLAP = Math.floor(TF1_T * 0.2);
 
 // More overlap between segments to hide seams
-const WALL_OVERLAP_PX = 6; // was 8
+const WALL_OVERLAP_PX = 4; // adjusted for smaller scale
 
 // Raise the back walls so they align with corners
-const BACK_WALL_RAISE_PX = 51; // was 64
+const BACK_WALL_RAISE_PX = 32; // adjusted for smaller scale
 
-const BACK_WALL_SHIFT_X = 6; // was 8
+const BACK_WALL_SHIFT_X = 4; // adjusted for smaller scale
 
-const WALL_WIDTH_TRIM = 3; // was 4
+const WALL_WIDTH_TRIM = 2; // adjusted for smaller scale
 
 // Side walls
-const SIDE_EDGE_PAD = 0; // Flush alignment with tile edges
+const SIDE_EDGE_PAD = 3; // Flush alignment with tile edges
 const SIDE_WALL_X_NUDGE = 0; // No additional nudge needed
-const SIDE_WALL_START_DROP = Math.floor(TF1_T * 0.3); // Start higher for better visual integration
+const SIDE_WALL_START_DROP = 0; // Start at the exact floor row for tight wall/floor alignment
 
 // Corners are perfect — keep this
 const CORNER_Y_NUDGE = Math.floor(TF1_T * 0.35);
 
 // ── MULTI-ROOM CONNECTED FLOORPLAN ─────────────────────────────────────────
 const TF1_FLOOR_MASK = [
-  "00111100111100",
-  "00111100111100",
-  "00000111100000",
-  "00000111100000",
-  "01111111111110",
-  "01110111101110",
-  "00000111100000", //
-  "00000111100000", //
-  "00111111111100", //
-  "00111111111100", //
-  "00000111100000",
-  "00000111100000",
-  "00111111111100", //
-  "00111111111100", //
-  "00111111111100", //
+  "0011100011100",
+  "0011111111100",
+  "0000011100000",
+  "0000011100000",
+  "0111111111110",
+  "0111011101110",
+  "0000011100000", //
+  "0000011100000", //
+  "0000011111100", //
+  "0000011111100", //
+  "0000011100000",
+  "0000011100000",
+  "0011111111100", //
+  "0011111111100", //
+  "0011111111100", //
 ];
 
 let TF1_W = 0;
@@ -60,20 +60,20 @@ let BUILDING_MIN_COL = 0;
 let BUILDING_MAX_COL = 0;
 
 function tf1Preload() {
-  floorImg = loadImage("assets/walls/floor_full.png"); //reference [19]
+  floorImg = loadImage("assets/newassets/floor.png"); //reference [19]
 
   wallImgs = [
-    loadImage("assets/walls/wall1.png"),
-    loadImage("assets/walls/wall2.png"),
-    loadImage("assets/walls/wall3.png"),
-    loadImage("assets/walls/wall4.png"),
+    loadImage("assets/newassets/wall_flat.png"),
+    // loadImage("assets/newassets/wall2.png"),
+    // loadImage("assets/newassets/wall3.png"),
+    // loadImage("assets/newassets/wall4.png"),
   ];
 
-  wallCorner = loadImage("assets/walls/wall_corner.png");
+  wallCorner = loadImage("assets/newassets/wall_corner_right.png");
   wallDoor = loadImage("assets/walls/wall_door.png"); // optional
 
-  externalSideWall = loadImage("assets/walls/external_side_wall.png");
-  internalSideWall = loadImage("assets/walls/inside_side_wall.png");
+  externalSideWall = loadImage("assets/newassets/wall_exterior.png");
+  internalSideWall = loadImage("assets/newassets/wall_inner.png");
 }
 
 function tf1Setup() {

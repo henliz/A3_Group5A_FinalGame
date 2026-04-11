@@ -495,7 +495,32 @@ function confirmChoice() {
 
 // ─── Misc helpers ─────────────────────────────────────────────
 function bedtime() {
-  // black screen removed — day ends via door (press E at door)
+  if (spoonsRemaining === 0 && dialoguePhase === "closed") {
+    fill("black");
+    rect(0, 0, width, height);
+
+    fill("white");
+    textAlign(CENTER, CENTER);
+    textSize(13);
+    text(
+      "With no more spoons left to give, little Red went off to bed. A restless slumber waiting just ahead.",
+      width / 2,
+      height / 2,
+    );
+
+    textSize(20);
+    text("DAY " + currentDay + " OVER", width / 2, height / 2 + 40);
+    //so cookie low notification can be reset for the next day
+    lowCookieNotifTriggered = false;
+    lowCookieNotifVisible = false;
+
+    if (!dayEndTriggered) {
+      dayEndTriggered = true;
+      setTimeout(() => {
+        advanceDay();
+      }, 2000); // show for 3 seconds, then advance
+    }
+  }
 }
 
 function getVisibleOptionIndices() {

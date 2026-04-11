@@ -16,121 +16,210 @@ const CLUTTER = []; // will hold placed props
 const clutterAssetList = [
   //Lobby clutter
   {
-    key: "bigtable1",
-    path: "assets/bigtable-5.png",
+    key: "desk2",
+    path: "assets/newassets/desk.png",
   },
   {
-    key: "sofa1",
-    path: "assets/walls/sofa-1.png",
+    key: "liveingroomtable",
+    path: "assets/newassets/newtable.png",
   },
   {
-    key: "piano",
-    path: "assets/Piano.png",
+    key: "newsofa1",
+    path: "assets/newassets/sofa.png",
   },
   {
-    key: "pianochair1",
-    path: "assets/pianochair.png",
+    key: "newsofa2",
+    path: "assets/newassets/sofa.png",
   },
   {
-    key: "shelf1",
-    path: "assets/shelf-1.png",
+    key: "livingroomwindow",
+    path: "assets/newassets/newwindow.png",
   },
   {
-    key: "sofa2",
-    path: "assets/walls/sofa-3.png",
+    key: "livingroombookshelf",
+    path: "assets/newassets/newbookshelf.png",
   },
   {
-    key: "plant1",
-    path: "assets/plant-1.png",
+    key: "liveingroomcabinet1",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "liveingroomcabinet2",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "liveingroomarmchair1",
+    path: "assets/newassets/armchair.png",
+  },
+  {
+    key: "liveingroomarmchair2",
+    path: "assets/newassets/armchair.png",
+  },
+  {
+    key: "livingroomplant",
+    path: "assets/plant-2.png",
   },
 
-  //Travern clutter
+  //Bar clutter
   {
-    key: "table1",
-    path: "assets/table-3.png",
+    key: "bar",
+    path: "assets/newassets/bar.png",
   },
   {
-    key: "counter1",
-    path: "assets/counter-4.png",
-  },
-
-  {
-    key: "pillar",
-    path: "assets/pillar-2.png",
+    key: "bartable",
+    path: "assets/newassets/newtable.png",
   },
   {
-    key: "stool1",
-    path: "assets/stool-1.png",
+    key: "barchair1",
+    path: "assets/newassets/newchair.png",
   },
   {
-    key: "stool2",
-    path: "assets/stool-2.png",
+    key: "barchair2",
+    path: "assets/newassets/newchair.png",
   },
   {
-    key: "stool3",
-    path: "assets/stool-1.png",
+    key: "barpainting",
+    path: "assets/newassets/painting.png",
+  },
+  {
+    key: "barstool1",
+    path: "assets/newassets/newstool.png",
+  },
+  {
+    key: "barstool2",
+    path: "assets/newassets/newstool.png",
+  },
+  {
+    key: "barstool3",
+    path: "assets/newassets/newstool.png",
+  },
+  {
+    key: "barstool4",
+    path: "assets/newassets/newstool.png",
+  },
+  {
+    key: "barstool5",
+    path: "assets/newassets/newstool.png",
   },
 
   //Room 1
   {
     key: "bed1",
-    path: "assets/bed-5.png",
+    path: "assets/newassets/double_bed.png",
   },
   {
-    key: "cabinet1",
-    path: "assets/cabinet.png",
+    key: "newwindow3",
+    path: "assets/newassets/newwindow.png",
+  },
+  {
+    key: "newcabinet3",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newcloset3",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "newchair1",
+    path: "assets/newassets/newchair.png",
   },
 
   //Room 2
   {
     key: "bed2",
-    path: "assets/bed-2.png",
+    path: "assets/newassets/double_bed.png",
+  },
+  {
+    key: "window2",
+    path: "assets/newassets/newwindow.png",
   },
   {
     key: "shelf3",
-    path: "assets/shelf-3.png",
+    path: "assets/newassets/newbookshelf.png",
+  },
+  {
+    key: "newcloset2",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "newcabinet2",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newplant1",
+    path: "assets/plant-1.png",
   },
   //Room 3
   {
     key: "bed3",
-    path: "assets/bed-4.png",
+    path: "assets/newassets/double_bed.png",
   },
   {
     key: "shelf2",
-    path: "assets/shelf-2.png",
+    path: "assets/newassets/newbookshelf.png",
+  },
+  {
+    key: "newcabinet1",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newcloset1",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "window1",
+    path: "assets/newassets/newwindow.png",
+  },
+  {
+    key: "armchair1",
+    path: "assets/newassets/armchair.png",
   },
 
   //Little Red Room Door
   {
     key: "door1",
-    path: "assets/door-1.png",
+    path: "assets/newassets/newdoor.png",
   },
 
   //office clutter
   {
-    key: "desk",
-    path: "assets/desk.png",
+    key: "newdesk1",
+    path: "assets/newassets/desk.png",
   },
   {
     key: "deskchair",
-    path: "assets/deskchair.png",
+    path: "assets/newassets/newchair.png",
   },
   {
     key: "painting",
-    path: "assets/painting.png",
+    path: "assets/newassets/painting.png",
   },
   {
-    key: "bigtable2",
-    path: "assets/bigtable-4.png",
+    key: "bookshelf1",
+    path: "assets/newassets/newbookshelf.png",
   },
   {
-    key: "TV",
-    path: "assets/TV.png",
+    key: "bookshelf2",
+    path: "assets/newassets/newbookshelf.png",
   },
   {
-    key: "cabinet2",
-    path: "assets/cabinet-2.png",
+    key: "smalltable1",
+    path: "assets/newassets/bedside_table.png",
   },
+  {
+    key: "smalltable2",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "smalltable3",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "plant2",
+    path: "assets/plant-1.png",
+  },
+
+  //evidence items
   {
     key: "phone",
     path: "assets/objects/phone.png",
@@ -174,193 +263,351 @@ const clutterAssetList = [
 ];
 
 const roomLayout = [
-  // Tavern clutter setting
+  // Bar clutter setting
   {
-    asset: "table1",
-    tileX: 2.6,
-    tileY: 7.5,
-    scale: 4,
+    asset: "bar",
+    tileX: 9.36,
+    tileY: 6.65,
+    scale: 1.6,
     anchor: "top-left",
   },
   {
-    asset: "counter1",
-    tileX: 10,
-    tileY: 8,
-    scale: 3,
-    anchor: "top-right",
-  },
-  {
-    asset: "pillar",
-    tileX: 10.8,
+    asset: "bartable",
+    tileX: 8.5,
     tileY: 9,
     scale: 4,
-    anchor: "bottom",
+    anchor: "top-left",
   },
   {
-    asset: "stool1",
+    asset: "barchair1",
+    tileX: 9.2,
+    tileY: 9,
+    scale: 3.5,
+    anchor: "top-left",
+    flip: true,
+  },
+  {
+    asset: "barchair2",
+    tileX: 8.1,
+    tileY: 9,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "barpainting",
+    tileX: 8.3,
+    tileY: 6.9,
+    scale: 2.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "barstool1",
     tileX: 10,
-    tileY: 6.8,
-    scale: 3,
+    tileY: 8.3,
+    scale: 2.2,
     anchor: "top-left",
   },
   {
-    asset: "stool2",
+    asset: "barstool2",
+    tileX: 10.5,
+    tileY: 8.3,
+    scale: 2.2,
+    anchor: "top-left",
+  },
+  {
+    asset: "barstool3",
     tileX: 9.5,
-    tileY: 6.8,
-    scale: 3,
+    tileY: 8.3,
+    scale: 2.3,
     anchor: "top-left",
   },
   {
-    asset: "stool3",
-    tileX: 10.7,
-    tileY: 6.8,
-    scale: 3,
+    asset: "barstool4",
+    tileX: 9,
+    tileY: 7.8,
+    scale: 2.2,
+    anchor: "top-left",
+  },
+  {
+    asset: "barstool5",
+    tileX: 9,
+    tileY: 8.1,
+    scale: 2.2,
     anchor: "top-left",
   },
 
   //Lobby clutter setting
   {
-    asset: "bigtable1",
-    tileX: 3,
-    tileY: 13,
-    scale: 6,
+    asset: "livingroomwindow",
+    tileX: 3.8,
+    tileY: 10.8,
+    scale: 3,
     anchor: "top-left",
   },
   {
-    asset: "piano",
-    tileX: 10,
-    tileY: 13.4,
-    scale: 5,
+    asset: "livingroombookshelf",
+    tileX: 2.5,
+    tileY: 11.1,
+    scale: 4.2,
     anchor: "top-left",
   },
   {
-    asset: "pianochair1",
-    tileX: 10.4,
-    tileY: 14.2,
+    asset: "newsofa1",
+    tileX: 3.7,
+    tileY: 11.6,
     scale: 4,
     anchor: "top-left",
   },
   {
-    asset: "plant1",
-    tileX: 9.5,
-    tileY: 12,
-    scale: 5,
+    asset: "desk2",
+    tileX: 3,
+    tileY: 13.2,
+    scale: 5.5,
     anchor: "top-left",
   },
   {
-    asset: "sofa1",
-    tileX: 10,
+    asset: "newsofa2",
+    tileX: 9,
+    tileY: 11.6,
+    scale: 4.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "liveingroomtable",
+    tileX: 9.2,
+    tileY: 12.5,
+    scale: 4.2,
+    anchor: "top-left",
+  },
+  {
+    asset: "liveingroomcabinet1",
+    tileX: 8.5,
     tileY: 11.8,
-    scale: 6,
-    anchor: "top-left",
-  },
-
-  {
-    asset: "shelf1",
-    tileX: 2.6,
-    tileY: 11.5,
-    scale: 4.3,
+    scale: 3,
     anchor: "top-left",
   },
   {
-    asset: "sofa2",
-    tileX: 3.5,
-    tileY: 12,
-    scale: 6,
+    asset: "liveingroomcabinet2",
+    tileX: 10.2,
+    tileY: 11.8,
+    scale: 3,
+    anchor: "top-left",
+  },
+  {
+    asset: "liveingroomarmchair1",
+    tileX: 8.8,
+    tileY: 12.5,
+    scale: 3,
+    anchor: "top-left",
+  },
+  {
+    asset: "liveingroomarmchair2",
+    tileX: 10,
+    tileY: 12.5,
+    scale: 3,
+    anchor: "top-left",
+    flip: true,
+  },
+  {
+    asset: "livingroomplant",
+    tileX: 8.6,
+    tileY: 11.65,
+    scale: 2.3,
     anchor: "top-left",
   },
 
   //Room 1 cultter setting
   {
     asset: "bed1",
-    tileX: 1.6,
-    tileY: 3.8,
-    scale: 6.2,
+    tileX: 1.2,
+    tileY: 3.6,
+    scale: 4.5,
     anchor: "top-left",
   },
   {
-    asset: "cabinet1",
-    tileX: 2.6,
-    tileY: 3.6,
-    scale: 4.3,
-    anchor: "bottom",
+    asset: "newwindow3",
+    tileX: 1.3,
+    tileY: 2.95,
+    scale: 3.3,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcabinet3",
+    tileX: 2.4,
+    tileY: 3.8,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcloset3",
+    tileX: 3,
+    tileY: 3.2,
+    scale: 4,
+    anchor: "top-left",
+  },
+  {
+    asset: "newchair1",
+    tileX: 3.45,
+    tileY: 5.5,
+    scale: 4,
+    anchor: "top-left",
+    flip: true,
   },
 
   //Room 2 clutter setting
   {
     asset: "bed2",
-    tileX: 10.4,
-    tileY: 0.2,
-    scale: 6,
+    tileX: 9.9,
+    tileY: -0.2,
+    scale: 3.8,
     anchor: "bottom",
   },
   {
+    asset: "window2",
+    tileX: 10,
+    tileY: -0.95,
+    scale: 2.8,
+    anchor: "top-left",
+  },
+  {
     asset: "shelf3",
-    tileX: 9,
-    tileY: -0.2,
-    scale: 6,
+    tileX: 8.2,
+    tileY: -0.8,
+    scale: 4,
     anchor: "bottom",
+  },
+  {
+    asset: "newcloset2",
+    tileX: 8.9,
+    tileY: -0.7,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcabinet2",
+    tileX: 9.5,
+    tileY: -0.2,
+    scale: 2.8,
+    anchor: "top-left",
+  },
+  {
+    asset: "newplant1",
+    tileX: 9.6,
+    tileY: -0.3,
+    scale: 2.2,
+    anchor: "top-left",
   },
 
   //Room 3 clutter setting
   {
     asset: "bed3",
-    tileX: 2.6,
-    tileY: 0.2,
-    scale: 5,
+    tileX: 3.9,
+    tileY: -0.3,
+    scale: 3.5,
     anchor: "bottom",
   },
   {
     asset: "shelf2",
-    tileX: 4.2,
-    tileY: 0,
-    scale: 6,
+    tileX: 2.8,
+    tileY: -0.7,
+    scale: 3.5,
     anchor: "bottom",
+  },
+  {
+    asset: "newcabinet1",
+    tileX: 3.5,
+    tileY: -0.1,
+    scale: 3,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcloset1",
+    tileX: 2.2,
+    tileY: -0.6,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "window1",
+    tileX: 4,
+    tileY: -0.95,
+    scale: 2.7,
+    anchor: "top-left",
+  },
+  {
+    asset: "armchair1",
+    tileX: 2.2,
+    tileY: 1.4,
+    scale: 3,
+    anchor: "top-left",
   },
 
   //office clutter setting
   {
-    asset: "desk",
-    tileX: 11.5,
-    tileY: 5,
-    scale: 7,
+    asset: "newdesk1",
+    tileX: 10.5,
+    tileY: 4.8,
+    scale: 4.3,
     anchor: "top-left",
   },
   {
     asset: "deskchair",
-    tileX: 11,
-    tileY: 5.1,
-    scale: 4,
+    tileX: 11.1,
+    tileY: 5,
+    scale: 4.3,
     anchor: "top-left",
+    flip: true,
   },
   {
     asset: "painting",
-    tileX: 9.4,
-    tileY: 2.5,
-    scale: 4,
-    anchor: "bottom",
+    tileX: 8.4,
+    tileY: 2.9,
+    scale: 3.2,
+    anchor: "top-left",
   },
   {
-    asset: "bigtable2",
+    asset: "bookshelf1",
     tileX: 11,
-    tileY: 3.7,
+    tileY: 3,
     scale: 4,
     anchor: "top-left",
   },
   {
-    asset: "TV",
-    tileX: 11.1,
-    tileY: 3.5,
-    scale: 3,
+    asset: "bookshelf2",
+    tileX: 10.3,
+    tileY: 3,
+    scale: 4,
     anchor: "top-left",
   },
   {
-    asset: "cabinet2",
-    tileX: 10.5,
-    tileY: 3.7,
+    asset: "smalltable1",
+    tileX: 8.6,
+    tileY: 3.8,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "smalltable2",
+    tileX: 9,
+    tileY: 3.8,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "smalltable3",
+    tileX: 8.2,
+    tileY: 3.8,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "plant2",
+    tileX: 8.75,
+    tileY: 3.65,
     scale: 3,
     anchor: "top-left",
   },
+
   //object phone
   {
     asset: "phone",
@@ -417,8 +664,8 @@ const roomLayout = [
   //object newsclipping
   {
     asset: "newsclipping",
-    tileX: 11.1,
-    tileY: 14.3,
+    tileX: 8.2,
+    tileY: 11.2,
     scale: 0.2,
     anchor: "top-left",
     glow: true,
@@ -453,8 +700,8 @@ const roomLayout = [
   //object medicinalbook
   {
     asset: "medicinalbook",
-    tileX: 11,
-    tileY: 12,
+    tileX: 9.5,
+    tileY: 12.5,
     scale: 0.15,
     anchor: "top-left",
     glow: true,
@@ -482,8 +729,8 @@ const roomLayout = [
 //Little Red Room Door setting
 const door1Layout = {
   asset: "door1",
-  tileX: 6.8,
-  tileY: 1.1,
+  tileX: 6.3,
+  tileY: 0,
   scale: 5,
   anchor: "bottom",
   interactRadius: 120, // radius (in pixels) where the player can interact
@@ -600,6 +847,7 @@ function clutterSetup() {
       closeupAsset: item.closeupAsset || null,
       closeupLabel: item.closeupLabel || null,
       examined: item.examined || false,
+      flip: item.flip || false,
     });
   }
 }
@@ -634,7 +882,15 @@ function clutterDraw(worldX = 0, worldY = 0, hideCrimeScene = false) {
       }
     }
 
-    image(p.img, pos.actualX, pos.actualY, pos.dw, pos.dh);
+    if (p.flip) {
+      push();
+      translate(pos.actualX + pos.dw / 2, pos.actualY);
+      scale(-1, 1);
+      image(p.img, -pos.dw / 2, 0, pos.dw, pos.dh);
+      pop();
+    } else {
+      image(p.img, pos.actualX, pos.actualY, pos.dw, pos.dh);
+    }
   }
 
   // Draw door1 separately
