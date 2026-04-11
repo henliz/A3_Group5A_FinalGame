@@ -451,17 +451,12 @@ function confirmChoice() {
   }
 
   spoonsRemaining -= option.cost;
+  checkLowCookieNotif(); // show warning if energy is now low
   chosenOption = option;
 
   if (typeof CookieSound !== "undefined") {
     CookieSound.setVolume(0.25);
     CookieSound.play();
-  }
-
-  if (spoonsRemaining <= 2 && !lowCookieNotifTriggered) {
-    lowCookieNotifVisible = true;
-    lowCookieNotifTriggered = true;
-    lowCookieNotifTimer = LOW_COOKIE_NOTIF_DURATION;
   }
 
   let visible = getVisibleOptionIndices();
@@ -494,32 +489,13 @@ function confirmChoice() {
 }
 
 // ─── Misc helpers ─────────────────────────────────────────────
-function bedtime() {
-  if (spoonsRemaining === 0 && dialoguePhase === "closed") {
-    fill("black");
-    rect(0, 0, width, height);
-
-    fill("white");
-    textAlign(CENTER, CENTER);
-    textSize(13);
-    text(
-      "With no more spoons left to give, little Red went off to bed. A restless slumber waiting just ahead.",
-      width / 2,
-      height / 2,
-    );
-
-    textSize(20);
-    text("DAY " + currentDay + " OVER", width / 2, height / 2 + 40);
-    //so cookie low notification can be reset for the next day
-    lowCookieNotifTriggered = false;
-    lowCookieNotifVisible = false;
-
-    if (!dayEndTriggered) {
-      dayEndTriggered = true;
-      setTimeout(() => {
-        advanceDay();
-      }, 2000); // show for 3 seconds, then advance
-    }
+// checkLowCookieNotif — only job is to show the low-energy warning.
+// Safe to call after any dialogue choice. Does NOT end the day.
+function checkLowCookieNotif() {
+  if (spoonsRemaining <= 2 && !lowCookieNotifTriggered) {
+    lowCookieNotifVisible = true;
+    lowCookieNotifTriggered = true;
+    lowCookieNotifTimer = LOW_COOKIE_NOTIF_DURATION;
   }
 }
 
@@ -598,7 +574,7 @@ window.openDialogue = openDialogue;
 window.closeDialogue = closeDialogue;
 window.drawDialogue = drawDialogue;
 window.dialoguePhase = dialoguePhase;
-window.bedtime = bedtime;
+window.checkLowCookieNotif = checkLowCookieNotif;
 window.startTypewriter = startTypewriter;
 window.skipTypewriter = skipTypewriter;
 window.handleExit = handleExit;

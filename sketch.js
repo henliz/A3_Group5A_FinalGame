@@ -407,7 +407,6 @@ function draw() {
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
-  bedtime();
   updateHoverCursor();
 }
 
@@ -850,8 +849,14 @@ function advanceDay() {
   // show end screen, then return to game
   endScreenAlpha = 255;
   currentScene = "END";
-  if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
-  if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+  if (endFadeTimeout) {
+    clearTimeout(endFadeTimeout);
+    endFadeTimeout = null;
+  }
+  if (endFadeInterval) {
+    clearInterval(endFadeInterval);
+    endFadeInterval = null;
+  }
   endFadeTimeout = setTimeout(() => {
     endFadeTimeout = null;
     endFadeInterval = setInterval(() => {
@@ -933,7 +938,7 @@ function drawLowCookieNotif() {
   fill(255, 255, 255, hoveringX ? alpha : alpha * 0.6);
   textSize(16);
   textAlign(CENTER, CENTER);
-  text("✕", xX + xSize / 2, xY + xSize / 2);
+  text("X", xX + xSize / 2, xY + xSize / 2);
 }
 
 function updateHoverCursor() {
@@ -1049,7 +1054,8 @@ function keyPressed() {
 
   if (currentScene === "CHECKIN") {
     _checkinCheatBuf += key;
-    if (_checkinCheatBuf.length > 5) _checkinCheatBuf = _checkinCheatBuf.slice(-5);
+    if (_checkinCheatBuf.length > 5)
+      _checkinCheatBuf = _checkinCheatBuf.slice(-5);
     if (_checkinCheatBuf === "12345") {
       _checkinCheatBuf = "";
       closeDialogue();
@@ -1061,8 +1067,14 @@ function keyPressed() {
 
   if (currentScene === "END") {
     if (key === "e" || key === "E" || key === " " || keyCode === ENTER) {
-      if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
-      if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+      if (endFadeTimeout) {
+        clearTimeout(endFadeTimeout);
+        endFadeTimeout = null;
+      }
+      if (endFadeInterval) {
+        clearInterval(endFadeInterval);
+        endFadeInterval = null;
+      }
       endScreenAlpha = 0;
       currentScene = "GAME";
     }
