@@ -763,10 +763,10 @@ function drawExamineImage() {
   if (!img) return;
 
   // Right half of screen, leaving room for the dialogue box at the bottom
-  const areaX = width * 0.54;
+  const areaX = width * 0.03;
   const areaY = height * 0.18;
-  const areaW = width * 0.43;
-  const areaH = height * 0.72;
+  const areaW = width * 0.42;
+  const areaH = height * 0.5;
 
   // Fit image within the area while preserving aspect ratio
   const aspect = img.width / img.height;
@@ -978,14 +978,13 @@ function updateHoverCursor() {
       hovering = true;
   }
 
-  // Dialogue choice buttons — reset each frame, set on hover
   if (dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing") {
     selectedOption = -1;
-    const btnW = 1080 / 3;
-    const btnH = 241 / 3;
-    const btnX = width * 0.6;
-    const startY = height * 0.4;
-    const gap = btnH + 10;
+    const btnW = 320;
+    const btnH = 110;
+    const btnX = width * 0.63;
+    const startY = height * 0.12 + 20;
+    const gap = btnH + 30;
     const visibleIndices = getVisibleOptionIndices();
     for (let i = 0; i < visibleIndices.length; i++) {
       const btnY = startY + i * gap;
@@ -1333,13 +1332,12 @@ function mousePressed() {
     }
   }
 
-  // Dialogue choice button clicks
   if (dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing") {
-    const btnW = 1080 / 3;
-    const btnH = 241 / 3;
-    const btnX = width * 0.6;
-    const startY = height * 0.4;
-    const gap = btnH + 10;
+    const btnW = 320;
+    const btnH = 110;
+    const btnX = width * 0.63;
+    const startY = height * 0.12 + 20;
+    const gap = btnH + 30;
     const visibleIndices = getVisibleOptionIndices();
 
     for (let i = 0; i < visibleIndices.length; i++) {

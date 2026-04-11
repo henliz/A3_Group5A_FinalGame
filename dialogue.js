@@ -204,7 +204,7 @@ function drawDialogue() {
   }
   tickTypewriter();
 
-  let boxW = 1857 / 3;
+  let boxW = width * 0.67;
   let boxH = 681 / 3;
   let boxX = width * 0.12;
   let boxY = height - boxH - 20;
@@ -250,8 +250,8 @@ function isLittleRedSpeaking() {
 }
 
 function drawPortrait(boxX, boxY, boxW) {
-  let pW = 300;
-  let pH = 420;
+  let pW = 330;
+  let pH = 450;
   let pY = boxY - pH; // bottom of portrait sits flush with top of dialogue box
 
   if (isLittleRedSpeaking()) {
@@ -271,7 +271,7 @@ function drawPortrait(boxX, boxY, boxW) {
       text("Little Red", pX + pW / 2, pY + pH / 2);
     }
   } else {
-    let pX = boxX + 20;
+    let pX = boxX + 5;
     let portraitImg = getActivePortrait();
     if (portraitImg) {
       image(portraitImg, pX, pY, pW, pH);
@@ -301,7 +301,7 @@ function getActivePortrait() {
 
 function drawNameTag(boxX, boxY, boxW) {
   let tagH = 70;
-  let tagY = boxY - tagH;
+  let tagY = boxY - tagH - 10;
 
   if (isLittleRedSpeaking()) {
     let tagW = 180;
@@ -393,12 +393,11 @@ function isMouseOver(x, y, w, h) {
 
 function drawOptions() {
   if (!activeNPC) return;
-
-  let btnW = 1080 / 3;
-  let btnH = 241 / 3;
-  let btnX = width * 0.6;
-  let startY = height * 0.4;
-  let gap = btnH + 10;
+  const btnW = 320;
+  const btnH = 110;
+  const btnX = width * 0.63;
+  const startY = height * 0.12 + 20;
+  const gap = btnH + 30;
 
   let visibleIndices = getVisibleOptionIndices();
 
@@ -426,7 +425,7 @@ function drawOptions() {
 
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(option.playerLine, btnX + 13, btnY - 7, btnW - 60, btnH);
+    text(option.playerLine, btnX + 15, btnY + 10, btnW - 70, btnH - 20);
 
     let iconSize = 25;
     let iconX = btnX + btnW - iconSize - 8;
@@ -538,9 +537,9 @@ function measureWrappedHeight(str, maxW, size) {
 }
 
 function splitMonologueIntoPages(fullText) {
-  let boxW = 1857 / 3;
+  let boxW = width * 0.65;
   let boxH = 681 / 3;
-  let usableW = boxW - 75;
+  let usableW = boxW - 150;
   let usableH = boxH - 80;
   let size = 30;
 
