@@ -34,6 +34,8 @@ let rmPg;
 let innkeeperPg;
 let fdlPg;
 let evidencePg;
+let cookiejar;
+let emptyjar;
 
 let portraits = {}; // for dialogue portraits
 
@@ -56,8 +58,13 @@ let npcPromptBounds = null; // set each frame by drawPrompt()
 let currentDay = 1;
 const TOTAL_DAYS = 3;
 let endScreenAlpha = 255;
+let endFadeTimeout = null;
+let endFadeInterval = null;
+let _checkinCheatBuf = "";
 
 let journalicon;
+let leftarrow;
+let rightarrow;
 
 let jersey10Font;
 let journalFont;
@@ -85,8 +92,8 @@ function preload() {
   loadHomeAssets();
   spoonImg = loadImage("assets/cookies.png"); //reference [7]
   innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [4]
-  nunImg = loadImage("nuns.png"); //reference [15]
-  runawayManImg = loadImage("assets/Jerome_spirtesheet.png"); //reference [2]
+  nunImg = loadImage("assets/Krisia_spritesheet.png"); //reference [15]
+  runawayManImg = loadImage("assets/Jerome_spritesheet.png"); //reference [2]
 
   // journal pages
   doctorPg = loadImage("assets/journal/Krisia_journal.png");
@@ -94,8 +101,12 @@ function preload() {
   innkeeperPg = loadImage("assets/journal/Mrs.Gustall_journal.png");
   fdlPg = loadImage("assets/journal/Helen_journal.png");
   evidencePg = loadImage("assets/journal/Evidence_journal.png");
+  leftarrow = loadImage("assets/left_arrow.png");
+  rightarrow = loadImage("assets/right_arrow.png");
 
   gear = loadImage("assets/gear.png");
+  cookiejar = loadImage("assets/cookiejar.png");
+  emptyjar = loadImage("assets/EmptyJar.png");
 
   // character portraits
   portraits = {
@@ -125,6 +136,9 @@ function preload() {
       happy: loadImage("assets/portraits/RM_happy.png"),
       sus: loadImage("assets/portraits/RM_sus.png"),
       angry: loadImage("assets/portraits/RM_angry.png"),
+    },
+    helen: {
+      idle: loadImage("assets/portraits/helen.png"),
     },
   };
   journalicon = loadImage("assets/bookicon.png"); // reference 16
@@ -269,15 +283,9 @@ function setup() {
   const zones = getInnZones();
   const used = [];
 
-  // Player spawns just inside the door
-  const doorPos = getPropPosition(door1Layout);
-  if (doorPos) {
-    player.px = doorPos.actualX + doorPos.dw / 2;
-    player.py = doorPos.actualY + doorPos.dh + 60;
-  } else {
-    player.px = 7.3 * TF1_T;
-    player.py = 3 * TF1_T;
-  }
+  // Player spawns near the crime scene (tileX 6.5, tileY 13.4)
+  player.px = 6.5 * TF1_T;
+  player.py = 12.5 * TF1_T;
   used.push({ x: player.px, y: player.py });
 
   // NPC spawns (spread out)
@@ -315,7 +323,7 @@ function setup() {
   runawayMan.colour = color(100, 220, 130); // green
   runawayMan.sprite = runawayManImg;
   runawayMan.spriteFrameW = 48;
-  runawayMan.spriteFrameH = 64; // measured from pixel data: rows are 64px tall, not 56
+  runawayMan.spriteFrameH = 48;
 
   judgePortraits = [
     portraits.innkeeper.idle,
@@ -379,6 +387,7 @@ function draw() {
 
   tf1Draw(0, 0);
   clutterDraw(0, 0);
+  cookieJarDraw();
   drawPlayer();
   for (let npc of npcs) {
     npc.update();
@@ -394,12 +403,12 @@ function draw() {
   drawPrompt();
   drawJournalIcon();
   drawDayCounter();
+  settings();
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
   bedtime();
   updateHoverCursor();
-  settings();
 }
 
 function updatePlayer() {
@@ -556,7 +565,7 @@ function drawPrompt() {
       let screenY = (npc.y - camY) * CAM_ZOOM;
 
       // draw a small dark pill-shaped box above the NPC
-      let msg = "Press 'E' to talk";
+      let msg = "Press SPACE to talk";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -592,7 +601,7 @@ function drawPrompt() {
       let screenX = (doorPos.actualX - camX) * CAM_ZOOM;
       let screenY = (doorPos.actualY - camY) * CAM_ZOOM;
       // draw a small dark pill-shaped box above the door
-      let msg = "Press 'E' to go to bed";
+      let msg = "Press SPACE to go to bed";
       textSize(16);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -615,7 +624,7 @@ function drawPrompt() {
     if (pos) {
       const screenX = (pos.actualX + pos.dw / 2 - camX) * CAM_ZOOM;
       const screenY = (pos.actualY - camY) * CAM_ZOOM;
-      let msg = "Press 'E' to examine";
+      let msg = "Press SPACE to examine";
       textSize(13);
       let msgW = textWidth(msg) + 20;
       let msgH = 24;
@@ -630,6 +639,7 @@ function drawPrompt() {
       text(msg, screenX, msgY + msgH / 2);
     }
   }
+  cookieJarDrawPrompt(player, camX, camY, CAM_ZOOM);
 }
 
 //journal icon
@@ -687,13 +697,12 @@ function drawJournalIcon() {
   }
 }
 
-//settings
+//settings pop up
 function settings() {
   const iw = 50;
   const ih = 50;
   const ix = width - iw - 30;
   const iy = 20;
-
   image(gear, ix, iy, iw, ih);
 
   if (setting === true) {
@@ -701,28 +710,46 @@ function settings() {
     fill(0, 0, 0, 200);
     rect(0, 0, width, height);
 
-    // instructions image
     if (instructions) {
       const imgW = min(900, width * 0.9);
       const imgH = imgW * (instructions.height / instructions.width);
       const imgX = (width - imgW) / 2;
       const imgY = (height - imgH) / 2;
-
       imageMode(CORNER);
       image(instructions, imgX, imgY, imgW, imgH);
+
+      // Close button top-right of the instructions image
+      drawCloseButton(imgX + imgW + 18, imgY - 18);
     }
-    image(gear, ix, iy, iw, ih);
   }
 }
 
 function handleSettingsClick(mx, my) {
-  const iw = 60;
-  const ih = 60;
-  const ix = width - iw - 30;
-  const iy = 12;
+  const iw = 60,
+    ih = 60;
+  const ix = width - iw - 30,
+    iy = 12;
 
   if (mx > ix && mx < ix + iw && my > iy && my < iy + ih) {
-    setting = !setting; // toggle on and off
+    setting = !setting;
+    return;
+  }
+  if (setting && instructions) {
+    const imgW = min(900, width * 0.9);
+    const imgH = imgW * (instructions.height / instructions.width);
+    const imgX = (width - imgW) / 2;
+    const imgY = (height - imgH) / 2;
+    const btnX = imgX + imgW + 18;
+    const btnY = imgY - 18;
+    const size = 36;
+    if (
+      mx > btnX - size / 2 &&
+      mx < btnX + size / 2 &&
+      my > btnY - size / 2 &&
+      my < btnY + size / 2
+    ) {
+      setting = false;
+    }
   }
 }
 
@@ -815,6 +842,7 @@ function advanceDay() {
   lowCookieNotifTriggered = false;
   lowCookieNotifVisible = false;
   dayEndTriggered = false;
+  cookieJarResetDay();
 
   // close any open dialogue
   closeDialogue();
@@ -822,17 +850,20 @@ function advanceDay() {
   // show end screen, then return to game
   endScreenAlpha = 255;
   currentScene = "END";
-  setTimeout(() => {
-    // start fading out over ~1.5 seconds before switching to GAME
-    const fadeInterval = setInterval(() => {
+  if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
+  if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+  endFadeTimeout = setTimeout(() => {
+    endFadeTimeout = null;
+    endFadeInterval = setInterval(() => {
       endScreenAlpha -= 5;
       if (endScreenAlpha <= 0) {
         endScreenAlpha = 0;
-        clearInterval(fadeInterval);
+        clearInterval(endFadeInterval);
+        endFadeInterval = null;
         currentScene = "GAME";
       }
-    }, 1000 / 60); // runs at ~60fps
-  }, 2000); // wait 2 seconds at full black before fading
+    }, 1000 / 60);
+  }, 2000);
 }
 
 function isMouseOverNPC(npc) {
@@ -964,22 +995,47 @@ function updateHoverCursor() {
         break;
       }
     }
+  }
 
-    // NPC sprites (world-space hit test)
-    if (dialoguePhase === "closed" && currentScene === "GAME") {
-      for (const npc of npcs) {
-        if (isMouseOverNPC(npc)) {
-          hovering = true;
-          break;
-        }
+  // NPC sprites (world-space hit test)
+  if (dialoguePhase === "closed" && currentScene === "GAME") {
+    for (const npc of npcs) {
+      if (isMouseOverNPC(npc)) {
+        hovering = true;
+        break;
       }
     }
-
-    const clickCursor = "url('assets/cursor-click.png') 4 4, auto";
-    const defaultCursor = "url('assets/cursor-default.png') 4 4, auto";
-    document.body.style.cursor =
-      hovering || mouseIsPressed ? clickCursor : defaultCursor;
   }
+
+  const clickCursor = "url('assets/cursor-click.png') 4 4, auto";
+  const defaultCursor = "url('assets/cursor-default.png') 4 4, auto";
+  const next = hovering || mouseIsPressed ? clickCursor : defaultCursor;
+  if (next !== updateHoverCursor._last) {
+    document.body.style.cursor = next;
+    updateHoverCursor._last = next;
+  }
+}
+
+function drawCloseButton(x, y, size = 36) {
+  const hovering =
+    mouseX > x - size / 2 &&
+    mouseX < x + size / 2 &&
+    mouseY > y - size / 2 &&
+    mouseY < y + size / 2;
+
+  // Circle background
+  noStroke();
+  fill(hovering ? color(180, 60, 60) : color(120, 40, 40));
+  ellipse(x, y, size, size);
+
+  // X mark
+  fill(255);
+  textSize(30);
+  textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
+  text("×", x, y - 4);
+
+  return hovering;
 }
 
 function keyPressed() {
@@ -992,7 +1048,24 @@ function keyPressed() {
   }
 
   if (currentScene === "CHECKIN") {
-    if (keyCode === ENTER) checkinAdvance();
+    _checkinCheatBuf += key;
+    if (_checkinCheatBuf.length > 5) _checkinCheatBuf = _checkinCheatBuf.slice(-5);
+    if (_checkinCheatBuf === "12345") {
+      _checkinCheatBuf = "";
+      closeDialogue();
+      currentScene = "GAME";
+      return;
+    }
+    if (dialoguePhase === "closed") return; // walk phase — nothing else to handle
+  }
+
+  if (currentScene === "END") {
+    if (key === "e" || key === "E" || key === " " || keyCode === ENTER) {
+      if (endFadeTimeout) { clearTimeout(endFadeTimeout); endFadeTimeout = null; }
+      if (endFadeInterval) { clearInterval(endFadeInterval); endFadeInterval = null; }
+      endScreenAlpha = 0;
+      currentScene = "GAME";
+    }
     return;
   }
 
@@ -1003,7 +1076,7 @@ function keyPressed() {
     return;
   }
 
-  if (isPlayerNearDoor1(player) && (key === "e" || key === "E")) {
+  if (isPlayerNearDoor1(player) && key === " ") {
     if (currentDay < TOTAL_DAYS) {
       advanceDay();
     }
@@ -1026,7 +1099,7 @@ function keyPressed() {
     }
   }
 
-  if (key === "E" || key === "e") {
+  if (key === "E" || key === "e" || key === " ") {
     // If text is still animating, skip to full text instead of advancing
     const choosingPhase =
       dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing";
@@ -1041,6 +1114,10 @@ function keyPressed() {
           openDialogue(npc);
           return;
         }
+      }
+      if (isPlayerNearCookieJar(player)) {
+        cookieJarInteract();
+        return;
       }
       // Check interactable evidence objects
       const nearItem = getInteractableNearPlayer(player);
@@ -1080,6 +1157,12 @@ function keyPressed() {
         closeDialogue();
       } else {
         dialoguePhase = "repeat-choosing";
+      }
+    } else if (dialoguePhase === "exchange") {
+      if (!typewriterDone) {
+        skipTypewriter();
+      } else {
+        advanceExchange();
       }
     } else if (dialoguePhase === "response" || dialoguePhase === "response2") {
       if (pendingResponseQueue.length > 0) {
@@ -1145,8 +1228,8 @@ function mousePressed() {
   }
 
   if (currentScene === "CHECKIN") {
-    checkinAdvance();
-    return;
+    // delegate clicks to the real dialogue system — same logic as GAME
+    if (dialoguePhase === "closed") return;
   }
 
   if (
@@ -1211,6 +1294,9 @@ function mousePressed() {
       } else if (dialoguePhase === "repeat") {
         if (spoonsRemaining === 0) closeDialogue();
         else dialoguePhase = "repeat-choosing";
+      } else if (dialoguePhase === "exchange") {
+        if (!typewriterDone) skipTypewriter();
+        else advanceExchange();
       } else if (
         dialoguePhase === "response" ||
         dialoguePhase === "response2"

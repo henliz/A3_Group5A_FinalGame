@@ -1,19 +1,15 @@
 let dialoguePhase = "closed";
 let activeNPC = null;
-let selectedOption = 0; // which button is highlighted (0, 1, 2)
-let spoonsRemaining = 7; // spoon budget for the day
-let chosenOption = null; // stores the option the player picked
-let pendingResponseQueue = []; // holds npcResponse2, 3, 4 in order
+let selectedOption = 0;
+let spoonsRemaining = 7;
+let chosenOption = null;
+let pendingResponseQueue = [];
 
-// CHANGE: added two variables to track monologue pages.
-// monologuePages is an array of text chunks that fit inside the dialogue box.
-// monologuePageIndex tracks which chunk we're currently showing.
 let monologuePages = [];
 let monologuePageIndex = 0;
 
-const tooTiredLine = "Gosh… I couldn't bring myself to ask them that."; // dialogue for when you don't have enough spoons to choose a dialogue option
+const tooTiredLine = "Gosh… I couldn't bring myself to ask them that.";
 
-// Exposed dialogue box bounds so sketch.js can hit-test clicks/hover
 let dialogueBoxBounds = null;
 
 // Typewriter effect state
@@ -21,8 +17,20 @@ let typewriterTarget = "";
 let typewriterIndex = 0;
 let typewriterDone = true;
 let typewriterFrame = 0;
-const TYPEWRITER_SPEED = 2; // frames per character (~30 chars/sec at 60fps)
+const TYPEWRITER_SPEED = 2;
 
+// ─── Exchange state ───────────────────────────────────────────
+// exchangeLines: full array of exchange entries for the chosen option
+// exchangeLineIndex: which entry we are currently on
+// exchangeChunkIndex: which text chunk within that entry (text, text2, text3…)
+let exchangeLines = [];
+let exchangeLineIndex = 0;
+let exchangeChunkIndex = 0;
+
+//portraits changes
+let littleRedEmotion = "idle";
+
+// ─── Typewriter helpers ───────────────────────────────────────
 function startTypewriter(text) {
   typewriterTarget = text || "";
   typewriterIndex = 0;
@@ -48,15 +56,115 @@ function tickTypewriter() {
   }
 }
 
+// ─── Exchange helpers ─────────────────────────────────────────
+
+// Returns all defined text chunks for a single exchange entry in order
+function getExchangeChunks(entry) {
+  let chunks = [];
+  if (entry.text) chunks.push(entry.text);
+  if (entry.text2) chunks.push(entry.text2);
+  if (entry.text3) chunks.push(entry.text3);
+  if (entry.text4) chunks.push(entry.text4);
+  return chunks;
+}
+
+// True if the current exchange line is spoken by Little Red
+function exchangePlayerSpeaking() {
+  if (!exchangeLines || exchangeLines.length === 0) return false;
+  return exchangeLines[exchangeLineIndex].speaker === "player";
+}
+
+// Applies emotion from the current exchange entry to the right portrait
+function applyExchangeEmotion() {
+  if (!exchangeLines || exchangeLines.length === 0) return;
+  let entry = exchangeLines[exchangeLineIndex];
+  if (!entry) return;
+  if (entry.speaker === "npc" && activeNPC) {
+    activeNPC.currentEmotion = entry.emotion || "idle";
+  }
+  if (entry.speaker === "player") {
+    littleRedEmotion = entry.emotion || "idle";
+  }
+}
+
+// Called from confirmChoice() when option.exchange exists.
+// Sets up exchange state and starts the first line.
+function startExchange(lines) {
+  exchangeLines = lines;
+  exchangeLineIndex = 0;
+  exchangeChunkIndex = 0;
+  dialoguePhase = "exchange";
+  applyExchangeEmotion();
+  let chunks = getExchangeChunks(lines[0]);
+  startTypewriter(chunks[0] || "");
+}
+
+// Called from E key / mouse when dialoguePhase === "exchange".
+// Advances chunks within the current entry first, then to the next entry.
+// When all entries are done, hands off cleanly to "response" phase.
+function advanceExchange() {
+  let entry = exchangeLines[exchangeLineIndex];
+  let chunks = getExchangeChunks(entry);
+
+  // More chunks left in this entry?
+  if (exchangeChunkIndex < chunks.length - 1) {
+    exchangeChunkIndex++;
+    startTypewriter(chunks[exchangeChunkIndex]);
+    return;
+  }
+
+  // Move to next entry
+  exchangeLineIndex++;
+  exchangeChunkIndex = 0;
+
+  if (exchangeLineIndex < exchangeLines.length) {
+    applyExchangeEmotion();
+    let nextChunks = getExchangeChunks(exchangeLines[exchangeLineIndex]);
+    startTypewriter(nextChunks[0] || "");
+    return;
+  }
+
+  // All exchange lines exhausted — decide what comes next
+  exchangeLines = [];
+  exchangeLineIndex = 0;
+  exchangeChunkIndex = 0;
+
+  // Build pending response queue from the chosen option
+  pendingResponseQueue = [];
+  if (chosenOption.npcResponse2)
+    pendingResponseQueue.push(chosenOption.npcResponse2);
+  if (chosenOption.npcResponse3)
+    pendingResponseQueue.push(chosenOption.npcResponse3);
+  if (chosenOption.npcResponse4)
+    pendingResponseQueue.push(chosenOption.npcResponse4);
+
+  // Do we have ANY npc response content?
+  const hasAnyNpcResponse =
+    !!chosenOption.npcResponse || pendingResponseQueue.length > 0;
+
+  if (hasAnyNpcResponse) {
+    dialoguePhase = "response";
+
+    if (chosenOption.npcResponse) {
+      startTypewriter(chosenOption.npcResponse);
+    } else {
+      startTypewriter(pendingResponseQueue.shift());
+    }
+  } else {
+    // No NPC response at all — go straight to monologue
+    startMonologue(chosenOption.monologue);
+  }
+}
+
+// ─── Open / Close ─────────────────────────────────────────────
 function openDialogue(npc) {
   activeNPC = npc;
 
-  // reset to first visible option, not just index 0
   let visible = getVisibleOptionIndices();
   selectedOption = visible.length > 0 ? visible[0] : 0;
 
   if (spoonsRemaining === 0) {
-    dialoguePhase = "hesitation"; // too tired to talk to anyone
+    dialoguePhase = "hesitation";
     startTypewriter(npc.dialogue.hesitationLine);
     return;
   }
@@ -78,13 +186,17 @@ function closeDialogue() {
   chosenOption = null;
   dialoguePhase = "closed";
   pendingResponseQueue = [];
-  // CHANGE: clear monologue pages on close so they don't bleed into the next conversation
   monologuePages = [];
   monologuePageIndex = 0;
-  // clear any active item examination
+  // reset exchange state
+  exchangeLines = [];
+  exchangeLineIndex = 0;
+  exchangeChunkIndex = 0;
+  littleRedEmotion = "idle";
   if (typeof activeExamineItem !== "undefined") activeExamineItem = null;
 }
 
+// ─── Draw dialogue ────────────────────────────────────────────
 function drawDialogue() {
   if (dialoguePhase === "closed") {
     dialogueBoxBounds = null;
@@ -92,10 +204,10 @@ function drawDialogue() {
   }
   tickTypewriter();
 
-  let boxW = 1857 / 3; // control width only
-  let boxH = 681 / 3; // height follows aspect ratio
-  let boxX = width * 0.12; // left-aligned with small margin
-  let boxY = height - boxH - 20; // pinned to bottom with padding
+  let boxW = 1857 / 3;
+  let boxH = 681 / 3;
+  let boxX = width * 0.12;
+  let boxY = height - boxH - 20;
 
   dialogueBoxBounds = { x: boxX, y: boxY, w: boxW, h: boxH };
 
@@ -118,16 +230,9 @@ function handleExit() {
     cost: -1,
     npcResponse: null,
   };
-  // CHANGE: use startMonologue() instead of manually setting phase + typewriter,
-  // so the exit monologue also gets auto-paged if it's long
   startMonologue(exitText);
 }
 
-// CHANGE: new helper function that handles starting a monologue.
-// It splits the full text into pages that fit the box (whole words only),
-// sets the phase to "monologue", and starts the typewriter on page 1.
-// Call this anywhere you previously wrote:
-//   dialoguePhase = "monologue"; startTypewriter(someText);
 function startMonologue(text) {
   monologuePages = splitMonologueIntoPages(text);
   monologuePageIndex = 0;
@@ -135,27 +240,28 @@ function startMonologue(text) {
   startTypewriter(monologuePages[0]);
 }
 
-//helper functions for drawDialogue
-function drawDialogueBox(boxX, boxY, boxW, boxH) {
-  if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
-    image(uiMonologueBox, boxX, boxY, boxW, boxH);
-  } else {
-    image(uiMainBox, boxX, boxY, boxW, boxH);
-  }
+// ─── Portrait / nametag / box helpers ────────────────────────
+// Single source of truth: is Little Red currently the speaker?
+function isLittleRedSpeaking() {
+  if (dialoguePhase === "monologue") return true;
+  if (dialoguePhase === "hesitation") return true;
+  if (dialoguePhase === "exchange" && exchangePlayerSpeaking()) return true;
+  return false;
 }
 
 function drawPortrait(boxX, boxY, boxW) {
   let pW = 300;
   let pH = 420;
-  let pY = boxY - pH * 0.9; // floats above the box
+  let pY = boxY - pH; // bottom of portrait sits flush with top of dialogue box
 
-  if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
-    // Little Red on the RIGHT during monologue
+  if (isLittleRedSpeaking()) {
     let pX = boxX + boxW - pW - 20;
     if (portraits.littleRed) {
-      image(portraits.littleRed.idle, pX, pY, pW, pH);
+      let lrEmotion = littleRedEmotion || "idle";
+      let lrPortrait =
+        portraits.littleRed[lrEmotion] || portraits.littleRed.idle;
+      image(lrPortrait, pX, pY, pW, pH);
     } else {
-      // placeholder if image not loaded
       fill(200, 150, 150);
       noStroke();
       rect(pX, pY, pW, pH, 8);
@@ -165,20 +271,22 @@ function drawPortrait(boxX, boxY, boxW) {
       text("Little Red", pX + pW / 2, pY + pH / 2);
     }
   } else {
-    // NPC portrait on the LEFT
     let pX = boxX + 20;
     let portraitImg = getActivePortrait();
     if (portraitImg) {
       image(portraitImg, pX, pY, pW, pH);
     } else {
-      // placeholder if portrait not ready yet
       fill(150, 150, 200);
       noStroke();
       rect(pX, pY, pW, pH, 8);
       fill(80);
       textSize(12);
       textAlign(CENTER, CENTER);
-      text(activeNPC.dialogue.name || "NPC", pX + pW / 2, pY + pH / 2);
+      text(
+        activeNPC ? activeNPC.dialogue.name || "NPC" : "NPC",
+        pX + pW / 2,
+        pY + pH / 2,
+      );
     }
   }
 }
@@ -195,8 +303,7 @@ function drawNameTag(boxX, boxY, boxW) {
   let tagH = 70;
   let tagY = boxY - tagH;
 
-  if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
-    // Little Red name tag on the RIGHT
+  if (isLittleRedSpeaking()) {
     let tagW = 180;
     let tagX = boxX + boxW - tagW - 20;
     fill(168, 86, 21);
@@ -207,8 +314,7 @@ function drawNameTag(boxX, boxY, boxW) {
     textAlign(CENTER, CENTER);
     text("Little Red", tagX + tagW / 2, tagY + tagH / 2.5);
   } else if (activeNPC && activeNPC.dialogue.name) {
-    // NPC name tag on the LEFT
-    textSize(38); // set size first so textWidth measures correctly
+    textSize(38);
     let tagW = textWidth(activeNPC.dialogue.name) + 60;
     let tagX = boxX + 20;
     fill(168, 86, 21);
@@ -220,134 +326,53 @@ function drawNameTag(boxX, boxY, boxW) {
   }
 }
 
-// CHANGE: helper that measures how tall a wrapped block of text would be
-// at a given width and font size. Used by splitMonologueIntoPages() to know
-// when a page is full. Words are never split — it only breaks at spaces.
-function measureWrappedHeight(str, maxW, size) {
-  textSize(size);
-  let words = str.split(" ");
-  let lineW = 0;
-  let lines = 1;
-  let spaceW = textWidth(" ");
+function drawDialogueBox(boxX, boxY, boxW, boxH) {
+  const useMonologueBox =
+    dialoguePhase === "monologue" || dialoguePhase === "hesitation";
 
-  for (let word of words) {
-    let parts = word.split("\n");
-    for (let p = 0; p < parts.length; p++) {
-      let ww = textWidth(parts[p]);
-      if (p > 0) {
-        lines++;
-        lineW = 0;
-      }
-      if (lineW + ww > maxW && lineW > 0) {
-        lines++;
-        lineW = ww + spaceW;
-      } else {
-        lineW += ww + spaceW;
-      }
-    }
+  if (useMonologueBox) {
+    image(uiMonologueBox, boxX, boxY, boxW, boxH);
+  } else {
+    image(uiMainBox, boxX, boxY, boxW, boxH);
   }
-  let lineH = textAscent() + textDescent() + 6;
-  return lines * lineH;
 }
 
-// CHANGE: splits a full monologue string into an array of page strings,
-// each of which fits inside the dialogue box without overflowing.
-// Words are kept whole — no word is ever cut in half.
-// Short monologues that fit in one page just return a single-element array
-// and behave exactly as before.
-function splitMonologueIntoPages(fullText) {
-  let boxW = 1857 / 3;
-  let boxH = 681 / 3;
-  let usableW = boxW - 75;
-  let usableH = boxH - 80;
-  let size = 30;
-
-  textSize(size);
-  textStyle(ITALIC);
-
-  let words = fullText.split(" ");
-  let pages = [];
-  let currentPage = "";
-
-  for (let word of words) {
-    let test = currentPage === "" ? word : currentPage + " " + word;
-    if (
-      measureWrappedHeight(test, usableW, size) > usableH &&
-      currentPage !== ""
-    ) {
-      pages.push(currentPage);
-      currentPage = word;
-    } else {
-      currentPage = test;
-    }
-  }
-  if (currentPage !== "") pages.push(currentPage);
-
-  textStyle(NORMAL);
-  return pages.length > 0 ? pages : [""];
-}
-
+// ─── Dialogue text ────────────────────────────────────────────
 function drawDialogueText(boxX, boxY, boxW, boxH) {
-  // text starts after the portrait width so it doesn't overlap
   let textX = boxX + 50;
   let textW = boxW - 75;
   let revealed = typewriterTarget.substring(0, typewriterIndex);
-
-  if (dialoguePhase === "hesitation") {
-    fill(255);
-    textStyle(ITALIC);
-    textSize(30);
-    textAlign(LEFT, TOP);
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
-    textStyle(NORMAL);
-    return;
-  }
-
-  // CHANGE: monologue rendering is now clean — no page-building here.
-  // Pages are built once in startMonologue() before this ever runs,
-  // so we just render whatever the typewriter is currently showing.
-  if (dialoguePhase === "monologue" && chosenOption) {
-    fill(255);
-    textStyle(ITALIC);
-    textSize(30);
-    textAlign(LEFT, TOP);
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
-    textStyle(NORMAL);
-    return;
-  }
 
   fill(255);
   textSize(30);
   textAlign(LEFT, TOP);
 
-  if (dialoguePhase === "opening" || dialoguePhase === "choosing") {
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
+  let useItalic = false;
+
+  // Monologue / hesitation are always italic
+  if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
+    useItalic = true;
   }
-  if (dialoguePhase === "repeat" || dialoguePhase === "repeat-choosing") {
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
+
+  // Exchange: allow per-line italic control
+  if (dialoguePhase === "exchange" && exchangeLines[exchangeLineIndex]) {
+    useItalic = !!exchangeLines[exchangeLineIndex].italic;
   }
-  if (dialoguePhase === "response" && chosenOption) {
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
-  }
-  if (
-    (dialoguePhase === "response" || dialoguePhase === "response2") &&
-    chosenOption
-  ) {
-    text(revealed, textX, boxY + 40, textW, boxH - 80);
-  }
+
+  if (useItalic) textStyle(ITALIC);
+  text(revealed, textX, boxY + 40, textW, boxH - 80);
+  textStyle(NORMAL);
 }
 
+// ─── Enter hint ───────────────────────────────────────────────
 function drawEnterHint(boxX, boxY, boxW, boxH) {
-  // don't show during choosing — player knows to use W/S/Enter
   if (dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing")
     return;
-  // don't show until text has fully revealed
   if (!typewriterDone) return;
 
   const hintX = boxX + boxW - 60;
   const hintY = boxY + boxH - 25;
 
-  // brighten on hover
   const hinting =
     dialogueBoxBounds &&
     mouseX > dialogueBoxBounds.x &&
@@ -358,11 +383,11 @@ function drawEnterHint(boxX, boxY, boxW, boxH) {
   fill(255, 255, 255, hinting ? 255 : 200);
   textSize(18);
   textAlign(RIGHT, BOTTOM);
-  text("Press 'E' to continue", hintX, hintY);
+  text("Press SPACE to continue", hintX, hintY);
 }
 
+// ─── Options ──────────────────────────────────────────────────
 function isMouseOver(x, y, w, h) {
-  //detects when the mouse is over a dialogue option box
   return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
 }
 
@@ -383,7 +408,6 @@ function drawOptions() {
     let btnY = startY + drawnIndex * gap;
     let canAfford = spoonsRemaining >= option.cost;
 
-    // draw button image
     if (!canAfford) {
       image(uiBtnDisabled, btnX, btnY, btnW, btnH);
     } else if (i === selectedOption) {
@@ -392,7 +416,6 @@ function drawOptions() {
       image(uiBtnRegular, btnX, btnY, btnW, btnH + 18);
     }
 
-    // text colour
     if (i === selectedOption && canAfford) {
       fill(255);
     } else if (!canAfford) {
@@ -405,7 +428,6 @@ function drawOptions() {
     textAlign(LEFT, CENTER);
     text(option.playerLine, btnX + 13, btnY - 7, btnW - 60, btnH);
 
-    // cookie cost badge on right
     let iconSize = 25;
     let iconX = btnX + btnW - iconSize - 8;
     let iconY = btnY + btnH / 2 - iconSize / 2;
@@ -418,17 +440,12 @@ function drawOptions() {
   }
 }
 
+// ─── Confirm choice ───────────────────────────────────────────
 function confirmChoice() {
   let option = activeNPC.dialogue.options[selectedOption];
 
-  // can't afford → show tooTired monologue
   if (spoonsRemaining < option.cost) {
-    chosenOption = {
-      monologue: tooTiredLine,
-      cost: -1, // special value so it doesn't trigger exit
-      npcResponse: null,
-    };
-    // CHANGE: use startMonologue() so the too-tired line is also auto-paged
+    chosenOption = { monologue: tooTiredLine, cost: -1, npcResponse: null };
     startMonologue(tooTiredLine);
     return;
   }
@@ -436,36 +453,37 @@ function confirmChoice() {
   spoonsRemaining -= option.cost;
   chosenOption = option;
 
-  // cookie consume sound
   if (typeof CookieSound !== "undefined") {
     CookieSound.setVolume(0.25);
     CookieSound.play();
   }
 
-  // low cookie notification
   if (spoonsRemaining <= 2 && !lowCookieNotifTriggered) {
     lowCookieNotifVisible = true;
     lowCookieNotifTriggered = true;
     lowCookieNotifTimer = LOW_COOKIE_NOTIF_DURATION;
   }
 
-  // reset highlight to first visible option for next time buttons appear
   let visible = getVisibleOptionIndices();
-  // filter out the option just chosen since it'll be gone next round
   visible = visible.filter(
     (i) => activeNPC.dialogue.options[i].id !== option.id,
   );
   selectedOption = visible.length > 0 ? visible[0] : 0;
 
-  // mark this option as used
   activeNPC.usedOptions.push(option.id);
 
-  // add notebook entry if this option has one
   if (option.notebookEntry && activeNPC.journalPageIndex !== undefined) {
     journal.addTextEntry(activeNPC.journalPageIndex, option.notebookEntry);
   }
 
-  // build the queue from any extra response parts
+  // If the option has an exchange, start it.
+  // npcResponse + queue will be picked up automatically when exchange finishes.
+  if (option.exchange && option.exchange.length > 0) {
+    startExchange(option.exchange);
+    return;
+  }
+
+  // No exchange — existing response flow, unchanged
   pendingResponseQueue = [];
   if (option.npcResponse2) pendingResponseQueue.push(option.npcResponse2);
   if (option.npcResponse3) pendingResponseQueue.push(option.npcResponse3);
@@ -475,6 +493,7 @@ function confirmChoice() {
   startTypewriter(option.npcResponse);
 }
 
+// ─── Misc helpers ─────────────────────────────────────────────
 function bedtime() {
   if (spoonsRemaining === 0 && dialoguePhase === "closed") {
     fill("black");
@@ -508,17 +527,73 @@ function getVisibleOptionIndices() {
   if (!activeNPC) return [];
   let visible = [];
   let options = activeNPC.dialogue.options;
-
   for (let i = 0; i < options.length; i++) {
-    let option = options[i];
-    if (activeNPC.usedOptions.includes(option.id)) {
-      continue;
-    }
+    if (activeNPC.usedOptions.includes(options[i].id)) continue;
     visible.push(i);
   }
   return visible;
 }
 
+function measureWrappedHeight(str, maxW, size) {
+  textSize(size);
+  let words = str.split(" ");
+  let lineW = 0;
+  let lines = 1;
+  let spaceW = textWidth(" ");
+
+  for (let word of words) {
+    let parts = word.split("\n");
+    for (let p = 0; p < parts.length; p++) {
+      let ww = textWidth(parts[p]);
+      if (p > 0) {
+        lines++;
+        lineW = 0;
+      }
+      if (lineW + ww > maxW && lineW > 0) {
+        lines++;
+        lineW = ww + spaceW;
+      } else {
+        lineW += ww + spaceW;
+      }
+    }
+  }
+  let lineH = textAscent() + textDescent() + 6;
+  return lines * lineH;
+}
+
+function splitMonologueIntoPages(fullText) {
+  let boxW = 1857 / 3;
+  let boxH = 681 / 3;
+  let usableW = boxW - 75;
+  let usableH = boxH - 80;
+  let size = 30;
+
+  textSize(size);
+  textStyle(ITALIC);
+
+  let words = fullText.split(" ");
+  let pages = [];
+  let currentPage = "";
+
+  for (let word of words) {
+    let test = currentPage === "" ? word : currentPage + " " + word;
+    if (
+      measureWrappedHeight(test, usableW, size) > usableH &&
+      currentPage !== ""
+    ) {
+      pages.push(currentPage);
+      currentPage = word;
+    } else {
+      currentPage = test;
+    }
+  }
+  if (currentPage !== "") pages.push(currentPage);
+
+  textStyle(NORMAL);
+  return pages.length > 0 ? pages : [""];
+}
+
+// ─── Exports ──────────────────────────────────────────────────
 window.openDialogue = openDialogue;
 window.closeDialogue = closeDialogue;
 window.drawDialogue = drawDialogue;
@@ -527,6 +602,5 @@ window.bedtime = bedtime;
 window.startTypewriter = startTypewriter;
 window.skipTypewriter = skipTypewriter;
 window.handleExit = handleExit;
-// CHANGE: export startMonologue so sketch.js can call it when transitioning
-// from a response phase into the monologue phase
 window.startMonologue = startMonologue;
+window.advanceExchange = advanceExchange;
