@@ -74,8 +74,20 @@ const clutterAssetList = [
     path: "assets/newassets/double_bed.png",
   },
   {
-    key: "cabinet1",
-    path: "assets/cabinet.png",
+    key: "newwindow3",
+    path: "assets/newassets/newwindow.png",
+  },
+  {
+    key: "newcabinet3",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newcloset3",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "newchair1",
+    path: "assets/newassets/newchair.png",
   },
 
   //Room 2
@@ -84,8 +96,24 @@ const clutterAssetList = [
     path: "assets/newassets/double_bed.png",
   },
   {
+    key: "window2",
+    path: "assets/newassets/newwindow.png",
+  },
+  {
     key: "shelf3",
     path: "assets/newassets/newbookshelf.png",
+  },
+  {
+    key: "newcloset2",
+    path: "assets/newassets/closet.png",
+  },
+  {
+    key: "newcabinet2",
+    path: "assets/newassets/bedside_table.png",
+  },
+  {
+    key: "newplant1",
+    path: "assets/plant-1.png",
   },
   //Room 3
   {
@@ -97,7 +125,7 @@ const clutterAssetList = [
     path: "assets/newassets/newbookshelf.png",
   },
   {
-    key: "smalltable1",
+    key: "newcabinet1",
     path: "assets/newassets/bedside_table.png",
   },
   {
@@ -105,14 +133,18 @@ const clutterAssetList = [
     path: "assets/newassets/closet.png",
   },
   {
-    key: "newplant1",
-    path: "assets/plant-1.png",
+    key: "window1",
+    path: "assets/newassets/newwindow.png",
+  },
+  {
+    key: "armchair1",
+    path: "assets/newassets/armchair.png",
   },
 
   //Little Red Room Door
   {
     key: "door1",
-    path: "assets/door-1.png",
+    path: "assets/newassets/newdoor.png",
   },
 
   //office clutter
@@ -276,17 +308,39 @@ const roomLayout = [
   //Room 1 cultter setting
   {
     asset: "bed1",
-    tileX: 1.6,
-    tileY: 3.8,
+    tileX: 1.2,
+    tileY: 3.6,
     scale: 4.5,
     anchor: "top-left",
   },
   {
-    asset: "cabinet1",
-    tileX: 2.6,
-    tileY: 3.6,
-    scale: 4.3,
-    anchor: "bottom",
+    asset: "newwindow3",
+    tileX: 1.3,
+    tileY: 2.95,
+    scale: 3.3,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcabinet3",
+    tileX: 2.4,
+    tileY: 3.8,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcloset3",
+    tileX: 3,
+    tileY: 3.2,
+    scale: 4,
+    anchor: "top-left",
+  },
+  {
+    asset: "newchair1",
+    tileX: 3.45,
+    tileY: 5.5,
+    scale: 4,
+    anchor: "top-left",
+    flip: true,
   },
 
   //Room 2 clutter setting
@@ -298,17 +352,45 @@ const roomLayout = [
     anchor: "bottom",
   },
   {
+    asset: "window2",
+    tileX: 10,
+    tileY: -0.95,
+    scale: 2.8,
+    anchor: "top-left",
+  },
+  {
     asset: "shelf3",
-    tileX: 8.3,
-    tileY: -0.5,
+    tileX: 8.2,
+    tileY: -0.8,
     scale: 4,
     anchor: "bottom",
+  },
+  {
+    asset: "newcloset2",
+    tileX: 8.9,
+    tileY: -0.7,
+    scale: 3.5,
+    anchor: "top-left",
+  },
+  {
+    asset: "newcabinet2",
+    tileX: 9.5,
+    tileY: -0.2,
+    scale: 2.8,
+    anchor: "top-left",
+  },
+  {
+    asset: "newplant1",
+    tileX: 9.6,
+    tileY: -0.3,
+    scale: 2.2,
+    anchor: "top-left",
   },
 
   //Room 3 clutter setting
   {
     asset: "bed3",
-    tileX: 4,
+    tileX: 3.9,
     tileY: -0.3,
     scale: 3.5,
     anchor: "bottom",
@@ -321,7 +403,7 @@ const roomLayout = [
     anchor: "bottom",
   },
   {
-    asset: "smalltable1",
+    asset: "newcabinet1",
     tileX: 3.5,
     tileY: -0.1,
     scale: 3,
@@ -335,10 +417,17 @@ const roomLayout = [
     anchor: "top-left",
   },
   {
-    asset: "newplant1",
-    tileX: 2.4,
-    tileY: 1.5,
-    scale: 4.3,
+    asset: "window1",
+    tileX: 4,
+    tileY: -0.95,
+    scale: 2.7,
+    anchor: "top-left",
+  },
+  {
+    asset: "armchair1",
+    tileX: 2.2,
+    tileY: 1.4,
+    scale: 3,
     anchor: "top-left",
   },
 
@@ -624,6 +713,7 @@ function clutterSetup() {
       closeupAsset: item.closeupAsset || null,
       closeupLabel: item.closeupLabel || null,
       examined: item.examined || false,
+      flip: item.flip || false,
     });
   }
 }
@@ -657,7 +747,15 @@ function clutterDraw(worldX = 0, worldY = 0) {
       }
     }
 
-    image(p.img, pos.actualX, pos.actualY, pos.dw, pos.dh);
+    if (p.flip) {
+      push();
+      translate(pos.actualX + pos.dw / 2, pos.actualY);
+      scale(-1, 1);
+      image(p.img, -pos.dw / 2, 0, pos.dw, pos.dh);
+      pop();
+    } else {
+      image(p.img, pos.actualX, pos.actualY, pos.dw, pos.dh);
+    }
   }
 
   // Draw door1 separately
