@@ -1,8 +1,8 @@
 const COOKIE_JAR = {
-  x: 1200,
-  y: 520,
-  w: 30,
-  h: 35,
+  x: 598,
+  y: 490,
+  w: 20,
+  h: 25,
 
   interactRadius: 80,
   usedToday: false,
