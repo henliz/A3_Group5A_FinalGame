@@ -85,6 +85,10 @@ function applyExchangeEmotion() {
   if (entry.speaker === "player") {
     littleRedEmotion = entry.emotion || "idle";
   }
+  // Fire Helen journal entry if this exchange line has one
+  if (entry.helenEntry && typeof journal !== "undefined") {
+    journal.addHelenEntry(entry.helenEntry.section, entry.helenEntry.text);
+  }
 }
 
 // Called from confirmChoice() when option.exchange exists.
@@ -469,6 +473,10 @@ function confirmChoice() {
 
   if (option.notebookEntry && activeNPC.journalPageIndex !== undefined) {
     journal.addTextEntry(activeNPC.journalPageIndex, option.notebookEntry);
+  }
+  // Fire Helen entry attached directly to an option (not an exchange line)
+  if (option.helenEntry) {
+    journal.addHelenEntry(option.helenEntry.section, option.helenEntry.text);
   }
 
   // If the option has an exchange, start it.

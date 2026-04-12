@@ -193,16 +193,28 @@ const runawayManDialogueByDay = {
             speaker: "npc",
             emotion: "idle",
             text: "Yes... When I checked in, I was going through a difficult time. Helen listened and comforted me.",
+            helenEntry: {
+              section: "jerome",
+              text: "Helped Jerome when he first checked in",
+            },
           },
           {
             speaker: "npc",
             emotion: "idle",
             text: "I gave her a necklace to thank her for all she's done for me during my stay.",
+            helenEntry: {
+              section: "jerome",
+              text: "Gave her a necklace to thank her but asked for it back",
+            },
           },
           {
             speaker: "player",
             italic: true,
             text: "It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...",
+            helenEntry: {
+              section: "jerome",
+              text: "Seems like they had a closer relationship",
+            },
           },
           {
             speaker: "player",
@@ -217,6 +229,10 @@ const runawayManDialogueByDay = {
             speaker: "npc",
             emotion: "idle",
             text: "She refused and said this confirmed her suspicions about me. Then she stormed off. That was the last time I saw her.",
+            helenEntry: {
+              section: "left",
+              text: "'Stormed off' that evening. Where did she go?",
+            },
           },
           {
             speaker: "player",

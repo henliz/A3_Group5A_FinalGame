@@ -77,18 +77,20 @@ function drawHomePage() {
   }
 }
 function drawEndPage() {
-  background(0);
-  // fade out the whole screen by drawing a black overlay on top
-  if (endScreenAlpha < 255) {
-    noStroke();
-    fill(0, endScreenAlpha);
-    rect(0, 0, width, height);
-  }
-  fill(255, endScreenAlpha === 0 ? 0 : 255);
+  // Black overlay that fades out
+  noStroke();
+  fill(0, endScreenAlpha);
+  rect(0, 0, width, height);
+
+  if (endScreenAlpha <= 0) return;
+
+  // Main day-over text
+  fill(255, endScreenAlpha);
   textAlign(CENTER, CENTER);
-  textSize(24);
+  textSize(35);
 
   if (currentDay < TOTAL_DAYS) {
+    textSize(35);
     text(
       "Day " +
         (currentDay - 1) +
@@ -98,6 +100,9 @@ function drawEndPage() {
       width / 2,
       height / 2 - 20,
     );
+    fill(255, endScreenAlpha * 0.6);
+    textSize(24);
+    text("Get ready for the next day", width / 2, height / 2 + 40);
   } else {
     text(
       "Day " +
@@ -108,7 +113,19 @@ function drawEndPage() {
     );
   }
 
-  fill(255, min(endScreenAlpha, 160));
-  textSize(16);
-  text("Press E to continue", width / 2, height / 2 + 40);
+  // Progress bar
+  let progress = constrain(endDayTimer / END_DAY_TOTAL, 0, 1);
+  let barW = 700;
+  let barH = 60;
+  let barX = width / 2 - barW / 2;
+  let barY = height / 2 + 150;
+
+  // Bar background
+  fill(255, 255, 255, endScreenAlpha * 0.2);
+  noStroke();
+  rect(barX, barY, barW, barH, 3);
+
+  // Bar fill
+  fill(255, 200, 50, endScreenAlpha);
+  rect(barX, barY, barW * progress, barH, 3);
 }

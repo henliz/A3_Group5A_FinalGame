@@ -714,6 +714,10 @@ const roomLayout = [
       "Medicinal Plants book:  wolfsbane page dog-eared, personal margin marks, not clinical annotations.",
     closeupAsset: "medicinal_plat_book",
     closeupLabel: "Medicinal Book",
+    helenEntry: {
+      section: "doctor",
+      text: "How did a page with her handwriting end up in Dr. Krisia's book about medicinal plants?",
+    },
   },
 
   //crime scene
@@ -848,6 +852,7 @@ function clutterSetup() {
       closeupLabel: item.closeupLabel || null,
       examined: item.examined || false,
       flip: item.flip || false,
+      helenEntry: item.helenEntry || null,
     });
   }
 }

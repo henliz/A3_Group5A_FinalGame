@@ -53,6 +53,10 @@ const doctorDialogueByDay = {
       {
         id: "A",
         cost: 3,
+        helenEntry: {
+          section: "doctor",
+          text: "Seemed suspicious of Dr. Krisia",
+        },
         playerLine:
           "Yesterday you mentioned Helen asked you a lot of personal questions. What kind of questions exactly?",
         exchange: [
@@ -273,6 +277,10 @@ const doctorDialogueByDay = {
             speaker: "npc",
             emotion: "idle",
             text: "Once I caught her following me when I was going on a walk, it was so creepy!",
+            helenEntry: {
+              section: "doctor",
+              text: "What did Helen know about her?",
+            },
           },
           {
             speaker: "player",
