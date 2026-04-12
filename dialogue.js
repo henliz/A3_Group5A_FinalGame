@@ -306,10 +306,12 @@ function drawNameTag(boxX, boxY, boxW) {
   if (isLittleRedSpeaking()) {
     let tagW = 180;
     let tagX = boxX + boxW - tagW - 20;
+    stroke(179, 70, 0);
+    strokeWeight(4);
     fill(168, 86, 21);
-    noStroke();
-    rect(tagX, tagY, tagW, tagH, 4);
+    rect(tagX, tagY, tagW, tagH, 10);
     fill(255);
+    noStroke();
     textSize(38);
     textAlign(CENTER, CENTER);
     text("Little Red", tagX + tagW / 2, tagY + tagH / 2.5);
@@ -317,10 +319,12 @@ function drawNameTag(boxX, boxY, boxW) {
     textSize(38);
     let tagW = textWidth(activeNPC.dialogue.name) + 60;
     let tagX = boxX + 20;
+    stroke(179, 70, 0);
+    strokeWeight(4);
     fill(168, 86, 21);
-    noStroke();
-    rect(tagX, tagY, tagW, tagH, 4);
+    rect(tagX, tagY, tagW, tagH, 10);
     fill(255);
+    noStroke();
     textAlign(CENTER, CENTER);
     text(activeNPC.dialogue.name, tagX + tagW / 2, tagY + tagH / 2.5);
   }
@@ -331,14 +335,14 @@ function drawDialogueBox(boxX, boxY, boxW, boxH) {
     dialoguePhase === "monologue" || dialoguePhase === "hesitation";
 
   if (useMonologueBox) {
-    stroke("black");
+    stroke(83, 45, 130);
     strokeWeight(4);
-    fill("purple");
+    fill(47, 36, 69);
     rect(boxX, boxY, boxW, boxH, 30);
   } else {
-    stroke("black");
+    stroke(179, 70, 0);
     strokeWeight(4);
-    fill("brown");
+    fill(255, 175, 88);
     rect(boxX, boxY, boxW, boxH, 30);
   }
 }
@@ -349,7 +353,8 @@ function drawDialogueText(boxX, boxY, boxW, boxH) {
   let textW = boxW - 75;
   let revealed = typewriterTarget.substring(0, typewriterIndex);
 
-  fill(255);
+  fill(103, 52, 12);
+  noStroke();
   textSize(30);
   textAlign(LEFT, TOP);
 
@@ -357,6 +362,7 @@ function drawDialogueText(boxX, boxY, boxW, boxH) {
 
   // Monologue / hesitation are always italic
   if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
+    fill(255, 255, 235);
     useItalic = true;
   }
 
@@ -387,7 +393,7 @@ function drawEnterHint(boxX, boxY, boxW, boxH) {
     mouseY < dialogueBoxBounds.y + dialogueBoxBounds.h;
 
   fill(255, 255, 255, hinting ? 255 : 200);
-  textSize(18);
+  textSize(22);
   textAlign(RIGHT, BOTTOM);
   text("Press SPACE to continue", hintX, hintY);
 }
@@ -414,28 +420,28 @@ function drawOptions() {
     let canAfford = spoonsRemaining >= option.cost;
 
     if (!canAfford) {
-      stroke("black");
+      stroke(113, 113, 113);
       strokeWeight(4);
-      fill("grey");
+      fill(186, 186, 186);
       rect(btnX, btnY, btnW, btnH, 20);
     } else if (i === selectedOption) {
-      stroke("black");
+      stroke(111, 31, 41);
       strokeWeight(4);
-      fill("orange");
+      fill(145, 34, 49);
       rect(btnX, btnY, btnW, btnH, 20);
     } else {
-      stroke("black");
+      stroke(138, 0, 31);
       strokeWeight(4);
-      fill("red");
+      fill(202, 22, 57);
       rect(btnX, btnY, btnW, btnH + 18, 20);
     }
 
     if (i === selectedOption && canAfford) {
-      fill(255);
+      fill(255, 255, 235);
     } else if (!canAfford) {
-      fill(100, 100, 100);
-    } else {
       fill(30, 30, 30);
+    } else {
+      fill(255, 255, 235);
     }
 
     textSize(18);
