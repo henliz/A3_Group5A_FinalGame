@@ -189,9 +189,80 @@ class Journal {
         text("• " + page.textEntries[i], entryX, entryY + i * 75, entryW, 200);
       }
       textStyle(NORMAL);
-      textFont(jersey10Font); // reset at the end
+      textFont(mainFont); // reset at the end
     }
-    textFont(jersey10Font);
+
+    // ─── Helen structured entries (FDL page only) ────────────
+    if (page.title === "FDL") {
+      if (!page.helenEntries) {
+        page.helenEntries = { left: [], jerome: [], doctor: [], innkeeper: [] };
+      }
+      const he = page.helenEntries;
+
+      // Always-present left side facts (baked in from day 1)
+      const alwaysLeft = [
+        "Time of death: ~12am",
+        "Cause of death: blood loss due to deep gashes and bites to the neck",
+      ];
+
+      const jX = width * 0.29; // left edge of journal image
+      const jY = height * 0.15; // top edge of journal image
+      const leftX = jX + 60; // left page text column
+      const rightX = jX + 345; // right page text column
+      const entryW = 240; // max text wrap width
+
+      textFont(journalFont);
+      textSize(11);
+      fill(40, 20, 10);
+      textAlign(LEFT, TOP);
+
+      // ── Left page ──────────────────────────────────────────
+      let leftY = jY + 340; // below the portrait area
+      textStyle(ITALIC);
+      for (const entry of alwaysLeft) {
+        text("• " + entry, leftX, leftY, entryW, 60);
+        leftY += measureWrappedHeight("• " + entry, entryW, 11) + 5;
+      }
+      for (const entry of he.left) {
+        text("• " + entry, leftX, leftY, entryW, 60);
+        leftY += measureWrappedHeight("• " + entry, entryW, 11) + 5;
+      }
+
+      // ── Right page ─────────────────────────────────────────
+      const rightSections = [
+        { key: "jerome", label: "Sir Jerome" },
+        { key: "doctor", label: "Dr. Krisia" },
+        { key: "innkeeper", label: "Mrs. Gustall" },
+      ];
+
+      let rightY = jY + 135; // start near top of right page
+      for (const sec of rightSections) {
+        const entries = he[sec.key];
+        if (!entries || entries.length === 0) continue;
+
+        // Section label
+        textSize(14);
+        textStyle(NORMAL);
+        textAlign(CENTER, TOP);
+        fill(100, 50, 10);
+        text(sec.label + ":", rightX, rightY, entryW, 20);
+        rightY += 16;
+
+        // Entries
+        textSize(12);
+        textStyle(ITALIC);
+        textAlign(LEFT, TOP);
+        fill(40, 20, 10);
+        for (const entry of entries) {
+          text("• " + entry, rightX, rightY, entryW, 80);
+          rightY += measureWrappedHeight("• " + entry, entryW, 12) - 10;
+        }
+        rightY += 10; // gap between sections
+      }
+      textSize(12);
+      textStyle(NORMAL);
+      textFont(mainFont);
+    }
 
     // Close button
     const btnX = width * 0.29 + 630;
@@ -360,5 +431,38 @@ class Journal {
       my < btnY + btnSize
     )
       this.nextPage();
+  }
+
+  // ─── Helen entry helper ───────────────────────────────────
+  // section: "left" | "jerome" | "doctor" | "innkeeper"
+  // Deduplicates automatically — safe to call multiple times.
+  addHelenEntry(section, text) {
+    const sectionMap = {
+      left: { pageIndex: 0, slot: "left" },
+      jerome: { pageIndex: 0, slot: "jerome" },
+      doctor: { pageIndex: 0, slot: "doctor" },
+      innkeeper: { pageIndex: 0, slot: "innkeeper" },
+    };
+    const target = sectionMap[section];
+    if (!target) return;
+
+    const page = this.pages[target.pageIndex];
+
+    // Store helen entries in a separate structured object
+    if (!page.helenEntries) {
+      page.helenEntries = { left: [], jerome: [], doctor: [], innkeeper: [] };
+    }
+
+    const bucket = page.helenEntries[target.slot];
+    if (bucket.includes(text)) return; // dedup — already added
+
+    bucket.push(text);
+    page.hasNew = true;
+    this._recalcUnread();
+
+    if (typeof journalNotifySound !== "undefined") {
+      journalNotifySound.setVolume(0.25);
+      journalNotifySound.play();
+    }
   }
 }

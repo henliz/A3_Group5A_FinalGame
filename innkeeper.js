@@ -59,6 +59,10 @@ const innkeeperDialogueByDay = {
             speaker: "npc",
             emotion: "angry",
             text: "Have you been snooping around my office?! It was bad enough Helen was always rustling around, and now you're rummaging through my business.",
+            helenEntry: {
+              section: "left",
+              text: "Well-liked by guests but would ask personal questions and snoop around",
+            },
           },
           {
             speaker: "player",
@@ -155,6 +159,10 @@ const innkeeperDialogueByDay = {
             emotion: "idle",
             italics: true,
             text: "Helen had access to Mrs. Gustall’s documents. She must have found her information about the shady donation and tax information.",
+            helenEntry: {
+              section: "innkeeper",
+              text: "Organized and had access to Mrs. Gustall's documents",
+            },
           },
           {
             speaker: "npc",
@@ -175,6 +183,10 @@ const innkeeperDialogueByDay = {
             speaker: "npc",
             emotion: "idle",
             text: "...she was already dead when I found her. It was really strange, she had a few scratches on her face and chest.",
+            helenEntry: {
+              section: "innkeeper",
+              text: "A few scratches on her body",
+            },
           },
           {
             speaker: "player",
@@ -210,6 +222,10 @@ const innkeeperDialogueByDay = {
             speaker: "npc",
             emotion: "idle",
             text: "She worked here for just under two years.",
+            helenEntry: {
+              section: "innkeeper",
+              text: "Worked for Mrs. Gustall for ~2 years",
+            },
           },
           {
             speaker: "npc",

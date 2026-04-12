@@ -51,6 +51,8 @@ let lowCookieNotifTimer = 0;
 const LOW_COOKIE_NOTIF_DURATION = 300; // ~5 seconds at 60fps
 
 let dayEndTriggered = false;
+let dayTransitionLocked = false; // blocks all input during day-end transition
+let confirmEndDayOpen = false; // whether the "end day?" modal is showing
 
 let currentScene = "HOME";
 let npcPromptBounds = null; // set each frame by drawPrompt()
@@ -60,6 +62,10 @@ const TOTAL_DAYS = 3;
 let endScreenAlpha = 255;
 let endFadeTimeout = null;
 let endFadeInterval = null;
+let endDayTimer = 0;
+const END_DAY_HOLD = 180; // frames fully black (3 sec)
+const END_DAY_FADE = 60; // frames to fade out (1 sec)
+const END_DAY_TOTAL = END_DAY_HOLD + END_DAY_FADE;
 let _checkinCheatBuf = "";
 
 let journalicon;
@@ -67,6 +73,7 @@ let leftarrow;
 let rightarrow;
 
 let jersey10Font;
+let mainFont;
 let journalFont;
 
 let primaryTextC;
@@ -150,6 +157,8 @@ function preload() {
   uiBtnDisabled = loadImage("assets/ui elements/Dialogue choice disabled.png");
 
   jersey10Font = loadFont("assets/Jersey10-Regular.ttf");
+  mainFont = loadFont("assets/LisuBosa-Regular.ttf");
+
   journalFont = loadFont("assets/Margarine-Regular.ttf");
 
   lowCookieNotifImg = loadImage(
@@ -262,7 +271,7 @@ function getInnZones() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noSmooth();
-  textFont(jersey10Font);
+  textFont(mainFont);
 
   //text colours
   primaryTextC = color(168, 86, 21);
@@ -357,6 +366,19 @@ function draw() {
     checkinDraw();
     return;
   } else if (currentScene === "END") {
+    endDayTimer++;
+    // Calculate alpha: fully opaque during hold, fading during fade phase
+    if (endDayTimer <= END_DAY_HOLD) {
+      endScreenAlpha = 255;
+    } else {
+      endScreenAlpha = map(endDayTimer, END_DAY_HOLD, END_DAY_TOTAL, 255, 0);
+    }
+    // Transition complete
+    if (endDayTimer >= END_DAY_TOTAL) {
+      endScreenAlpha = 0;
+      currentScene = "GAME";
+      dayTransitionLocked = false;
+    }
     drawEndPage();
     return;
   }
@@ -407,6 +429,7 @@ function draw() {
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
+  drawConfirmEndDay();
   updateHoverCursor();
 }
 
@@ -824,7 +847,121 @@ function drawDayCounter() {
   drawingContext.shadowBlur = 0;
 }
 
+function drawConfirmEndDay() {
+  if (!confirmEndDayOpen) return;
+
+  // Dim backdrop
+  noStroke();
+  fill(0, 0, 0, 160);
+  rect(0, 0, width, height);
+
+  // Panel
+  const panelW = 520;
+  const panelH = 280;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+  const corner = 20;
+  stroke(56, 29, 16);
+  strokeWeight(4);
+  fill(107, 59, 34);
+  rect(panelX, panelY, panelW, panelH, corner);
+  noStroke();
+  // X close button (top right)
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  const hoveringX = dist(mouseX, mouseY, xX, xY) < xSize / 2;
+  fill(hoveringX ? color(90, 40, 35) : color(106, 46, 43));
+  stroke(56, 29, 16);
+  strokeWeight(2);
+  ellipse(xX, xY, xSize, xSize);
+  noStroke();
+  fill(255);
+  textFont(jersey10Font);
+  textSize(22);
+  textAlign(CENTER, CENTER);
+  text("×", xX, xY - 2);
+
+  // Question text
+  fill(255);
+  textFont(jersey10Font);
+  textSize(42);
+  textAlign(CENTER, CENTER);
+  text("Would you like to \nend the day?", width / 2, panelY + 100);
+
+  // Yes button
+  const btnW = 180;
+  const btnH = 45;
+  const yesBtnX = width / 2 - btnW - 20;
+  const noBtnX = width / 2 + 20;
+  const btnY = panelY + panelH - btnH - 40;
+
+  const hoveringYes =
+    mouseX > yesBtnX &&
+    mouseX < yesBtnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+  const hoveringNo =
+    mouseX > noBtnX &&
+    mouseX < noBtnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+
+  // Yes
+  fill(hoveringYes ? color(250, 219, 177) : color(240, 193, 130));
+  rect(yesBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  textSize(26);
+  textAlign(CENTER, CENTER);
+  text("Yes", yesBtnX + btnW / 2, btnY + btnH / 2 - 5);
+
+  // No
+  fill(hoveringNo ? color(250, 219, 177) : color(240, 193, 130));
+  rect(noBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  text("No", noBtnX + btnW / 2, btnY + btnH / 2 - 5);
+}
+
+function handleConfirmEndDayClick(mx, my) {
+  if (!confirmEndDayOpen) return false;
+
+  const panelW = 520;
+  const panelH = 280;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+
+  // X button
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  if (dist(mx, my, xX, xY) < xSize / 2) {
+    confirmEndDayOpen = false;
+    return true;
+  }
+
+  // Yes / No buttons
+  const btnW = 180;
+  const btnH = 55;
+  const yesBtnX = width / 2 - btnW - 20;
+  const noBtnX = width / 2 + 20;
+  const btnY = panelY + panelH - btnH - 30;
+
+  if (mx > yesBtnX && mx < yesBtnX + btnW && my > btnY && my < btnY + btnH) {
+    confirmEndDayOpen = false;
+    advanceDay();
+    return true;
+  }
+
+  if (mx > noBtnX && mx < noBtnX + btnW && my > btnY && my < btnY + btnH) {
+    confirmEndDayOpen = false;
+    return true;
+  }
+
+  return true; // click consumed — don't let anything behind the modal fire
+}
+
 function advanceDay() {
+  dayTransitionLocked = true; // lock all input immediately
   currentDay++;
 
   // swap each NPC's dialogue to the new day
@@ -846,29 +983,10 @@ function advanceDay() {
   // close any open dialogue
   closeDialogue();
 
-  // show end screen, then return to game
+  // show end screen — timing and fade handled in draw()
   endScreenAlpha = 255;
+  endDayTimer = 0;
   currentScene = "END";
-  if (endFadeTimeout) {
-    clearTimeout(endFadeTimeout);
-    endFadeTimeout = null;
-  }
-  if (endFadeInterval) {
-    clearInterval(endFadeInterval);
-    endFadeInterval = null;
-  }
-  endFadeTimeout = setTimeout(() => {
-    endFadeTimeout = null;
-    endFadeInterval = setInterval(() => {
-      endScreenAlpha -= 5;
-      if (endScreenAlpha <= 0) {
-        endScreenAlpha = 0;
-        clearInterval(endFadeInterval);
-        endFadeInterval = null;
-        currentScene = "GAME";
-      }
-    }, 1000 / 60);
-  }, 2000);
 }
 
 function isMouseOverNPC(npc) {
@@ -1044,6 +1162,9 @@ function drawCloseButton(x, y, size = 36) {
 }
 
 function keyPressed() {
+  if (dayTransitionLocked) return; // ignore all input during day transition
+  if (confirmEndDayOpen) return; // modal is open — keyboard does nothing
+
   if (currentScene === "HOME") {
     if (keyCode === ENTER) {
       currentScene = "CHECKIN";
@@ -1090,7 +1211,7 @@ function keyPressed() {
 
   if (isPlayerNearDoor1(player) && key === " ") {
     if (currentDay < TOTAL_DAYS) {
-      advanceDay();
+      confirmEndDayOpen = true; // open modal — only Yes will call advanceDay()
     }
     // day 3: G does nothing until verdict is implemented
     return;
@@ -1142,6 +1263,12 @@ function keyPressed() {
           if (nearItem.asset !== "phone") nearItem.examined = true;
           if (nearItem.journalEntry) {
             journal.addTextEntry(4, nearItem.journalEntry); // 4 = Evidence page
+          }
+          if (nearItem.helenEntry) {
+            journal.addHelenEntry(
+              nearItem.helenEntry.section,
+              nearItem.helenEntry.text,
+            );
           }
           if (nearItem.closeupAsset) {
             journal.addImageEntry(
@@ -1200,6 +1327,11 @@ function keyPressed() {
 }
 
 function mousePressed() {
+  // modal takes full priority — nothing else fires while it's open
+  if (confirmEndDayOpen) {
+    handleConfirmEndDayClick(mouseX, mouseY);
+    return;
+  }
   // dismiss cookie notif
   if (lowCookieNotifVisible) {
     let nW = 420;
