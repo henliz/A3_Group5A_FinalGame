@@ -359,12 +359,10 @@ function setup() {
 function draw() {
   background(22, 18, 20);
 
-  // Start music when entering GAME scene
   if (currentScene === "GAME" && !musicStarted && backgroundMusic) {
     backgroundMusic.loop();
-    backgroundMusic.setVolume(0.17); // Set volume to 50%
+    backgroundMusic.setVolume(0.17);
     musicStarted = true;
-    console.log("Music started!");
   }
 
   if (currentScene === "HOME") {
@@ -373,15 +371,24 @@ function draw() {
   } else if (currentScene === "CHECKIN") {
     checkinDraw();
     return;
+  } else if (currentScene === "PROLOGUE") {
+    background(0);
+    imageMode(CENTER);
+    image(prologueVideo, width / 2, height / 2, width - 200, height);
+    imageMode(CORNER);
+    fill(255, 255, 255, 140);
+    textAlign(RIGHT, BOTTOM);
+    textSize(14);
+    textFont(mainFont);
+    text("Press any key or click to skip", width - 20, height - 16);
+    return;
   } else if (currentScene === "END") {
     endDayTimer++;
-    // Calculate alpha: fully opaque during hold, fading during fade phase
     if (endDayTimer <= END_DAY_HOLD) {
       endScreenAlpha = 255;
     } else {
       endScreenAlpha = map(endDayTimer, END_DAY_HOLD, END_DAY_TOTAL, 255, 0);
     }
-    // Transition complete
     if (endDayTimer >= END_DAY_TOTAL) {
       endScreenAlpha = 0;
       currentScene = "GAME";
@@ -389,23 +396,13 @@ function draw() {
     }
     drawEndPage();
     return;
-  }
-
-  // Prologue video
-  if (currentScene === "PROLOGUE") {
-    background(0);
-    imageMode(CENTER);
-    image(prologueVideo, width / 2, height / 2, width - 200, height);
-    imageMode(CORNER);
-    // skip hint
-    fill(255, 255, 255, 140);
-    textAlign(RIGHT, BOTTOM);
-    textSize(14);
-    textFont(mainFont);
-    text("Press any key or click to skip", width - 20, height - 16);
+  } else if (currentScene === "CREDITS") {
+    resetMatrix();
+    drawCreditsPage();
     return;
   }
 
+  // Everything below only runs for GAME scene
   if (!journal.isOpen) {
     updatePlayer();
     camX = lerp(camX, player.px - width / (2 * CAM_ZOOM), 0.14);
@@ -415,7 +412,6 @@ function draw() {
   push();
   scale(CAM_ZOOM);
   translate(-camX, -camY);
-
   tf1Draw(0, 0);
   clutterDraw(0, 0);
   cookieJarDraw();
@@ -426,8 +422,7 @@ function draw() {
   }
   pop();
 
-  drawLighting(); // screen-space overlay — after world, before all UI
-
+  drawLighting();
   drawDialogue();
   drawExamineImage();
   drawSpoonCounter();
@@ -1341,6 +1336,75 @@ function updateHoverCursor() {
   }
 }
 
+function resetGameState() {
+  // Core progression
+  currentDay = 1;
+  judgePhase = "closed";
+  judgeSelectedPortrait = -1;
+  judgement = false;
+  musicStarted = false;
+
+  // Cookies / energy
+  spoonsRemaining = 7;
+  lowCookieNotifTriggered = false;
+  lowCookieNotifVisible = false;
+  lowCookieNotifTimer = 0;
+  hasShownOutOfCookiesModal = false;
+  outOfCookiesModalOpen = false;
+  outOfCookiesPending = false;
+  sleepHintActive = false;
+  refillHintActive = false;
+
+  // Day transition
+  dayTransitionLocked = false;
+  dayEndTriggered = false;
+  confirmEndDayOpen = false;
+  endDayTimer = 0;
+  endScreenAlpha = 255;
+
+  // Dialogue
+  closeDialogue();
+  activeExamineItem = null;
+
+  // Journal — wipe all entries and unread flag
+  journal = new Journal();
+
+  // NPC state — reset dialogue back to day 1, clear used options
+  for (let npc of npcs) {
+    if (npc.dialogueByDay && npc.dialogueByDay[1]) {
+      npc.dialogue = npc.dialogueByDay[1];
+    }
+    npc.usedOptions = [];
+    npc.firstVisit = true;
+  }
+
+  // Evidence / clutter — clear examined flags on all interactable items
+  for (let item of roomLayout) {
+    if (item.examined !== undefined) item.examined = false;
+  }
+
+  // Cookie jar
+  cookieJarResetDay();
+
+  // Player position back to spawn
+  player.px = 6.5 * TF1_T;
+  player.py = 12.5 * TF1_T;
+  player.dir = DIR.down;
+  player.moving = false;
+  player.frame = 0;
+  player.animTimer = 0;
+
+  // Camera snap to player (no lerp drift)
+  camX = player.px - width / (2 * CAM_ZOOM);
+  camY = player.py - height / (2 * CAM_ZOOM);
+
+  // Music
+  if (backgroundMusic && backgroundMusic.isPlaying()) backgroundMusic.stop();
+
+  // Credits scroll
+  creditsScrollY = 0;
+}
+
 function drawCloseButton(x, y, size = 36) {
   const hovering =
     mouseX > x - size / 2 &&
@@ -1372,6 +1436,14 @@ function keyPressed() {
       currentScene = "CHECKIN";
       checkinSetup();
     }
+    return;
+  }
+
+  if (judgePhase === "good_ending" || judgePhase === "bad_ending") {
+    judgePhase = "closed";
+    judgeSelectedPortrait = -1;
+    creditsScrollY = 0;
+    currentScene = "CREDITS";
     return;
   }
 
@@ -1526,6 +1598,15 @@ function keyPressed() {
   if (judgeKeyPressed(key)) {
     return;
   }
+
+  // In keyPressed() — CREDITS enter/escape
+  if (currentScene === "CREDITS") {
+    if (keyCode === ENTER || keyCode === ESCAPE) {
+      resetGameState();
+      currentScene = "HOME";
+    }
+    return;
+  }
 }
 
 function mousePressed() {
@@ -1536,6 +1617,14 @@ function mousePressed() {
   }
   if (confirmEndDayOpen) {
     handleConfirmEndDayClick(mouseX, mouseY);
+    return;
+  }
+
+  if (judgePhase === "good_ending" || judgePhase === "bad_ending") {
+    judgePhase = "closed";
+    judgeSelectedPortrait = -1;
+    creditsScrollY = 0;
+    currentScene = "CREDITS";
     return;
   }
 
@@ -1710,5 +1799,22 @@ function mousePressed() {
         return;
       }
     }
+  }
+
+  if (currentScene === "CREDITS") {
+    const btnW = 240,
+      btnH = 48;
+    const btnX = width / 2 - btnW / 2;
+    const btnY = height - 80;
+    if (
+      mouseX > btnX &&
+      mouseX < btnX + btnW &&
+      mouseY > btnY &&
+      mouseY < btnY + btnH
+    ) {
+      resetGameState();
+      currentScene = "HOME";
+    }
+    return;
   }
 }

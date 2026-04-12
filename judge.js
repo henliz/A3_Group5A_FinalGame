@@ -210,14 +210,21 @@ function _drawEndingScreen() {
   textFont(mainFont);
   textAlign(CENTER, CENTER);
   textSize(52);
-  text(isGood ? "Good Ending" : "Bad Ending", width / 2, height / 2 - 20);
+  text(isGood ? "Good Ending" : "Bad Ending", width / 2, height / 2 - 40);
 
-  // any key returns to game
-  if (keyIsPressed || mouseIsPressed) {
-    judgePhase = "closed";
-    judgeSelectedPortrait = -1;
-    currentScene = "GAME";
-  }
+  fill(220, 200, 160);
+  textFont(mainFontItalic);
+  textSize(22);
+  text(
+    isGood ? "Justice has been served." : "The killer walks free...",
+    width / 2,
+    height / 2 + 20,
+  );
+
+  fill(255, 255, 255, 160);
+  textFont(mainFont);
+  textSize(16);
+  text("Press any key or click to continue", width / 2, height / 2 + 80);
 }
 
 function _isOver(x, y, w, h) {
