@@ -204,10 +204,10 @@ function drawDialogue() {
   }
   tickTypewriter();
 
-  let boxW = width * 0.67;
-  let boxH = 681 / 3;
+  let boxW = width * 0.8;
+  let boxH = 681 / 3 - 10;
   let boxX = width * 0.12;
-  let boxY = height - boxH - 20;
+  let boxY = height - boxH - 15;
 
   dialogueBoxBounds = { x: boxX, y: boxY, w: boxW, h: boxH };
 
@@ -331,9 +331,15 @@ function drawDialogueBox(boxX, boxY, boxW, boxH) {
     dialoguePhase === "monologue" || dialoguePhase === "hesitation";
 
   if (useMonologueBox) {
-    image(uiMonologueBox, boxX, boxY, boxW, boxH);
+    stroke("black");
+    strokeWeight(4);
+    fill("purple");
+    rect(boxX, boxY, boxW, boxH, 30);
   } else {
-    image(uiMainBox, boxX, boxY, boxW, boxH);
+    stroke("black");
+    strokeWeight(4);
+    fill("brown");
+    rect(boxX, boxY, boxW, boxH, 30);
   }
 }
 
@@ -393,10 +399,10 @@ function isMouseOver(x, y, w, h) {
 
 function drawOptions() {
   if (!activeNPC) return;
-  const btnW = 320;
-  const btnH = 110;
-  const btnX = width * 0.63;
-  const startY = height * 0.12 + 20;
+  const btnW = 450;
+  const btnH = 90;
+  const btnX = width * 0.63 - 40;
+  const startY = height * 0.12 + 15;
   const gap = btnH + 30;
 
   let visibleIndices = getVisibleOptionIndices();
@@ -408,11 +414,20 @@ function drawOptions() {
     let canAfford = spoonsRemaining >= option.cost;
 
     if (!canAfford) {
-      image(uiBtnDisabled, btnX, btnY, btnW, btnH);
+      stroke("black");
+      strokeWeight(4);
+      fill("grey");
+      rect(btnX, btnY, btnW, btnH, 20);
     } else if (i === selectedOption) {
-      image(uiBtnHover, btnX, btnY, btnW, btnH);
+      stroke("black");
+      strokeWeight(4);
+      fill("orange");
+      rect(btnX, btnY, btnW, btnH, 20);
     } else {
-      image(uiBtnRegular, btnX, btnY, btnW, btnH + 18);
+      stroke("black");
+      strokeWeight(4);
+      fill("red");
+      rect(btnX, btnY, btnW, btnH + 18, 20);
     }
 
     if (i === selectedOption && canAfford) {
@@ -425,9 +440,10 @@ function drawOptions() {
 
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(option.playerLine, btnX + 15, btnY + 10, btnW - 70, btnH - 20);
+    noStroke();
+    text(option.playerLine, btnX + 10, btnY + 5, btnW - 60, btnH - 10);
 
-    let iconSize = 25;
+    let iconSize = 30;
     let iconX = btnX + btnW - iconSize - 8;
     let iconY = btnY + btnH / 2 - iconSize / 2;
     image(spoonImg, iconX, iconY, iconSize, iconSize);
@@ -435,6 +451,7 @@ function drawOptions() {
     fill(i === selectedOption && canAfford ? 255 : 30);
     textAlign(RIGHT, CENTER);
     textSize(18);
+    noStroke();
     text(option.cost, btnX + btnW - iconSize - 12, btnY + btnH / 2);
   }
 }

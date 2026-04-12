@@ -980,11 +980,12 @@ function updateHoverCursor() {
 
   if (dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing") {
     selectedOption = -1;
-    const btnW = 320;
-    const btnH = 110;
-    const btnX = width * 0.63;
-    const startY = height * 0.12 + 20;
+    const btnW = 450;
+    const btnH = 90;
+    const btnX = width * 0.63 - 40;
+    const startY = height * 0.12 + 15;
     const gap = btnH + 30;
+
     const visibleIndices = getVisibleOptionIndices();
     for (let i = 0; i < visibleIndices.length; i++) {
       const btnY = startY + i * gap;
@@ -1333,11 +1334,12 @@ function mousePressed() {
   }
 
   if (dialoguePhase === "choosing" || dialoguePhase === "repeat-choosing") {
-    const btnW = 320;
-    const btnH = 110;
-    const btnX = width * 0.63;
-    const startY = height * 0.12 + 20;
+    const btnW = 450;
+    const btnH = 90;
+    const btnX = width * 0.63 - 40;
+    const startY = height * 0.12 + 15;
     const gap = btnH + 30;
+
     const visibleIndices = getVisibleOptionIndices();
 
     for (let i = 0; i < visibleIndices.length; i++) {
