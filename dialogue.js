@@ -480,7 +480,7 @@ function confirmChoice() {
   checkLowCookieNotif(); // show warning if energy is now low
   chosenOption = option;
 
-  if (typeof CookieSound !== "undefined") {
+  if (option.cost >= 1 && typeof CookieSound !== "undefined") {
     CookieSound.setVolume(0.25);
     CookieSound.play();
   }
