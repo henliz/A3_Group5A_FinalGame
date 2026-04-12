@@ -35,7 +35,7 @@ const runawayManDialogueByDay = {
       {
         id: "C",
         cost: 0,
-        playerLine: "Sorry…I was just passing by",
+        playerLine: "Sorry…I was just passing by [Exit]",
         npcResponse: "Sure you were.",
         monologue:
           "He didn't believe me. Why would he. I stopped directly in front of him and then apologized for existing near him. He's already decided I'm suspicious or irrelevant and I gave him nothing to think otherwise. I don't know which one is worse right now.",
@@ -210,7 +210,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...",
+            text: "(It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...)",
             helenEntry: {
               section: "jerome",
               text: "Seems like they had a closer relationship",
@@ -218,7 +218,8 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "player",
-            text: "But a necklace seems like an intimate gift to give to someone you met just a few days ago. Especially one that's expensive...",
+            italic: true,
+            text: "(But a necklace seems like an intimate gift to give to someone you met just a few days ago. Especially one that's expensive...)",
           },
           {
             speaker: "npc",
@@ -237,7 +238,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "Suspicions? Does he mean she knew about his wife? Or what the fine was for...",
+            text: "(Suspicions? Does he mean she knew about his wife? Or what the fine was for...)",
           },
           {
             speaker: "player",
@@ -281,7 +282,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "Does he have a history of gambling? Is this what Helen 'knew about' in her note?",
+            text: "(Does he have a history of gambling? Is this what Helen 'knew about' in her note?)",
           },
           {
             speaker: "npc",
@@ -300,7 +301,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "So he IS married. Why else would his in-laws care so much about his attendance?",
+            text: "(So he IS married. Why else would his in-laws care so much about his attendance?)",
           },
           {
             speaker: "player",

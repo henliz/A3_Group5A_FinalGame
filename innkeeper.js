@@ -33,7 +33,7 @@ const innkeeperDialogueByDay = {
       {
         id: "C",
         cost: 0,
-        playerLine: "Sorry...Nevermind",
+        playerLine: "Sorry...Nevermind [Exit]",
         npcResponse: "If you're not helping, don't get in the way.",
         monologue:
           "I had something to ask and I lost it the second she looked at me. Now I'm standing here and she's already looking through me like I'm not worth the attention. Maybe that's better. Maybe being invisible is safer right now.",
@@ -157,8 +157,8 @@ const innkeeperDialogueByDay = {
           {
             speaker: "player",
             emotion: "idle",
-            italics: true,
-            text: "Helen had access to Mrs. Gustall’s documents. She must have found her information about the shady donation and tax information.",
+            italic: true,
+            text: "(Helen had access to Mrs. Gustall’s documents. She must have found her information about the shady donation and tax information.)",
             helenEntry: {
               section: "innkeeper",
               text: "Organized and had access to Mrs. Gustall's documents",
