@@ -34,7 +34,7 @@ const doctorDialogueByDay = {
       {
         id: "C",
         cost: 0,
-        playerLine: "..Hi",
+        playerLine: "..Hi [Exit]",
         npcResponse: "Hi",
         monologue:
           "That was so awkward. I got lost in thought trying to say something to her and now I'm at the other side of the room. Maybe I should try talking with someone else…",
@@ -110,7 +110,7 @@ const doctorDialogueByDay = {
             speaker: "player",
             italic: true,
             emotion: "idle",
-            text: "Examined. That's a specific word. She said it like it had already happened to her.",
+            text: "(Examined. That's a specific word. She said it like it had already happened to her.)",
           },
           {
             speaker: "npc",
@@ -138,7 +138,7 @@ const doctorDialogueByDay = {
             speaker: "player",
             italic: true,
             emotion: "idle",
-            text: "Good thank you...",
+            text: "(Good thank you...)",
           },
           {
             speaker: "npc",
@@ -198,8 +198,8 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
-            italics: true,
-            text: "It’s a bit strange she was going on a walk so late, but after dinner walks are pretty common...",
+            italic: true,
+            text: "(It’s a bit strange she was going on a walk so late, but after dinner walks are pretty common...)",
           },
           {
             speaker: "player",
