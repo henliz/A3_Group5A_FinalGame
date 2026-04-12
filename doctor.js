@@ -67,7 +67,7 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "nervous",
+            emotion: "idle",
             text: "She asked specifically about wolfsbane.",
           },
           {
