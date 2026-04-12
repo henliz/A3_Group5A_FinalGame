@@ -1025,7 +1025,9 @@ function drawGuidanceNotif() {
   fill(255, 255, 255, hoveringX ? 255 : 160);
   textSize(18);
   textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
   text("X", xX + xSize / 2, xY + xSize / 2);
+  textFont(mainFont);
 }
 
 function drawConfirmEndDay() {
@@ -1242,7 +1244,9 @@ function drawLowCookieNotif() {
   fill(255, 255, 255, hoveringX ? alpha : alpha * 0.6);
   textSize(18);
   textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
   text("X", xX + xSize / 2, xY + xSize / 2);
+  textFont(mainFont);
 }
 
 function updateHoverCursor() {

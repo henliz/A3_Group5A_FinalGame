@@ -95,7 +95,7 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "nervous",
             text: "I just thought it seemed like a good cause —",
           },
           {
@@ -156,7 +156,7 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             italic: true,
             text: "(Helen had access to Mrs. Gustall’s documents. She must have found her information about the shady donation and tax information.)",
             helenEntry: {
@@ -166,18 +166,18 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "nervous",
             text: "I turn in around 11pm every night. I was already asleep when the scream woke me up.",
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             text: "What happened after?",
           },
           {
             speaker: "npc",
-            emotion: "idle",
-            text: "I ran out to find Helen bleeding out on the ground....",
+            emotion: "nervous",
+            text: "I ran out to find Helen bleeding out on the ground...",
           },
           {
             speaker: "npc",
@@ -199,7 +199,7 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yeah, she was really sweet in the short time I knew her.",
           },
           {
@@ -248,7 +248,7 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Ha! Not really. She made a lot of mistakes and was always nosy. Always in everyone’s business.",
           },
           {
@@ -258,7 +258,7 @@ const innkeeperDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "happy",
             text: "Thank you for sharing.",
           },
         ],
@@ -274,7 +274,7 @@ const innkeeperDialogueByDay = {
         exchange: [
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yeah, it was nice talking to you too.",
           },
           {

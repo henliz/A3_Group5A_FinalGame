@@ -72,17 +72,17 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             text: "Wolfsbane?",
           },
           {
             speaker: "npc",
-            emotion: "nervous",
+            emotion: "sus",
             text: "She said she'd read it had medicinal uses. I told her my medical practice was my own business.",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "sus",
             text: "She smiled and said of course. But she kept prying.",
           },
         ],
@@ -109,7 +109,7 @@ const doctorDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            emotion: "idle",
+            emotion: "determined",
             text: "(Examined. That's a specific word. She said it like it had already happened to her.)",
           },
           {
@@ -212,11 +212,11 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             text: "It was pretty dark outside, you’re not worried for your safety?",
           },
           {
-            speaker: "npc",
+            speaker: "sus",
             text: "The moon is still pretty full so it’s not too dark. Besides I’m perfectly capable of defending myself.",
           },
           {
@@ -255,27 +255,27 @@ const doctorDialogueByDay = {
             text: "Helen, didn't deserve to die in that way.",
           },
           {
-            speaker: "npc",
+            speaker: "player",
             emotion: "idle",
             text: "She seemed to really care about everyone. She didn't deserve to die.",
           },
           {
-            speaker: "player",
+            speaker: "npc",
             text: "Oh she was very sweet and accommodating, but she was really unprofessional.",
           },
           {
-            speaker: "npc",
+            speaker: "player",
             emotion: "idle",
             text: "Like how she would ask you specific questions about your medical practice?",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "angry",
             text: "Not just that! She would go through my medical journals and books.",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "angry",
             text: "Once I caught her following me when I was going on a walk, it was so creepy!",
             helenEntry: {
               section: "doctor",
@@ -284,6 +284,7 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
+            emotion: "determined",
             text: "Hmm... Interesting",
           },
         ],
