@@ -646,8 +646,8 @@ const roomLayout = [
   //object certificate
   {
     asset: "certificate",
-    tileX: 9.3, //11
-    tileY: 3.8, //4
+    tileX: 10.6, //11
+    tileY: 4.8, //4
     scale: 0.2,
     anchor: "top-left",
     glow: true,
