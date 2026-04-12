@@ -71,7 +71,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "sus",
+            emotion: "determined",
             text: "Did you see Helen before she died?",
           },
           {
@@ -102,7 +102,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "npc",
             emotion: "idle",
-            text: "My father-in-law's birthday. I was just passing through for one night?",
+            text: "My father-in-law's birthday. I was just passing through for one night.",
           },
           {
             speaker: "player",
@@ -173,7 +173,7 @@ const runawayManDialogueByDay = {
         exchange: [
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "sus",
             text: "I don't see how that's any of your business.",
           },
           {
@@ -191,7 +191,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yes... When I checked in, I was going through a difficult time. Helen listened and comforted me.",
             helenEntry: {
               section: "jerome",
@@ -200,7 +200,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "I gave her a necklace to thank her for all she's done for me during my stay.",
             helenEntry: {
               section: "jerome",
@@ -223,7 +223,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "nervous",
             text: "But that night I received a call saying that I had to settle a large fine so I asked for the necklace back.",
           },
           {
@@ -263,7 +263,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "npc",
             emotion: "idle",
-            text: "Sir, I wanted to check out and leave, but now I'm stuck here.",
+            text: "Three. I wanted to check out and leave, but now I’m stuck here.",
           },
           {
             speaker: "npc",
@@ -272,11 +272,12 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yeah, but it's not awful all the time. I've been playing poker with Mrs. Gustall in the evenings.",
           },
           {
-            speaker: "player",
+            speaker: "npc",
+            emotion: "nervous",
             text: "No money though, I'm not getting involved with that again.",
           },
           {
@@ -295,7 +296,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yes, my in-laws will be so angry if I miss it.",
           },
           {
