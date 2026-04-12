@@ -60,7 +60,7 @@ function _drawConfirmPopup() {
 
   // Title text
   fill(255, 210, 50);
-  textFont(jersey10Font);
+  textFont(mainFont);
   textAlign(CENTER, CENTER);
   textSize(22);
   text("Are you ready to identify the killer?", popX + popW / 2, popY + 60);
@@ -124,7 +124,7 @@ function _drawSelectPopup() {
 
   // Heading
   fill(255, 210, 50);
-  textFont(jersey10Font);
+  textFont(mainFont);
   textAlign(CENTER, CENTER);
   textSize(20);
   text("Who is the killer?", popX + popW / 2, popY + 36);
@@ -207,7 +207,7 @@ function _drawEndingScreen() {
   const isGood = judgePhase === "good_ending";
 
   fill(isGood ? color(255, 210, 50) : color(200, 60, 60));
-  textFont(jersey10Font);
+  textFont(mainFont);
   textAlign(CENTER, CENTER);
   textSize(52);
   text(isGood ? "Good Ending" : "Bad Ending", width / 2, height / 2 - 20);

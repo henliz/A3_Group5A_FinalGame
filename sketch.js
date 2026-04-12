@@ -673,7 +673,7 @@ function drawJournalIcon() {
   const rightEdge = width - 30 + 60 + padX;
   noStroke();
   fill(255, 255, 255, 80);
-  rect(leftEdge, topEdge, rightEdge - leftEdge - 60, 86, 12);
+  rect(leftEdge - 20, topEdge, rightEdge - leftEdge - 30, 86, 12);
 
   const iw = 60;
   const ih = 60;
@@ -884,7 +884,7 @@ function drawConfirmEndDay() {
 
   // Question text
   fill(255);
-  textFont(jersey10Font);
+  textFont(mainFont);
   textSize(42);
   textAlign(CENTER, CENTER);
   text("Would you like to \nend the day?", width / 2, panelY + 100);
