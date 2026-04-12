@@ -53,6 +53,12 @@ const LOW_COOKIE_NOTIF_DURATION = 300; // ~5 seconds at 60fps
 let dayEndTriggered = false;
 let dayTransitionLocked = false; // blocks all input during day-end transition
 let confirmEndDayOpen = false; // whether the "end day?" modal is showing
+let outOfCookiesModalOpen = false;
+let hasShownOutOfCookiesModal = false;
+let outOfCookiesPending = false; // fires modal after dialogue closes
+
+let sleepHintActive = false;
+let refillHintActive = false;
 
 let currentScene = "HOME";
 let npcPromptBounds = null; // set each frame by drawPrompt()
@@ -74,6 +80,7 @@ let rightarrow;
 
 let jersey10Font;
 let mainFont;
+let mainFontItalic;
 let journalFont;
 
 let primaryTextC;
@@ -158,6 +165,7 @@ function preload() {
 
   jersey10Font = loadFont("assets/Jersey10-Regular.ttf");
   mainFont = loadFont("assets/LisuBosa-Regular.ttf");
+  mainFontItalic = loadFont("assets/LisuBosa-Italic.ttf");
 
   journalFont = loadFont("assets/Margarine-Regular.ttf");
 
@@ -393,6 +401,7 @@ function draw() {
     fill(255, 255, 255, 140);
     textAlign(RIGHT, BOTTOM);
     textSize(14);
+    textFont(mainFont);
     text("Press any key or click to skip", width - 20, height - 16);
     return;
   }
@@ -429,7 +438,9 @@ function draw() {
   journal.display();
   drawJudgement();
   drawLowCookieNotif();
+  drawGuidanceNotif();
   drawConfirmEndDay();
+  drawOutOfCookiesModal();
   updateHoverCursor();
 }
 
@@ -609,6 +620,7 @@ function drawPrompt() {
       fill(255);
       textAlign(CENTER, CENTER);
       textSize(13);
+      textFont(mainFont);
       text(msg, screenX, msgY + msgH / 2);
 
       break; // only show prompt for one NPC at a time
@@ -635,6 +647,7 @@ function drawPrompt() {
       fill(0);
       textAlign(CENTER, CENTER);
       textSize(16);
+      textFont(mainFont);
       text(msg, screenX + msgW / 4, msgY + msgH / 2);
     }
   }
@@ -658,6 +671,7 @@ function drawPrompt() {
       fill(255);
       textAlign(CENTER, CENTER);
       textSize(13);
+      textFont(mainFont);
       text(msg, screenX, msgY + msgH / 2);
     }
   }
@@ -704,6 +718,7 @@ function drawJournalIcon() {
   drawingContext.shadowColor = "rgba(255, 195, 40, 1)";
   drawingContext.shadowBlur = 3;
   fill(255, 210, 50);
+  textFont(jersey10Font);
   text("J", ix + iw / 2, iy + ih / 2 + bobY);
   drawingContext.shadowBlur = 12;
   text("J", ix + iw / 2, iy + ih / 2 + bobY);
@@ -842,9 +857,186 @@ function drawDayCounter() {
   drawingContext.shadowColor = "rgba(0, 0, 0, 0.95)";
   drawingContext.shadowBlur = 4;
   fill(255, 210, 50);
+  textFont(mainFont);
   text(`Day ${currentDay}/${TOTAL_DAYS}`, width - 170, 35);
   drawingContext.shadowColor = "transparent";
   drawingContext.shadowBlur = 0;
+}
+
+function drawOutOfCookiesModal() {
+  if (!outOfCookiesModalOpen) return;
+
+  // Dim backdrop
+  noStroke();
+  fill(0, 0, 0, 160);
+  rect(0, 0, width, height);
+
+  // Panel — identical style to confirmEndDay
+  const panelW = 520;
+  const panelH = 300;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+
+  stroke(56, 29, 16);
+  strokeWeight(4);
+  fill(107, 59, 34);
+  rect(panelX, panelY, panelW, panelH, 20);
+  noStroke();
+
+  // X close button
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  const hoveringX = dist(mouseX, mouseY, xX, xY) < xSize / 2;
+  fill(hoveringX ? color(90, 40, 35) : color(106, 46, 43));
+  stroke(56, 29, 16);
+  strokeWeight(2);
+  ellipse(xX, xY, xSize, xSize);
+  noStroke();
+  fill(255);
+  textFont(jersey10Font);
+  textSize(22);
+  textAlign(CENTER, CENTER);
+  text("×", xX, xY - 2);
+
+  // Message
+  fill(255);
+  textFont(mainFont);
+  textSize(38);
+  textAlign(CENTER, CENTER);
+  text(
+    "You've ran out of cookies!\nWhat would you like to do?",
+    width / 2,
+    panelY + 110,
+  );
+
+  // Buttons
+  const btnW = 200;
+  const btnH = 45;
+  const refillBtnX = width / 2 - btnW - 20;
+  const sleepBtnX = width / 2 + 20;
+  const btnY = panelY + panelH - btnH - 40;
+
+  const hoveringRefill =
+    mouseX > refillBtnX &&
+    mouseX < refillBtnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+  const hoveringSleep =
+    mouseX > sleepBtnX &&
+    mouseX < sleepBtnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+
+  // Refill button
+  fill(hoveringRefill ? color(250, 219, 177) : color(240, 193, 130));
+  rect(refillBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  textFont(mainFont);
+  textSize(22);
+  textAlign(CENTER, CENTER);
+  text("Refill Cookies", refillBtnX + btnW / 2, btnY + btnH / 2 - 3);
+
+  // Sleep button
+  fill(hoveringSleep ? color(250, 219, 177) : color(240, 193, 130));
+  rect(sleepBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  textFont(mainFont);
+  text("Go to bed", sleepBtnX + btnW / 2, btnY + btnH / 2 - 3);
+}
+
+function handleOutOfCookiesClick(mx, my) {
+  if (!outOfCookiesModalOpen) return false;
+
+  const panelW = 520;
+  const panelH = 300;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+
+  // X button
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  if (dist(mx, my, xX, xY) < xSize / 2) {
+    outOfCookiesModalOpen = false;
+    return true;
+  }
+
+  const btnW = 200;
+  const btnH = 55;
+  const refillBtnX = width / 2 - btnW - 20;
+  const sleepBtnX = width / 2 + 20;
+  const btnY = panelY + panelH - btnH - 30;
+
+  // Refill chosen
+  if (
+    mx > refillBtnX &&
+    mx < refillBtnX + btnW &&
+    my > btnY &&
+    my < btnY + btnH
+  ) {
+    outOfCookiesModalOpen = false;
+    refillHintActive = true;
+    sleepHintActive = false;
+    return true;
+  }
+
+  // Sleep chosen
+  if (
+    mx > sleepBtnX &&
+    mx < sleepBtnX + btnW &&
+    my > btnY &&
+    my < btnY + btnH
+  ) {
+    outOfCookiesModalOpen = false;
+    sleepHintActive = true;
+    refillHintActive = false;
+    return true;
+  }
+
+  return true; // consume all clicks while modal open
+}
+
+function drawGuidanceNotif() {
+  const showing = sleepHintActive || refillHintActive;
+  if (!showing) return;
+
+  const msg = sleepHintActive
+    ? "To go to bed, walk to the bedroom door at the top and press SPACE."
+    : "Go to the cookie jar in the tavern in the middle to refill your energy.";
+
+  let nW = 420;
+  let nH = 82;
+  let nX = width - nW - 20;
+  let nY = 120; // below the low-cookie notif slot
+
+  // Background — same brown as low cookie notif
+  noStroke();
+  fill(107, 59, 34);
+  rect(nX, nY, nW, nH, 20);
+
+  // Message text
+  fill(255);
+  textSize(16);
+  textAlign(LEFT, CENTER);
+  textFont(mainFont);
+  text(msg, nX + 16, nY, nW - 40, nH);
+
+  // X button
+  let xSize = 26;
+  let xX = nX + nW - xSize - 8;
+  let xY = nY + 8;
+
+  const hoveringX =
+    mouseX > xX && mouseX < xX + xSize && mouseY > xY && mouseY < xY + xSize;
+
+  fill(255, 255, 255, hoveringX ? 255 : 160);
+  textSize(18);
+  textFont(jersey10Font);
+  textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
+  text("X", xX + xSize / 2, xY + xSize / 2);
+  textFont(mainFont);
 }
 
 function drawConfirmEndDay() {
@@ -913,12 +1105,14 @@ function drawConfirmEndDay() {
   fill(56, 29, 16);
   textSize(26);
   textAlign(CENTER, CENTER);
+  textFont(mainFont);
   text("Yes", yesBtnX + btnW / 2, btnY + btnH / 2 - 5);
 
   // No
   fill(hoveringNo ? color(250, 219, 177) : color(240, 193, 130));
   rect(noBtnX, btnY, btnW, btnH, 30);
   fill(56, 29, 16);
+  textFont(mainFont);
   text("No", noBtnX + btnW / 2, btnY + btnH / 2 - 5);
 }
 
@@ -979,6 +1173,12 @@ function advanceDay() {
   lowCookieNotifVisible = false;
   dayEndTriggered = false;
   cookieJarResetDay();
+  // reset out-of-cookies modal state for new day
+  hasShownOutOfCookiesModal = false;
+  outOfCookiesModalOpen = false;
+  outOfCookiesPending = false;
+  sleepHintActive = false;
+  refillHintActive = false;
 
   // close any open dialogue
   closeDialogue();
@@ -1021,21 +1221,21 @@ function drawLowCookieNotif() {
   let alpha =
     lowCookieNotifTimer < 60 ? map(lowCookieNotifTimer, 0, 60, 0, 255) : 255;
 
-  tint(255, alpha);
-  image(lowCookieNotifImg, nX, nY, nW, nH);
-  noTint();
+  fill(107, 59, 34, alpha);
+  rect(nX, nY, nW, nH, 20);
 
   // message text
   fill(255, 255, 255, alpha);
   textSize(16);
   textAlign(LEFT, CENTER);
+  textFont(mainFont);
   text("Be careful, your energy is running low", nX + 16, nY + nH / 2 - 8);
 
   // progress bar along the bottom
   let barW = nW - 32;
-  let barH = 5;
+  let barH = 6;
   let barX = nX + 16;
-  let barY = nY + nH - 12;
+  let barY = nY + nH - 19;
   let progress = lowCookieNotifTimer / LOW_COOKIE_NOTIF_DURATION;
 
   fill(255, 255, 255, alpha * 0.3);
@@ -1046,7 +1246,7 @@ function drawLowCookieNotif() {
   rect(barX, barY, barW * progress, barH, 3);
 
   // X button
-  let xSize = 20;
+  let xSize = 26;
   let xX = nX + nW - xSize - 8;
   let xY = nY + 8;
 
@@ -1054,9 +1254,11 @@ function drawLowCookieNotif() {
     mouseX > xX && mouseX < xX + xSize && mouseY > xY && mouseY < xY + xSize;
 
   fill(255, 255, 255, hoveringX ? alpha : alpha * 0.6);
-  textSize(16);
+  textSize(18);
   textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
   text("X", xX + xSize / 2, xY + xSize / 2);
+  textFont(mainFont);
 }
 
 function updateHoverCursor() {
@@ -1327,11 +1529,37 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  // modal takes full priority — nothing else fires while it's open
+  // modals take full priority
+  if (outOfCookiesModalOpen) {
+    handleOutOfCookiesClick(mouseX, mouseY);
+    return;
+  }
   if (confirmEndDayOpen) {
     handleConfirmEndDayClick(mouseX, mouseY);
     return;
   }
+
+  // dismiss guidance notif X button
+  if (sleepHintActive || refillHintActive) {
+    const nW = 460,
+      nH = 82;
+    const nX = width - nW - 20,
+      nY = 210;
+    const xSize = 20;
+    const xX = nX + nW - xSize - 8;
+    const xY = nY + 8;
+    if (
+      mouseX > xX &&
+      mouseX < xX + xSize &&
+      mouseY > xY &&
+      mouseY < xY + xSize
+    ) {
+      sleepHintActive = false;
+      refillHintActive = false;
+      return;
+    }
+  }
+
   // dismiss cookie notif
   if (lowCookieNotifVisible) {
     let nW = 420;

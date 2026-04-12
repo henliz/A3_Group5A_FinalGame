@@ -87,29 +87,26 @@ function drawEndPage() {
   // Main day-over text
   fill(255, endScreenAlpha);
   textAlign(CENTER, CENTER);
-  textSize(35);
+  textSize(90);
 
   if (currentDay < TOTAL_DAYS) {
+    text("Day " + (currentDay - 1) + " is over.", width / 2, height / 2 - 70);
     textSize(35);
     text(
-      "Day " +
-        (currentDay - 1) +
-        " is over.\n" +
-        (TOTAL_DAYS - currentDay) +
-        " day(s) until the sheriff arrives.",
+      TOTAL_DAYS - currentDay + " day(s) until the sheriff arrives.",
       width / 2,
-      height / 2 - 20,
+      height / 2 + 20,
     );
     fill(255, endScreenAlpha * 0.6);
     textSize(24);
-    text("Get ready for the next day", width / 2, height / 2 + 40);
+    text("Get ready for the next day", width / 2, height / 2 + 60);
   } else {
+    text("Day " + (currentDay - 1) + " is over.", width / 2, height / 2 - 70);
+    textSize(35);
     text(
-      "Day " +
-        (currentDay - 1) +
-        " is over.\nThe sheriff arrives tomorrow. Time to make your verdict.",
+      "The sheriff arrives tomorrow. Time to make your verdict.",
       width / 2,
-      height / 2 - 20,
+      height / 2 + 20,
     );
   }
 

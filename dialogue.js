@@ -198,6 +198,11 @@ function closeDialogue() {
   exchangeChunkIndex = 0;
   littleRedEmotion = "idle";
   if (typeof activeExamineItem !== "undefined") activeExamineItem = null;
+  // Show out-of-cookies modal now that dialogue is fully closed
+  if (outOfCookiesPending) {
+    outOfCookiesPending = false;
+    outOfCookiesModalOpen = true;
+  }
 }
 
 // ─── Draw dialogue ────────────────────────────────────────────
@@ -375,9 +380,9 @@ function drawDialogueText(boxX, boxY, boxW, boxH) {
     useItalic = !!exchangeLines[exchangeLineIndex].italic;
   }
 
-  if (useItalic) textStyle(ITALIC);
+  textFont(useItalic ? mainFontItalic : mainFont);
   text(revealed, textX, boxY + 40, textW, boxH - 80);
-  textStyle(NORMAL);
+  textFont(mainFont);
 }
 
 // ─── Enter hint ───────────────────────────────────────────────
@@ -478,6 +483,10 @@ function confirmChoice() {
 
   spoonsRemaining -= option.cost;
   checkLowCookieNotif(); // show warning if energy is now low
+  if (spoonsRemaining === 0 && !hasShownOutOfCookiesModal) {
+    hasShownOutOfCookiesModal = true;
+    outOfCookiesPending = true;
+  }
   chosenOption = option;
 
   if (option.cost >= 1 && typeof CookieSound !== "undefined") {
@@ -491,7 +500,7 @@ function confirmChoice() {
   );
   selectedOption = visible.length > 0 ? visible[0] : 0;
 
-  activeNPC.usedOptions.push(option.id);
+  if (option.cost > 0) activeNPC.usedOptions.push(option.id);
 
   if (option.notebookEntry && activeNPC.journalPageIndex !== undefined) {
     journal.addTextEntry(activeNPC.journalPageIndex, option.notebookEntry);
@@ -575,7 +584,7 @@ function splitMonologueIntoPages(fullText) {
   let size = 30;
 
   textSize(size);
-  textStyle(ITALIC);
+  textStyle(mainFontItalic);
 
   let words = fullText.split(" ");
   let pages = [];
@@ -595,7 +604,7 @@ function splitMonologueIntoPages(fullText) {
   }
   if (currentPage !== "") pages.push(currentPage);
 
-  textStyle(NORMAL);
+  textStyle(mainFont);
   return pages.length > 0 ? pages : [""];
 }
 
