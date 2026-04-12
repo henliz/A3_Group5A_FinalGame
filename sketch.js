@@ -401,6 +401,7 @@ function draw() {
     fill(255, 255, 255, 140);
     textAlign(RIGHT, BOTTOM);
     textSize(14);
+    textFont(mainFont);
     text("Press any key or click to skip", width - 20, height - 16);
     return;
   }
@@ -619,6 +620,7 @@ function drawPrompt() {
       fill(255);
       textAlign(CENTER, CENTER);
       textSize(13);
+      textFont(mainFont);
       text(msg, screenX, msgY + msgH / 2);
 
       break; // only show prompt for one NPC at a time
@@ -645,6 +647,7 @@ function drawPrompt() {
       fill(0);
       textAlign(CENTER, CENTER);
       textSize(16);
+      textFont(mainFont);
       text(msg, screenX + msgW / 4, msgY + msgH / 2);
     }
   }
@@ -668,6 +671,7 @@ function drawPrompt() {
       fill(255);
       textAlign(CENTER, CENTER);
       textSize(13);
+      textFont(mainFont);
       text(msg, screenX, msgY + msgH / 2);
     }
   }
@@ -714,6 +718,7 @@ function drawJournalIcon() {
   drawingContext.shadowColor = "rgba(255, 195, 40, 1)";
   drawingContext.shadowBlur = 3;
   fill(255, 210, 50);
+  textFont(jersey10Font);
   text("J", ix + iw / 2, iy + ih / 2 + bobY);
   drawingContext.shadowBlur = 12;
   text("J", ix + iw / 2, iy + ih / 2 + bobY);
@@ -852,6 +857,7 @@ function drawDayCounter() {
   drawingContext.shadowColor = "rgba(0, 0, 0, 0.95)";
   drawingContext.shadowBlur = 4;
   fill(255, 210, 50);
+  textFont(mainFont);
   text(`Day ${currentDay}/${TOTAL_DAYS}`, width - 170, 35);
   drawingContext.shadowColor = "transparent";
   drawingContext.shadowBlur = 0;
@@ -935,6 +941,7 @@ function drawOutOfCookiesModal() {
   fill(hoveringSleep ? color(250, 219, 177) : color(240, 193, 130));
   rect(sleepBtnX, btnY, btnW, btnH, 30);
   fill(56, 29, 16);
+  textFont(mainFont);
   text("Go to bed", sleepBtnX + btnW / 2, btnY + btnH / 2 - 3);
 }
 
@@ -1012,6 +1019,7 @@ function drawGuidanceNotif() {
   fill(255);
   textSize(16);
   textAlign(LEFT, CENTER);
+  textFont(mainFont);
   text(msg, nX + 16, nY, nW - 40, nH);
 
   // X button
@@ -1024,6 +1032,7 @@ function drawGuidanceNotif() {
 
   fill(255, 255, 255, hoveringX ? 255 : 160);
   textSize(18);
+  textFont(jersey10Font);
   textAlign(CENTER, CENTER);
   text("X", xX + xSize / 2, xY + xSize / 2);
 }
@@ -1094,12 +1103,14 @@ function drawConfirmEndDay() {
   fill(56, 29, 16);
   textSize(26);
   textAlign(CENTER, CENTER);
+  textFont(mainFont);
   text("Yes", yesBtnX + btnW / 2, btnY + btnH / 2 - 5);
 
   // No
   fill(hoveringNo ? color(250, 219, 177) : color(240, 193, 130));
   rect(noBtnX, btnY, btnW, btnH, 30);
   fill(56, 29, 16);
+  textFont(mainFont);
   text("No", noBtnX + btnW / 2, btnY + btnH / 2 - 5);
 }
 
@@ -1215,6 +1226,7 @@ function drawLowCookieNotif() {
   fill(255, 255, 255, alpha);
   textSize(16);
   textAlign(LEFT, CENTER);
+  textFont(mainFont);
   text("Be careful, your energy is running low", nX + 16, nY + nH / 2 - 8);
 
   // progress bar along the bottom
@@ -1242,6 +1254,7 @@ function drawLowCookieNotif() {
   fill(255, 255, 255, hoveringX ? alpha : alpha * 0.6);
   textSize(18);
   textAlign(CENTER, CENTER);
+  textFont(jersey10Font);
   text("X", xX + xSize / 2, xY + xSize / 2);
 }
 
