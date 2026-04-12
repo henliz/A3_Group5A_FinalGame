@@ -59,6 +59,7 @@ function cookieJarInteract() {
   if (!COOKIE_JAR.usedToday) {
     spoonsRemaining = 7; // refill to max
     COOKIE_JAR.usedToday = true;
+    refillHintActive = false; // auto-dismiss guidance
 
     if (typeof CookieSound !== "undefined") {
       CookieSound.setVolume(0.4);

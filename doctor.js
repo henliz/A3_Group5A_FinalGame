@@ -34,7 +34,7 @@ const doctorDialogueByDay = {
       {
         id: "C",
         cost: 0,
-        playerLine: "..Hi",
+        playerLine: "..Hi [Exit]",
         npcResponse: "Hi",
         monologue:
           "That was so awkward. I got lost in thought trying to say something to her and now I'm at the other side of the room. Maybe I should try talking with someone else…",
@@ -67,22 +67,22 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "nervous",
+            emotion: "idle",
             text: "She asked specifically about wolfsbane.",
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             text: "Wolfsbane?",
           },
           {
             speaker: "npc",
-            emotion: "nervous",
+            emotion: "sus",
             text: "She said she'd read it had medicinal uses. I told her my medical practice was my own business.",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "sus",
             text: "She smiled and said of course. But she kept prying.",
           },
         ],
@@ -109,8 +109,8 @@ const doctorDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            emotion: "idle",
-            text: "Examined. That's a specific word. She said it like it had already happened to her.",
+            emotion: "determined",
+            text: "(Examined. That's a specific word. She said it like it had already happened to her.)",
           },
           {
             speaker: "npc",
@@ -138,7 +138,7 @@ const doctorDialogueByDay = {
             speaker: "player",
             italic: true,
             emotion: "idle",
-            text: "Good thank you...",
+            text: "(Good thank you...)",
           },
           {
             speaker: "npc",
@@ -198,8 +198,8 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
-            italics: true,
-            text: "It’s a bit strange she was going on a walk so late, but after dinner walks are pretty common...",
+            italic: true,
+            text: "(It’s a bit strange she was going on a walk so late, but after dinner walks are pretty common...)",
           },
           {
             speaker: "player",
@@ -212,11 +212,11 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "idle",
+            emotion: "determined",
             text: "It was pretty dark outside, you’re not worried for your safety?",
           },
           {
-            speaker: "npc",
+            speaker: "sus",
             text: "The moon is still pretty full so it’s not too dark. Besides I’m perfectly capable of defending myself.",
           },
           {
@@ -255,27 +255,27 @@ const doctorDialogueByDay = {
             text: "Helen, didn't deserve to die in that way.",
           },
           {
-            speaker: "npc",
+            speaker: "player",
             emotion: "idle",
             text: "She seemed to really care about everyone. She didn't deserve to die.",
           },
           {
-            speaker: "player",
+            speaker: "npc",
             text: "Oh she was very sweet and accommodating, but she was really unprofessional.",
           },
           {
-            speaker: "npc",
+            speaker: "player",
             emotion: "idle",
             text: "Like how she would ask you specific questions about your medical practice?",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "angry",
             text: "Not just that! She would go through my medical journals and books.",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "angry",
             text: "Once I caught her following me when I was going on a walk, it was so creepy!",
             helenEntry: {
               section: "doctor",
@@ -284,6 +284,7 @@ const doctorDialogueByDay = {
           },
           {
             speaker: "player",
+            emotion: "determined",
             text: "Hmm... Interesting",
           },
         ],

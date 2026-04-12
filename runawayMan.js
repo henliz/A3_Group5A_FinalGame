@@ -35,7 +35,7 @@ const runawayManDialogueByDay = {
       {
         id: "C",
         cost: 0,
-        playerLine: "Sorry…I was just passing by",
+        playerLine: "Sorry…I was just passing by [Exit]",
         npcResponse: "Sure you were.",
         monologue:
           "He didn't believe me. Why would he. I stopped directly in front of him and then apologized for existing near him. He's already decided I'm suspicious or irrelevant and I gave him nothing to think otherwise. I don't know which one is worse right now.",
@@ -71,7 +71,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "player",
-            emotion: "sus",
+            emotion: "determined",
             text: "Did you see Helen before she died?",
           },
           {
@@ -102,7 +102,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "npc",
             emotion: "idle",
-            text: "My father-in-law's birthday. I was just passing through for one night?",
+            text: "My father-in-law's birthday. I was just passing through for one night.",
           },
           {
             speaker: "player",
@@ -173,7 +173,7 @@ const runawayManDialogueByDay = {
         exchange: [
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "sus",
             text: "I don't see how that's any of your business.",
           },
           {
@@ -191,7 +191,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yes... When I checked in, I was going through a difficult time. Helen listened and comforted me.",
             helenEntry: {
               section: "jerome",
@@ -200,7 +200,7 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "I gave her a necklace to thank her for all she's done for me during my stay.",
             helenEntry: {
               section: "jerome",
@@ -210,7 +210,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...",
+            text: "(It sounds like they grew very close in the past few days. It's probably why Jerome decided to stay a few extra nights...)",
             helenEntry: {
               section: "jerome",
               text: "Seems like they had a closer relationship",
@@ -218,11 +218,12 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "player",
-            text: "But a necklace seems like an intimate gift to give to someone you met just a few days ago. Especially one that's expensive...",
+            italic: true,
+            text: "(But a necklace seems like an intimate gift to give to someone you met just a few days ago. Especially one that's expensive...)",
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "nervous",
             text: "But that night I received a call saying that I had to settle a large fine so I asked for the necklace back.",
           },
           {
@@ -237,7 +238,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "player",
             italic: true,
-            text: "Suspicions? Does he mean she knew about his wife? Or what the fine was for...",
+            text: "(Suspicions? Does he mean she knew about his wife? Or what the fine was for...)",
           },
           {
             speaker: "player",
@@ -262,7 +263,7 @@ const runawayManDialogueByDay = {
           {
             speaker: "npc",
             emotion: "idle",
-            text: "Sir, I wanted to check out and leave, but now I'm stuck here.",
+            text: "Three. I wanted to check out and leave, but now I’m stuck here.",
           },
           {
             speaker: "npc",
@@ -271,17 +272,18 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yeah, but it's not awful all the time. I've been playing poker with Mrs. Gustall in the evenings.",
           },
           {
-            speaker: "player",
+            speaker: "npc",
+            emotion: "nervous",
             text: "No money though, I'm not getting involved with that again.",
           },
           {
             speaker: "player",
             italic: true,
-            text: "Does he have a history of gambling? Is this what Helen 'knew about' in her note?",
+            text: "(Does he have a history of gambling? Is this what Helen 'knew about' in her note?)",
           },
           {
             speaker: "npc",
@@ -294,13 +296,13 @@ const runawayManDialogueByDay = {
           },
           {
             speaker: "npc",
-            emotion: "idle",
+            emotion: "happy",
             text: "Yes, my in-laws will be so angry if I miss it.",
           },
           {
             speaker: "player",
             italic: true,
-            text: "So he IS married. Why else would his in-laws care so much about his attendance?",
+            text: "(So he IS married. Why else would his in-laws care so much about his attendance?)",
           },
           {
             speaker: "player",
