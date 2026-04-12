@@ -47,7 +47,7 @@ function drawHomePage() {
   rect(0, 0, width, height);
 
   if (logoImg) {
-    const logoW = min(width * 0.72, 880);
+    const logoW = min(width * 0.72, 880) - 330;
     const logoH = logoW * (logoImg.height / logoImg.width);
     imageMode(CENTER);
     image(
@@ -125,4 +125,76 @@ function drawEndPage() {
   // Bar fill
   fill(255, 200, 50, endScreenAlpha);
   rect(barX, barY, barW * progress, barH, 3);
+}
+
+function drawCreditsPage() {
+  background(0);
+
+  const cx = width / 2;
+  let y = height * 0.1;
+  const lh = 38;
+
+  // Title
+  fill(255, 210, 50);
+  textFont(mainFont);
+  textAlign(CENTER, CENTER);
+  textSize(52);
+  text("Murder at the Moorwood Inn", cx, y);
+  y += 52;
+
+  // Subtitle
+  fill(220, 200, 160);
+  textFont(mainFontItalic);
+  textSize(22);
+  text("A Murder Mystery", cx, y);
+  y += lh * 2.2;
+
+  // 6 name slots
+  const names = [
+    "Amanda Guan",
+    "Tiffany Lu",
+    "Amara Damji",
+    "Ayomide Ibidapo",
+    "Yolanda Wang",
+    "Henriëtta van Niekerk",
+  ];
+
+  fill(255);
+  textFont(mainFont);
+  textSize(20);
+  for (let name of names) {
+    text(name, cx, y);
+    y += lh;
+  }
+  y += lh * 0.8;
+
+  // Thank you
+  fill(220, 200, 160);
+  textFont(mainFontItalic);
+  textSize(24);
+  text("Thank you for playing.", cx, y);
+
+  // Separator
+  stroke(168, 86, 21, 120);
+  strokeWeight(1);
+  line(cx - 180, height - 100, cx + 180, height - 100);
+  noStroke();
+
+  // Return to Home button
+  const btnW = 240;
+  const btnH = 48;
+  const btnX = cx - btnW / 2;
+  const btnY = height - 82;
+  const hovering =
+    mouseX > btnX &&
+    mouseX < btnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+
+  fill(hovering ? color(200, 150, 40) : color(120, 85, 25));
+  rect(btnX, btnY, btnW, btnH, 10);
+  fill(255);
+  textFont(mainFont);
+  textSize(20);
+  text("Return to Home", cx, btnY + btnH / 2);
 }
