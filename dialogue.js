@@ -208,10 +208,10 @@ function drawDialogue() {
   }
   tickTypewriter();
 
-  let boxW = 1857 / 3;
-  let boxH = 681 / 3;
+  let boxW = width * 0.8;
+  let boxH = 681 / 3 - 10;
   let boxX = width * 0.12;
-  let boxY = height - boxH - 20;
+  let boxY = height - boxH - 15;
 
   dialogueBoxBounds = { x: boxX, y: boxY, w: boxW, h: boxH };
 
@@ -254,8 +254,8 @@ function isLittleRedSpeaking() {
 }
 
 function drawPortrait(boxX, boxY, boxW) {
-  let pW = 300;
-  let pH = 420;
+  let pW = 330;
+  let pH = 450;
   let pY = boxY - pH; // bottom of portrait sits flush with top of dialogue box
 
   if (isLittleRedSpeaking()) {
@@ -275,7 +275,7 @@ function drawPortrait(boxX, boxY, boxW) {
       text("Little Red", pX + pW / 2, pY + pH / 2);
     }
   } else {
-    let pX = boxX + 20;
+    let pX = boxX + 5;
     let portraitImg = getActivePortrait();
     if (portraitImg) {
       image(portraitImg, pX, pY, pW, pH);
@@ -305,15 +305,17 @@ function getActivePortrait() {
 
 function drawNameTag(boxX, boxY, boxW) {
   let tagH = 70;
-  let tagY = boxY - tagH;
+  let tagY = boxY - tagH - 10;
 
   if (isLittleRedSpeaking()) {
     let tagW = 180;
     let tagX = boxX + boxW - tagW - 20;
+    stroke(179, 70, 0);
+    strokeWeight(4);
     fill(168, 86, 21);
-    noStroke();
-    rect(tagX, tagY, tagW, tagH, 4);
+    rect(tagX, tagY, tagW, tagH, 10);
     fill(255);
+    noStroke();
     textSize(38);
     textAlign(CENTER, CENTER);
     text("Little Red", tagX + tagW / 2, tagY + tagH / 2.5);
@@ -321,10 +323,12 @@ function drawNameTag(boxX, boxY, boxW) {
     textSize(38);
     let tagW = textWidth(activeNPC.dialogue.name) + 60;
     let tagX = boxX + 20;
+    stroke(179, 70, 0);
+    strokeWeight(4);
     fill(168, 86, 21);
-    noStroke();
-    rect(tagX, tagY, tagW, tagH, 4);
+    rect(tagX, tagY, tagW, tagH, 10);
     fill(255);
+    noStroke();
     textAlign(CENTER, CENTER);
     text(activeNPC.dialogue.name, tagX + tagW / 2, tagY + tagH / 2.5);
   }
@@ -335,9 +339,15 @@ function drawDialogueBox(boxX, boxY, boxW, boxH) {
     dialoguePhase === "monologue" || dialoguePhase === "hesitation";
 
   if (useMonologueBox) {
-    image(uiMonologueBox, boxX, boxY, boxW, boxH);
+    stroke(83, 45, 130);
+    strokeWeight(4);
+    fill(47, 36, 69);
+    rect(boxX, boxY, boxW, boxH, 30);
   } else {
-    image(uiMainBox, boxX, boxY, boxW, boxH);
+    stroke(179, 70, 0);
+    strokeWeight(4);
+    fill(255, 175, 88);
+    rect(boxX, boxY, boxW, boxH, 30);
   }
 }
 
@@ -347,7 +357,8 @@ function drawDialogueText(boxX, boxY, boxW, boxH) {
   let textW = boxW - 75;
   let revealed = typewriterTarget.substring(0, typewriterIndex);
 
-  fill(255);
+  fill(103, 52, 12);
+  noStroke();
   textSize(30);
   textAlign(LEFT, TOP);
 
@@ -355,6 +366,7 @@ function drawDialogueText(boxX, boxY, boxW, boxH) {
 
   // Monologue / hesitation are always italic
   if (dialoguePhase === "monologue" || dialoguePhase === "hesitation") {
+    fill(255, 255, 235);
     useItalic = true;
   }
 
@@ -385,7 +397,7 @@ function drawEnterHint(boxX, boxY, boxW, boxH) {
     mouseY < dialogueBoxBounds.y + dialogueBoxBounds.h;
 
   fill(255, 255, 255, hinting ? 255 : 200);
-  textSize(18);
+  textSize(22);
   textAlign(RIGHT, BOTTOM);
   text("Press SPACE to continue", hintX, hintY);
 }
@@ -397,12 +409,11 @@ function isMouseOver(x, y, w, h) {
 
 function drawOptions() {
   if (!activeNPC) return;
-
-  let btnW = 1080 / 3;
-  let btnH = 241 / 3;
-  let btnX = width * 0.6;
-  let startY = height * 0.4;
-  let gap = btnH + 10;
+  const btnW = 450;
+  const btnH = 90;
+  const btnX = width * 0.63 - 40;
+  const startY = height * 0.12 + 15;
+  const gap = btnH + 30;
 
   let visibleIndices = getVisibleOptionIndices();
 
@@ -413,26 +424,36 @@ function drawOptions() {
     let canAfford = spoonsRemaining >= option.cost;
 
     if (!canAfford) {
-      image(uiBtnDisabled, btnX, btnY, btnW, btnH);
+      stroke(113, 113, 113);
+      strokeWeight(4);
+      fill(186, 186, 186);
+      rect(btnX, btnY, btnW, btnH, 20);
     } else if (i === selectedOption) {
-      image(uiBtnHover, btnX, btnY, btnW, btnH);
+      stroke(111, 31, 41);
+      strokeWeight(4);
+      fill(145, 34, 49);
+      rect(btnX, btnY, btnW, btnH, 20);
     } else {
-      image(uiBtnRegular, btnX, btnY, btnW, btnH + 18);
+      stroke(138, 0, 31);
+      strokeWeight(4);
+      fill(202, 22, 57);
+      rect(btnX, btnY, btnW, btnH + 18, 20);
     }
 
     if (i === selectedOption && canAfford) {
-      fill(255);
+      fill(255, 255, 235);
     } else if (!canAfford) {
-      fill(100, 100, 100);
-    } else {
       fill(30, 30, 30);
+    } else {
+      fill(255, 255, 235);
     }
 
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(option.playerLine, btnX + 13, btnY - 7, btnW - 60, btnH);
+    noStroke();
+    text(option.playerLine, btnX + 10, btnY + 5, btnW - 60, btnH - 10);
 
-    let iconSize = 25;
+    let iconSize = 30;
     let iconX = btnX + btnW - iconSize - 8;
     let iconY = btnY + btnH / 2 - iconSize / 2;
     image(spoonImg, iconX, iconY, iconSize, iconSize);
@@ -440,6 +461,7 @@ function drawOptions() {
     fill(i === selectedOption && canAfford ? 255 : 30);
     textAlign(RIGHT, CENTER);
     textSize(18);
+    noStroke();
     text(option.cost, btnX + btnW - iconSize - 12, btnY + btnH / 2);
   }
 }
@@ -546,9 +568,9 @@ function measureWrappedHeight(str, maxW, size) {
 }
 
 function splitMonologueIntoPages(fullText) {
-  let boxW = 1857 / 3;
+  let boxW = width * 0.65;
   let boxH = 681 / 3;
-  let usableW = boxW - 75;
+  let usableW = boxW - 150;
   let usableH = boxH - 80;
   let size = 30;
 
