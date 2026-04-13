@@ -279,6 +279,8 @@ function whodunnitDraw() {
 
   pop();
 
+  drawLighting();
+
   // ── Phase logic ──────────────────────────────────────────────────
   if (wdPhase === "cop_walk") {
     wdFadeAlpha = max(0, wdFadeAlpha - 3);
