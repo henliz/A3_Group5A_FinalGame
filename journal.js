@@ -177,19 +177,24 @@ class Journal {
 
     if (page.textEntries.length > 0) {
       let entryX = width * 0.29 + 350;
-      let entryY = 250;
+      let entryY = 255;
       let entryW = 650 / 2 - 80;
 
       fill(40, 20, 10);
       textSize(12);
       textAlign(LEFT, TOP);
       textStyle(ITALIC);
+      textFont(journalFont);
 
       for (let i = 0; i < page.textEntries.length; i++) {
-        text("• " + page.textEntries[i], entryX, entryY + i * 75, entryW, 200);
+        const entryText = "• " + page.textEntries[i];
+        text(entryText, entryX, entryY, entryW, 200);
+
+        entryY += measureWrappedHeight(entryText, entryW, 12);
       }
+
       textStyle(NORMAL);
-      textFont(mainFont); // reset at the end
+      textFont(mainFont);
     }
 
     // ─── Helen structured entries (FDL page only) ────────────

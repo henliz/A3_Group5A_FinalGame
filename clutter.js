@@ -711,7 +711,7 @@ const roomLayout = [
     monologue:
       "A doctor marking up a page about a plant that isn't commonly used in  medicine anymore. That's strange. Or maybe I don't know enough about medicine to know if it's strange. I'm writing it down anyway. Hmmm... I see a note here from Helen.  Helen was watching her. Helen figured something out and wrote it down and now Helen is dead and this page is still here. My hands are shaking and I don't know if that's fear or the fact that I haven't eaten today.",
     journalEntry:
-      "Medicinal Plants book:  wolfsbane page dog-eared, personal margin marks, not clinical annotations.",
+      "Medicinal Plants book:  wolfsbane page dog-eared, personal margin marks, not clinical annotations, and a ripped page of a journal entry from H, how did it get here?",
     closeupAsset: "medicinal_plat_book",
     closeupLabel: "Medicinal Book",
     helenEntry: {
