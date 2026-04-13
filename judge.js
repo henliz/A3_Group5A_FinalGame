@@ -90,7 +90,7 @@ function _drawConfirmPopup() {
   }
 }
 
-const _PORTRAIT_NAMES = ["Innkeeper", "Doctor", "Jerome"];
+const _PORTRAIT_NAMES = ["Gustall", "Doctor", "Jerome"];
 
 function _drawSelectPopup() {
   fill(0, 0, 0, 160);
