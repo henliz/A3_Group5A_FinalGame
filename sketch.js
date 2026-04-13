@@ -108,10 +108,10 @@ function preload() {
   whodunnitPreload();
   charSheet = loadImage("redridinghood.png"); //reference [15]
   loadHomeAssets();
-  spoonImg = loadImage("assets/cookies.png"); //reference [7]
-  innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [4]
-  nunImg = loadImage("assets/Krisia_spritesheet.png"); //reference [15]
-  runawayManImg = loadImage("assets/Jerome_spritesheet.png"); //reference [2]
+  spoonImg = loadImage("assets/cookies.png"); //reference [4]
+  innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [5]
+  nunImg = loadImage("assets/Krisia_spritesheet.png");
+  runawayManImg = loadImage("assets/Jerome_spritesheet.png");
 
   // journal pages
   doctorPg = loadImage("assets/journal/Krisia_journal.png");
@@ -122,7 +122,7 @@ function preload() {
   leftarrow = loadImage("assets/left_arrow.png");
   rightarrow = loadImage("assets/right_arrow.png");
 
-  gear = loadImage("assets/gear.png");
+  gear = loadImage("assets/gear.png"); // reference [14]
   cookiejar = loadImage("assets/cookiejar.png");
   emptyjar = loadImage("assets/EmptyJar.png");
 
@@ -162,7 +162,7 @@ function preload() {
       idle: null, // extracted from copSheet in setup() after load
     },
   };
-  journalicon = loadImage("assets/bookicon.png"); // reference 16
+  journalicon = loadImage("assets/bookicon.png"); // reference [22]
   // ui dialogue elements
   uiMainBox = loadImage("assets/ui elements/Main Dialogue Box.png");
   uiMonologueBox = loadImage("assets/ui elements/Inner Monologue Box.png");
@@ -170,9 +170,9 @@ function preload() {
   uiBtnHover = loadImage("assets/ui elements/Dialogue choice hover.png");
   uiBtnDisabled = loadImage("assets/ui elements/Dialogue choice disabled.png");
 
-  jersey10Font = loadFont("assets/Jersey10-Regular.ttf");
-  mainFont = loadFont("assets/LisuBosa-Regular.ttf");
-  mainFontItalic = loadFont("assets/LisuBosa-Italic.ttf");
+  jersey10Font = loadFont("assets/Jersey10-Regular.ttf"); // reference [7]
+  mainFont = loadFont("assets/LisuBosa-Regular.ttf"); // reference [9]
+  mainFontItalic = loadFont("assets/LisuBosa-Italic.ttf"); // reference [9]
 
   journalFont = loadFont("assets/Margarine-Regular.ttf");
 
@@ -180,7 +180,7 @@ function preload() {
     "assets/ui elements/Cookie Low Reminder Box.png",
   );
 
-  prologueVideo = createVideo("assets/Prologue.mp4"); //reference [4], [5]
+  prologueVideo = createVideo("assets/Prologue.mp4"); //reference [15], [16]
   prologueVideo.hide();
   // auto-skip to game if the video can't load or play (codec/browser ssue)
   prologueVideo.elt.onerror = () => {
