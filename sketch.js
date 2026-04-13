@@ -53,6 +53,7 @@ const LOW_COOKIE_NOTIF_DURATION = 300; // ~5 seconds at 60fps
 let dayEndTriggered = false;
 let dayTransitionLocked = false; // blocks all input during day-end transition
 let confirmEndDayOpen = false; // whether the "end day?" modal is showing
+let confirmCallOpen   = false; // whether the "call the sheriff?" modal is showing
 let outOfCookiesModalOpen = false;
 let hasShownOutOfCookiesModal = false;
 let outOfCookiesPending = false; // fires modal after dialogue closes
@@ -90,6 +91,7 @@ let dialogueDisabledButtonTextC;
 let journalTextC;
 
 let prologueVideo;
+let gustallVideo;
 
 // Audio settings
 let backgroundMusic;
@@ -102,6 +104,7 @@ function preload() {
   tf1Preload();
   clutterPreload();
   checkinPreload();
+  whodunnitPreload();
   charSheet = loadImage("redridinghood.png"); //reference [15]
   loadHomeAssets();
   spoonImg = loadImage("assets/cookies.png"); //reference [7]
@@ -154,6 +157,9 @@ function preload() {
     helen: {
       idle: loadImage("assets/portraits/helen.png"),
     },
+    cop: {
+      idle: null, // extracted from copSheet in setup() after load
+    },
   };
   journalicon = loadImage("assets/bookicon.png"); // reference 16
   // ui dialogue elements
@@ -184,6 +190,10 @@ function preload() {
       if (currentScene === "PROLOGUE") currentScene = "GAME";
     }, 3000);
   };
+  gustallVideo = createVideo("assets/gustall.mp4");
+  gustallVideo.hide();
+  gustallVideo.elt.onerror = () => { if (wdPhase === "gustall_video") { judgePhase = "bad_ending"; wdPhase = "video_done"; } };
+
   backgroundMusic = loadSound("assets/audio/bgm.mp3"); //reference [1]
   pageFlipSound = loadSound("assets/audio/pageturning.mp3"); //reference [1]
   CookieSound = loadSound("assets/audio/eatcookie.mp3"); //reference [1]
@@ -288,6 +298,11 @@ function setup() {
   dialogueDisabledButtonTextC = color(168, 86, 21);
   journalTextC = color(255);
 
+  // Extract portrait frame from cop spritesheet: col 1 (idle), row 0 (front-facing)
+  if (copSheet) {
+    portraits.cop.idle = copSheet.get(COP_FRAME_W, 0, COP_FRAME_W, COP_FRAME_H);
+  }
+
   tf1Setup();
   // once the floor/tile system exists we can place our furniture
   clutterSetup();
@@ -371,6 +386,9 @@ function draw() {
   } else if (currentScene === "CHECKIN") {
     checkinDraw();
     return;
+  } else if (currentScene === "WHODUNNIT") {
+    whodunnitDraw();
+    return;
   } else if (currentScene === "PROLOGUE") {
     background(0);
     imageMode(CENTER);
@@ -432,6 +450,7 @@ function draw() {
   settings();
   journal.display();
   drawJudgement();
+  drawConfirmCall();
   drawLowCookieNotif();
   drawGuidanceNotif();
   drawConfirmEndDay();
@@ -818,6 +837,7 @@ function drawExamineImage() {
 
 function handlePhoneClick(mx, my) {
   if (currentDay !== 3 || dialoguePhase !== "closed" || journal.isOpen) return;
+  if (currentScene === "WHODUNNIT") return;
 
   const phoneItem = roomLayout.find((f) => f.asset === "phone");
   if (!phoneItem) return;
@@ -841,8 +861,7 @@ function handlePhoneClick(mx, my) {
     wy > pos.actualY &&
     wy < pos.actualY + pos.dh
   ) {
-    judgePhase = "confirm";
-    judgeSelectedPortrait = -1;
+    confirmCallOpen = true;
   }
 }
 
@@ -1149,6 +1168,111 @@ function handleConfirmEndDayClick(mx, my) {
   return true; // click consumed — don't let anything behind the modal fire
 }
 
+function drawConfirmCall() {
+  if (!confirmCallOpen) return;
+
+  // Dim backdrop
+  noStroke();
+  fill(0, 0, 0, 160);
+  rect(0, 0, width, height);
+
+  // Panel
+  const panelW = 520;
+  const panelH = 280;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+  stroke(56, 29, 16);
+  strokeWeight(4);
+  fill(107, 59, 34);
+  rect(panelX, panelY, panelW, panelH, 20);
+  noStroke();
+
+  // X close button
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  const hoveringX = dist(mouseX, mouseY, xX, xY) < xSize / 2;
+  fill(hoveringX ? color(90, 40, 35) : color(106, 46, 43));
+  stroke(56, 29, 16);
+  strokeWeight(2);
+  ellipse(xX, xY, xSize, xSize);
+  noStroke();
+  fill(255);
+  textFont(jersey10Font);
+  textSize(22);
+  textAlign(CENTER, CENTER);
+  text("×", xX, xY - 2);
+
+  // Question text
+  fill(255);
+  textFont(mainFont);
+  textSize(38);
+  textAlign(CENTER, CENTER);
+  text("Are you ready to\ncall the Sheriff?", width / 2, panelY + 105);
+
+  // Buttons
+  const btnW = 180;
+  const btnH = 45;
+  const yesBtnX = width / 2 - btnW - 20;
+  const noBtnX  = width / 2 + 20;
+  const btnY    = panelY + panelH - btnH - 40;
+
+  const hoveringYes = mouseX > yesBtnX && mouseX < yesBtnX + btnW && mouseY > btnY && mouseY < btnY + btnH;
+  const hoveringNo  = mouseX > noBtnX  && mouseX < noBtnX  + btnW && mouseY > btnY && mouseY < btnY + btnH;
+
+  fill(hoveringYes ? color(250, 219, 177) : color(240, 193, 130));
+  rect(yesBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  textSize(26);
+  textAlign(CENTER, CENTER);
+  textFont(mainFont);
+  text("Yes", yesBtnX + btnW / 2, btnY + btnH / 2 - 5);
+
+  fill(hoveringNo ? color(250, 219, 177) : color(240, 193, 130));
+  rect(noBtnX, btnY, btnW, btnH, 30);
+  fill(56, 29, 16);
+  textFont(mainFont);
+  text("Not yet", noBtnX + btnW / 2, btnY + btnH / 2 - 5);
+}
+
+function handleConfirmCallClick(mx, my) {
+  if (!confirmCallOpen) return false;
+
+  const panelW = 520;
+  const panelH = 280;
+  const panelX = width / 2 - panelW / 2;
+  const panelY = height / 2 - panelH / 2;
+
+  // X button
+  const xSize = 36;
+  const xX = panelX + panelW - xSize / 2 - 10;
+  const xY = panelY + xSize / 2 + 10;
+  if (dist(mx, my, xX, xY) < xSize / 2) {
+    confirmCallOpen = false;
+    return true;
+  }
+
+  const btnW = 180;
+  const btnH = 45;
+  const yesBtnX = width / 2 - btnW - 20;
+  const noBtnX  = width / 2 + 20;
+  const btnY    = panelY + panelH - btnH - 40;
+
+  if (mx > yesBtnX && mx < yesBtnX + btnW && my > btnY && my < btnY + btnH) {
+    confirmCallOpen = false;
+    currentScene = "WHODUNNIT";
+    whodunnitSetup();
+    return true;
+  }
+
+  if (mx > noBtnX && mx < noBtnX + btnW && my > btnY && my < btnY + btnH) {
+    confirmCallOpen = false;
+    return true;
+  }
+
+  return true;
+}
+
 function advanceDay() {
   dayTransitionLocked = true; // lock all input immediately
   currentDay++;
@@ -1342,6 +1466,7 @@ function resetGameState() {
   judgePhase = "closed";
   judgeSelectedPortrait = -1;
   judgement = false;
+  confirmCallOpen = false;
   musicStarted = false;
 
   // Cookies / energy
@@ -1430,6 +1555,7 @@ function drawCloseButton(x, y, size = 36) {
 function keyPressed() {
   if (dayTransitionLocked) return; // ignore all input during day transition
   if (confirmEndDayOpen) return; // modal is open — keyboard does nothing
+  if (confirmCallOpen) return;
 
   if (currentScene === "HOME") {
     if (keyCode === ENTER) {
@@ -1458,6 +1584,18 @@ function keyPressed() {
       return;
     }
     if (dialoguePhase === "closed") return; // walk phase — nothing else to handle
+  }
+
+  if (currentScene === "WHODUNNIT") {
+    if (wdPhase === "gustall_video") {
+      gustallVideo.stop();
+      gustallVideo.hide();
+      judgePhase = "bad_ending";
+      wdPhase    = "video_done";
+      return;
+    }
+    if (dialoguePhase === "closed") return;
+    // else fall through to E/Space handler for dialogue advancement
   }
 
   if (currentScene === "END") {
@@ -1530,8 +1668,7 @@ function keyPressed() {
       const nearItem = getInteractableNearPlayer(player);
       if (nearItem) {
         if (nearItem.asset === "phone" && currentDay === 3) {
-          judgePhase = "confirm";
-          judgeSelectedPortrait = -1;
+          confirmCallOpen = true;
         } else {
           // Mark examined (phone stays interactive across days)
           if (nearItem.asset !== "phone") nearItem.examined = true;
@@ -1619,6 +1756,10 @@ function mousePressed() {
     handleConfirmEndDayClick(mouseX, mouseY);
     return;
   }
+  if (confirmCallOpen) {
+    handleConfirmCallClick(mouseX, mouseY);
+    return;
+  }
 
   if (judgePhase === "good_ending" || judgePhase === "bad_ending") {
     judgePhase = "closed";
@@ -1691,6 +1832,18 @@ function mousePressed() {
   if (currentScene === "CHECKIN") {
     // delegate clicks to the real dialogue system — same logic as GAME
     if (dialoguePhase === "closed") return;
+  }
+
+  if (currentScene === "WHODUNNIT") {
+    if (wdPhase === "gustall_video") {
+      gustallVideo.stop();
+      gustallVideo.hide();
+      judgePhase = "bad_ending";
+      wdPhase    = "video_done";
+      return;
+    }
+    if (dialoguePhase === "closed") return;
+    // else fall through to dialogue click handling
   }
 
   if (

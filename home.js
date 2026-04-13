@@ -4,37 +4,48 @@ const SCENE = {
   END: "END",
 };
 
-let homeBgImg;
+// Parallax layer images
+// Group A — Layer 1 alone        (furthest, moves least)
+// Group B — Layer 2 alone
+// Group C — Layers 3 + 4 together (lighting/shading pair, same depth)
+// Group D — Layers 5 + 6 + 7 together (lighting/shading trio, same depth, closest)
+// Layer 8 — not used for parallax
+let bgLayer1, bgLayer2, bgLayer3, bgLayer4, bgLayer5, bgLayer6, bgLayer7, bgLayer8;
 let logoImg;
 let instructions;
 let homeMouseX = 0;
 let homeMouseY = 0;
 
 function loadHomeAssets() {
-  homeBgImg = loadImage("assets/homepic.png");
+  bgLayer1 = loadImage("assets/BG_Layer1.png");
+  bgLayer2 = loadImage("assets/BG_Layer2.png");
+  bgLayer3 = loadImage("assets/BG_Layer3.png");
+  bgLayer4 = loadImage("assets/BG_Layer4.png");
+  bgLayer5 = loadImage("assets/BG_Layer5.png");
+  bgLayer6 = loadImage("assets/BG_Layer6.png");
+  bgLayer7 = loadImage("assets/BG_Layer7.png");
+  bgLayer8 = loadImage("assets/BG_Layer8.png");
   logoImg = loadImage("through_the_woods_logo.png");
   instructions = loadImage("assets/interact_info.png");
 }
 
 function drawHomePage() {
+  background(255);
   homeMouseX = lerp(homeMouseX, mouseX, 0.06);
   homeMouseY = lerp(homeMouseY, mouseY, 0.06);
 
   const offsetX = (homeMouseX - width / 2) / width;
   const offsetY = (homeMouseY - height / 2) / height;
-  const bgShiftX = offsetX * -28;
-  const bgShiftY = offsetY * -18;
-  const logoShiftX = offsetX * 10;
-  const logoShiftY = offsetY * 8;
 
-  const oversize = 60;
-  image(
-    homeBgImg,
-    -oversize / 2 + bgShiftX,
-    -oversize / 2 + bgShiftY,
-    width + oversize,
-    height + oversize,
-  );
+  // ── Background layers ─────────────────────────────────────────
+  if (bgLayer8) image(bgLayer8, 0, 0, width, height);
+  if (bgLayer7) image(bgLayer7, 0, 0, width, height);
+  if (bgLayer5) image(bgLayer5, offsetX * -4,  offsetY * -3,  width, height);
+  if (bgLayer6) image(bgLayer6, offsetX * -8,  offsetY * -5,  width, height);
+  if (bgLayer3) image(bgLayer3, offsetX * -14, offsetY * -9,  width, height);
+  if (bgLayer4) image(bgLayer4, offsetX * -14, offsetY * -9,  width, height);
+  if (bgLayer1) image(bgLayer1, offsetX * -22, offsetY * -14, width, height);
+  if (bgLayer2) image(bgLayer2, offsetX * -35, offsetY * -22, width, height);
 
   const grad = drawingContext.createLinearGradient(0, 0, 0, height * 0.5);
   grad.addColorStop(0, "rgba(0,0,0,0.88)");
@@ -52,8 +63,8 @@ function drawHomePage() {
     imageMode(CENTER);
     image(
       logoImg,
-      width / 2 + logoShiftX,
-      height * 0.28 + logoShiftY,
+      width / 2,
+      height * 0.24,
       logoW,
       logoH,
     );
@@ -149,14 +160,14 @@ function drawCreditsPage() {
   text("A Murder Mystery", cx, y);
   y += lh * 2.2;
 
-  // 6 name slots
+  // Names — alphabetical by last name
   const names = [
-    "Amanda Guan",
-    "Tiffany Lu",
     "Amara Damji",
+    "Amanda Guan",
     "Ayomide Ibidapo",
-    "Yolanda Wang",
+    "Tiffany Lu",
     "Henriëtta van Niekerk",
+    "Yolanda Wang",
   ];
 
   fill(255);
@@ -164,7 +175,7 @@ function drawCreditsPage() {
   textSize(20);
   for (let name of names) {
     text(name, cx, y);
-    y += lh;
+    y += lh * 1.6;
   }
   y += lh * 0.8;
 
