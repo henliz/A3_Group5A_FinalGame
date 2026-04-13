@@ -489,7 +489,7 @@ function confirmChoice() {
   }
   chosenOption = option;
 
-  if (typeof CookieSound !== "undefined") {
+  if (option.cost >= 1 && typeof CookieSound !== "undefined") {
     CookieSound.setVolume(0.25);
     CookieSound.play();
   }
