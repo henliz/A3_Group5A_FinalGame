@@ -195,6 +195,22 @@ function _drawNPCAtPos(sheet, wx, wy) {
   imageMode(CORNER);
 }
 
+function _drawVideoLetterboxed(vid) {
+  const vw = vid.elt.videoWidth  || vid.width  || 1280;
+  const vh = vid.elt.videoHeight || vid.height || 720;
+  const ratio = vw / vh;
+  let drawW = width;
+  let drawH = width / ratio;
+  if (drawH > height) {
+    drawH = height;
+    drawW = height * ratio;
+  }
+  const dx = (width  - drawW) / 2;
+  const dy = (height - drawH) / 2;
+  imageMode(CORNER);
+  image(vid, dx, dy, drawW, drawH);
+}
+
 function _startGatherChatter() {
   activeNPC    = copNPC;
   chosenOption = { npcResponse: null, monologue: "Everyone is in the same room now. No more running. Whatever comes next happens in front of everyone." };
@@ -203,20 +219,21 @@ function _startGatherChatter() {
 
 // ─── Draw ─────────────────────────────────────────────────────────────────────
 function whodunnitDraw() {
-  // Gustall cinematic — fullscreen, no world rendering
+  // Gustall cinematic — fullscreen letterboxed, no world rendering
   if (wdPhase === "gustall_video") {
     background(0);
     if (gustallVideo) {
-      imageMode(CENTER);
-      image(gustallVideo, width / 2, height / 2, width, height);
-      imageMode(CORNER);
+      _drawVideoLetterboxed(gustallVideo);
     }
-    fill(255, 255, 255, 140);
-    noStroke();
-    textFont(mainFont);
-    textAlign(RIGHT, BOTTOM);
-    textSize(14);
-    text("Press any key or click to skip", width - 20, height - 16);
+    return;
+  }
+
+  // Jerome cinematic — fullscreen letterboxed, no world rendering
+  if (wdPhase === "jerome_video") {
+    background(0);
+    if (jeromeVideo) {
+      _drawVideoLetterboxed(jeromeVideo);
+    }
     return;
   }
 
@@ -316,6 +333,19 @@ function whodunnitDraw() {
         if (gustallVideo) {
           gustallVideo.play();
           gustallVideo.elt.onended = () => {
+            judgePhase = "bad_ending";
+            wdPhase    = "video_done";
+          };
+        } else {
+          judgePhase = "bad_ending";
+          wdPhase    = "video_done";
+        }
+      // Jerome accused (index 2) → play cinematic first
+      } else if (wdEndingPhase === "bad_ending" && judgeSelectedPortrait === 2) {
+        wdPhase = "jerome_video";
+        if (jeromeVideo) {
+          jeromeVideo.play();
+          jeromeVideo.elt.onended = () => {
             judgePhase = "bad_ending";
             wdPhase    = "video_done";
           };

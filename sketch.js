@@ -92,6 +92,7 @@ let journalTextC;
 
 let prologueVideo;
 let gustallVideo;
+let jeromeVideo;
 
 // Audio settings
 let backgroundMusic;
@@ -193,6 +194,10 @@ function preload() {
   gustallVideo = createVideo("assets/gustall.mp4");
   gustallVideo.hide();
   gustallVideo.elt.onerror = () => { if (wdPhase === "gustall_video") { judgePhase = "bad_ending"; wdPhase = "video_done"; } };
+
+  jeromeVideo = createVideo("assets/jerome.mp4");
+  jeromeVideo.hide();
+  jeromeVideo.elt.onerror = () => { if (wdPhase === "jerome_video") { judgePhase = "bad_ending"; wdPhase = "video_done"; } };
 
   backgroundMusic = loadSound("assets/audio/bgm.mp3"); //reference [1]
   pageFlipSound = loadSound("assets/audio/pageturning.mp3"); //reference [1]
@@ -1587,13 +1592,7 @@ function keyPressed() {
   }
 
   if (currentScene === "WHODUNNIT") {
-    if (wdPhase === "gustall_video") {
-      gustallVideo.stop();
-      gustallVideo.hide();
-      judgePhase = "bad_ending";
-      wdPhase    = "video_done";
-      return;
-    }
+    if (wdPhase === "gustall_video" || wdPhase === "jerome_video") return; // no skipping
     if (dialoguePhase === "closed") return;
     // else fall through to E/Space handler for dialogue advancement
   }
@@ -1835,13 +1834,7 @@ function mousePressed() {
   }
 
   if (currentScene === "WHODUNNIT") {
-    if (wdPhase === "gustall_video") {
-      gustallVideo.stop();
-      gustallVideo.hide();
-      judgePhase = "bad_ending";
-      wdPhase    = "video_done";
-      return;
-    }
+    if (wdPhase === "gustall_video" || wdPhase === "jerome_video") return; // no skipping
     if (dialoguePhase === "closed") return;
     // else fall through to dialogue click handling
   }
