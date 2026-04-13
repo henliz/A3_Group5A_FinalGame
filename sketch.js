@@ -102,12 +102,12 @@ function preload() {
   tf1Preload();
   clutterPreload();
   checkinPreload();
-  charSheet = loadImage("redridinghood.png"); //reference [15]
+  charSheet = loadImage("redridinghood.png"); //reference [12]
   loadHomeAssets();
-  spoonImg = loadImage("assets/cookies.png"); //reference [7]
-  innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [4]
-  nunImg = loadImage("assets/Krisia_spritesheet.png"); //reference [15]
-  runawayManImg = loadImage("assets/Jerome_spritesheet.png"); //reference [2]
+  spoonImg = loadImage("assets/cookies.png"); //reference [4]
+  innkeeperImg = loadImage("assets/innkeeper_sprite.png"); //reference [5]
+  nunImg = loadImage("assets/Krisia_spritesheet.png");
+  runawayManImg = loadImage("assets/Jerome_spritesheet.png");
 
   // journal pages
   doctorPg = loadImage("assets/journal/Krisia_journal.png");
@@ -118,7 +118,7 @@ function preload() {
   leftarrow = loadImage("assets/left_arrow.png");
   rightarrow = loadImage("assets/right_arrow.png");
 
-  gear = loadImage("assets/gear.png");
+  gear = loadImage("assets/gear.png"); // reference [6]
   cookiejar = loadImage("assets/cookiejar.png");
   emptyjar = loadImage("assets/EmptyJar.png");
 
@@ -155,7 +155,7 @@ function preload() {
       idle: loadImage("assets/portraits/helen.png"),
     },
   };
-  journalicon = loadImage("assets/bookicon.png"); // reference 16
+  journalicon = loadImage("assets/bookicon.png"); // reference [14]
   // ui dialogue elements
   uiMainBox = loadImage("assets/ui elements/Main Dialogue Box.png");
   uiMonologueBox = loadImage("assets/ui elements/Inner Monologue Box.png");
@@ -173,7 +173,7 @@ function preload() {
     "assets/ui elements/Cookie Low Reminder Box.png",
   );
 
-  prologueVideo = createVideo("assets/Prologue.mp4"); //reference [4], [5]
+  prologueVideo = createVideo("assets/Prologue.mp4"); //reference [6], [8]
   prologueVideo.hide();
   // auto-skip to game if the video can't load or play (codec/browser ssue)
   prologueVideo.elt.onerror = () => {
