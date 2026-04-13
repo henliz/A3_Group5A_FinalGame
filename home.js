@@ -1,6 +1,7 @@
 const SCENE = {
   HOME: "HOME",
   GAME: "GAME",
+  CREDITS: "CREDITS",
   END: "END",
 };
 

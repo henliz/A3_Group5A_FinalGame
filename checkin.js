@@ -121,6 +121,8 @@ function checkinDraw() {
 
   pop();
 
+  drawLighting();
+
   // ── Walk logic ───────────────────────────────────────────────
   if (ciPhase === "walk") {
     if (ciPlayerWX > ciTargetWX) {
