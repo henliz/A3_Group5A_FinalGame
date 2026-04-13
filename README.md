@@ -40,33 +40,48 @@ Implementing the cookie jar mechanics that allow players to fill up their energy
 
 [2] Epidemic Fantasy. 2020. Bonnie Grace - Highland Hymn (Epidemic Sound) (Royalty Free Music). YouTube. Retrieved March 13, 2026 from https://www.youtube.com/watch?v=KpMaW2QfBoQ
 
-[3] Epidemic Fantasy. 2020. Bonnie Grace - May You Have (Orchestral Medieval Music) (Royalty Free Music). MP3. https://youtu.be/ZPE6SW3eMjw?si=dr5GpfpDrUOlxe4f
+[3] Epidemic Fantasy. 2020. Bonnie Grace - May You Have (Orchestral Medieval Music) (Royalty Free Music). MP3.  https://youtu.be/ZPE6SW3eMjw?si=dr5GpfpDrUOlxe4f 
 
-[4] Ghostpixxells. Free Pixel Food. PNG. https://ghostpixxells.itch.io/pixelfood
+[4] Ghostpixxells. Free Pixel Food. PNG. https://ghostpixxells.itch.io/pixelfood 
 
-[5] GalacticGod. NPC Character Set Elderly Inn Keeper. PNG. https://galacticgod.itch.io/rpg-maker-npc-character-set-elderlyinnkeeper
+[5] GalacticGod. NPC Character Set Elderly Inn Keeper. PNG. https://galacticgod.itch.io/rpg-maker-npc-character-set-elderlyinnkeeper 
 
-[6] Kevin MacLeod. 2015. Pooka. MP3. https://youtu.be/vlslyEOazXQ?si=r1iE3odBqLu_A4l4
+[6] Google Fonts. Fuzzy Bubbles. Font. https://fonts.google.com/specimen/Fuzzy+Bubbles?preview.script=Latn 
 
-[7] Knekko. 2023. Cogwheels and Gears. PNG.https://opengameart.org/content/cogwheels-and-gears
+[7] Google Fonts. Jersey 10. Font. https://fonts.google.com/specimen/Jersey+10 
 
-[8] Media Right Productions. 2015. The Poisoned Princess. MP3. https://youtu.be/JiYEdENrR-g?si=P8gTz39Unf82lDHl
+[8] Google Fonts. Lisu Bosa. Font. https://fonts.google.com/specimen/Lisu+Bosa
 
-[9] NICE Clinical Guidelines, No. 159. 2013. Social Anxiety Disorder: Recognition, Assessment and Treatment.Retrieved from https://www.ncbi.nlm.nih.gov/books/NBK327674/
+[9] Google Fonts. Mansalva. Font. https://fonts.google.com/specimen/Mansalva 
 
-[10] NIMH. 2025. National Institute for Mental Health: Social Anxiety Disorder: What You Need to Know. Retrieved from https://www.nimh.nih.gov/health/publications/social-anxiety-disorder-more-than-just-shyness
+[10] Google Fonts. Niconne. Font. https://fonts.google.com/specimen/Niconne?preview.script=Latn
 
-[11] Screen Therapy. 2020. Celeste: Growing Stronger & Healing Anxiety | Screen Therapy . Youtu.be. Retrieved February 21, 2026 from https://youtu.be/On_gtBhjpos?si=YGUxlaIDe3ToVo8c
+[11] Google Fonts. New Rocker. Font. https://fonts.google.com/specimen/New+Rocker?preview.script=Latn 
 
-[12] Sky L. Anderson. 2020. Portraying Mental Illness in Video Games
-Exploratory Case Studies for Improving Interactive Depictions. Loading 13, 21 (Sept. 2020), 20-33. https://doi.org/10.7202/1071449ar
+[12] Google Fonts. Redacted Script. Font. https://fonts.google.com/specimen/Redacted+Script?query=redacted&preview.script=Latn
 
-[13] Slimeresources. 2015. Red riding hood sprite, nuns.png. PNG. https://slimsresources.wordpress.com/wp-content/uploads/2015/07/adultred.png
+[13] Kevin MacLeod. 2015. Pooka. MP3.  https://youtu.be/vlslyEOazXQ?si=r1iE3odBqLu_A4l4 
 
-[14] Soloslime. 2025. Book Icon. PNG. https://opengameart.org/content/book-icon-0
+[14] Knekko. 2023. Cogwheels and Gears.   PNG.https://opengameart.org/content/cogwheels-and-gears 
 
-[15] Sweezycursors.World of Warcraft Pixel Cursor. PNG. https://sweezy-cursors.com/cursor/world-of-warcraft-pixel/
+[15] Media Right Productions. 2015. The Poisoned Princess. MP3.  https://youtu.be/JiYEdENrR-g?si=P8gTz39Unf82lDHl 
 
-[16] Thiago Alves. 2018. Exploring Underrepresented Narratives: Social Anxiety in Games. Master’s thesis. University of Skövde, School of Informatics. Retrieved from https://www.diva-portal.org/smash/get/diva2:1217926/FULLTEXT01.pdf
+[16] NICE Clinical Guidelines, No. 159. 2013.  Social Anxiety Disorder: Recognition, Assessment and Treatment.Retrieved from https://www.ncbi.nlm.nih.gov/books/NBK327674/ 
 
-[17] Wellness Road Psychology. 2026. Social Anxiety Misconceptions: 7 Myths That Are Holding People Back. Retrieved from https://wellnessroadpsychology.com/social-anxiety-misconceptions
+[17] NIMH. 2025. National Institute for Mental Health: Social Anxiety Disorder: What You Need to Know. Retrieved from https://www.nimh.nih.gov/health/publications/social-anxiety-disorder-more-than-just-shyness
+
+[18] Screen Therapy. 2020. Celeste: Growing Stronger & Healing Anxiety | Screen Therapy . Youtu.be. Retrieved February 21, 2026 from https://youtu.be/On_gtBhjpos?si=YGUxlaIDe3ToVo8c 
+
+[19] Sky L. Anderson. 2020. Portraying Mental Illness in Video Games
+Exploratory Case Studies for Improving Interactive Depictions. Loading 13, 21 (Sept. 2020), 20-33.  https://doi.org/10.7202/1071449ar 
+
+[20] Slimeresources. 2015. Red riding hood sprite, nuns.png. PNG. https://slimsresources.wordpress.com/wp-content/uploads/2015/07/adultred.png
+
+[21] Soloslime. 2025. Book Icon. PNG.  https://opengameart.org/content/book-icon-0 
+
+[22] Sweezycursors.World of Warcraft Pixel Cursor. PNG. https://sweezy-cursors.com/cursor/world-of-warcraft-pixel/ 
+
+[23] Thiago Alves. 2018. Exploring Underrepresented Narratives: Social Anxiety in Games. Master’s thesis. University of Skövde, School of Informatics. Retrieved from https://www.diva-portal.org/smash/get/diva2:1217926/FULLTEXT01.pdf 
+
+[24] Wellness Road Psychology. 2026. Social Anxiety Misconceptions: 7 Myths That Are Holding People Back. Retrieved from https://wellnessroadpsychology.com/social-anxiety-misconceptions 
+
