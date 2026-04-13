@@ -237,6 +237,15 @@ function whodunnitDraw() {
     return;
   }
 
+  // Krisia cinematic — fullscreen letterboxed, no world rendering
+  if (wdPhase === "krisia_video") {
+    background(0);
+    if (krisiaVideo) {
+      _drawVideoLetterboxed(krisiaVideo);
+    }
+    return;
+  }
+
   // After video — show ending screen via drawJudgement()
   if (wdPhase === "video_done") {
     background(0);
@@ -332,28 +341,50 @@ function whodunnitDraw() {
       // Gustall accused (index 0) → play cinematic first
       if (wdEndingPhase === "bad_ending" && judgeSelectedPortrait === 0) {
         wdPhase = "gustall_video";
+        if (backgroundMusic && backgroundMusic.isPlaying()) backgroundMusic.stop();
         if (gustallVideo) {
           gustallVideo.play();
           gustallVideo.elt.onended = () => {
             judgePhase = "bad_ending";
             wdPhase    = "video_done";
+            if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
           };
         } else {
           judgePhase = "bad_ending";
           wdPhase    = "video_done";
+          if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
         }
       // Jerome accused (index 2) → play cinematic first
       } else if (wdEndingPhase === "bad_ending" && judgeSelectedPortrait === 2) {
         wdPhase = "jerome_video";
+        if (backgroundMusic && backgroundMusic.isPlaying()) backgroundMusic.stop();
         if (jeromeVideo) {
           jeromeVideo.play();
           jeromeVideo.elt.onended = () => {
             judgePhase = "bad_ending";
             wdPhase    = "video_done";
+            if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
           };
         } else {
           judgePhase = "bad_ending";
           wdPhase    = "video_done";
+          if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
+        }
+      // Krisia accused (index 1) → good ending cinematic
+      } else if (wdEndingPhase === "good_ending" && judgeSelectedPortrait === 1) {
+        wdPhase = "krisia_video";
+        if (backgroundMusic && backgroundMusic.isPlaying()) backgroundMusic.stop();
+        if (krisiaVideo) {
+          krisiaVideo.play();
+          krisiaVideo.elt.onended = () => {
+            judgePhase = "good_ending";
+            wdPhase    = "video_done";
+            if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
+          };
+        } else {
+          judgePhase = "good_ending";
+          wdPhase    = "video_done";
+          if (backgroundMusic) { backgroundMusic.loop(); backgroundMusic.setVolume(0.17); }
         }
       } else {
         judgePhase = wdEndingPhase; // hand off to sketch.js

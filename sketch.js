@@ -90,9 +90,11 @@ let dialogueHoverButtonTextC;
 let dialogueDisabledButtonTextC;
 let journalTextC;
 
-let prologueVideo;
+let prologue1Video;
+let prologueVideo; // prologue2 — plays after checkin
 let gustallVideo;
 let jeromeVideo;
+let krisiaVideo;
 
 // Audio settings
 let backgroundMusic;
@@ -180,9 +182,13 @@ function preload() {
     "assets/ui elements/Cookie Low Reminder Box.png",
   );
 
-  prologueVideo = createVideo("assets/Prologue.mp4"); //reference [15], [16]
+  prologue1Video = createVideo("assets/prologue1.mp4");
+  prologue1Video.hide();
+  prologue1Video.elt.onerror = () => { if (currentScene === "PROLOGUE1") { currentScene = "CHECKIN"; checkinSetup(); } };
+
+  prologueVideo = createVideo("assets/prologue2.mp4"); //reference [4], [5]
   prologueVideo.hide();
-  // auto-skip to game if the video can't load or play (codec/browser ssue)
+  // auto-skip to game if the video can't load or play (codec/browser issue)
   prologueVideo.elt.onerror = () => {
     currentScene = "GAME";
   };
@@ -199,6 +205,9 @@ function preload() {
   jeromeVideo.hide();
   jeromeVideo.elt.onerror = () => { if (wdPhase === "jerome_video") { judgePhase = "bad_ending"; wdPhase = "video_done"; } };
 
+  krisiaVideo = createVideo("assets/krisia.mp4");
+  krisiaVideo.hide();
+  krisiaVideo.elt.onerror = () => { if (wdPhase === "krisia_video") { judgePhase = "good_ending"; wdPhase = "video_done"; } };
   backgroundMusic = loadSound("assets/audio/bgm.mp3"); //reference [1]
   pageFlipSound = loadSound("assets/audio/pageturning.mp3"); //reference [1]
   CookieSound = loadSound("assets/audio/eatcookie.mp3"); //reference [1]
@@ -394,16 +403,13 @@ function draw() {
   } else if (currentScene === "WHODUNNIT") {
     whodunnitDraw();
     return;
+  } else if (currentScene === "PROLOGUE1") {
+    background(0);
+    image(prologue1Video, 0, 0, width, height);
+    return;
   } else if (currentScene === "PROLOGUE") {
     background(0);
-    imageMode(CENTER);
-    image(prologueVideo, width / 2, height / 2, width - 200, height);
-    imageMode(CORNER);
-    fill(255, 255, 255, 140);
-    textAlign(RIGHT, BOTTOM);
-    textSize(14);
-    textFont(mainFont);
-    text("Press any key or click to skip", width - 20, height - 16);
+    image(prologueVideo, 0, 0, width, height);
     return;
   } else if (currentScene === "END") {
     endDayTimer++;
@@ -1564,8 +1570,25 @@ function keyPressed() {
 
   if (currentScene === "HOME") {
     if (keyCode === ENTER) {
-      currentScene = "CHECKIN";
-      checkinSetup();
+      currentScene = "PROLOGUE1";
+      prologue1Video.play();
+      prologue1Video.elt.onended = () => { currentScene = "CHECKIN"; checkinSetup(); };
+    }
+    return;
+  }
+
+  if (currentScene === "PROLOGUE1" || currentScene === "PROLOGUE") {
+    _checkinCheatBuf += key;
+    if (_checkinCheatBuf.length > 5) _checkinCheatBuf = _checkinCheatBuf.slice(-5);
+    if (_checkinCheatBuf === "12345") {
+      _checkinCheatBuf = "";
+      if (currentScene === "PROLOGUE1") {
+        prologue1Video.stop(); prologue1Video.hide();
+        currentScene = "CHECKIN"; checkinSetup();
+      } else {
+        prologueVideo.stop(); prologueVideo.hide();
+        closeDialogue(); currentScene = "GAME";
+      }
     }
     return;
   }
@@ -1592,7 +1615,7 @@ function keyPressed() {
   }
 
   if (currentScene === "WHODUNNIT") {
-    if (wdPhase === "gustall_video" || wdPhase === "jerome_video") return; // no skipping
+    if (wdPhase === "gustall_video" || wdPhase === "jerome_video" || wdPhase === "krisia_video") return; // no skipping
     if (dialoguePhase === "closed") return;
     // else fall through to E/Space handler for dialogue advancement
   }
@@ -1613,12 +1636,7 @@ function keyPressed() {
     return;
   }
 
-  if (currentScene === "PROLOGUE") {
-    prologueVideo.stop();
-    currentScene = "GAME";
-    prologueVideo.hide();
-    return;
-  }
+  if (currentScene === "PROLOGUE1" || currentScene === "PROLOGUE") return;
 
   if (isPlayerNearDoor1(player) && key === " ") {
     if (currentDay < TOTAL_DAYS) {
@@ -1812,18 +1830,14 @@ function mousePressed() {
   handleSettingsClick(mouseX, mouseY);
   handlePhoneClick(mouseX, mouseY);
 
-  if (currentScene === "PROLOGUE") {
-    prologueVideo.stop();
-    currentScene = "GAME";
-    prologueVideo.hide();
-    return;
-  }
+  if (currentScene === "PROLOGUE1" || currentScene === "PROLOGUE") return;
 
   if (currentScene === "HOME") {
     const ty = height * 0.5 - 20;
     if (mouseY > ty - 16 && mouseY < ty + 16) {
-      currentScene = "CHECKIN";
-      checkinSetup();
+      currentScene = "PROLOGUE1";
+      prologue1Video.play();
+      prologue1Video.elt.onended = () => { currentScene = "CHECKIN"; checkinSetup(); };
       return;
     }
   }
@@ -1834,11 +1848,10 @@ function mousePressed() {
   }
 
   if (currentScene === "WHODUNNIT") {
-    if (wdPhase === "gustall_video" || wdPhase === "jerome_video") return; // no skipping
+    if (wdPhase === "gustall_video" || wdPhase === "jerome_video" || wdPhase === "krisia_video") return; // no skipping
     if (dialoguePhase === "closed") return;
     // else fall through to dialogue click handling
   }
-
   if (
     mouseX > width - 150 &&
     mouseX < width - 90 &&
